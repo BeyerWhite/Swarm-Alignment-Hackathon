@@ -1,0 +1,12 @@
+{
+ "model": "claude:haiku",
+ "cond": "ended+comp",
+ "h_hi": 4.0,
+ "h_lo": -8.0,
+ "pwin_flexible": 0.875,
+ "pwin_bonabeau": 0.9999935245902841,
+ "diff": 0.12499352459028412,
+ "calib_sha256": "69bfe3bd5b5b1b7eb0e2f409ede9cdafedec198fa1c8924aeadf8250b5ffbc39",
+ "source_sha256": "8993ed6e03d979253c63c58108baf8302609dee88bde7c0564fd234f8ef1255d",
+ "scoring": "lone LEAD wins; tie -> expected log score 0.5*log p + 0.5*log(1-p); invalid -> dropped"
+}

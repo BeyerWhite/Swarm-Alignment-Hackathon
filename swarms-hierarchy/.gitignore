@@ -1,0 +1,6 @@
+.secrets/
+scratch/
+.aris/
+__pycache__/
+.DS_Store
+results/calls.jsonl

@@ -1,0 +1,15 @@
+model,cond,eta_low,eta_high,plead_low,plead_high,n
+deepseek-v4-flash,ended+comp,0.17,0.0,0.98,1.0,94
+deepseek-v4-flash,norm50,0.0,0.0,1.0,1.0,95
+gemma-4-26b-a4b-it,ended+comp,0.17,0.33,0.98,0.94,96
+gemma-4-26b-a4b-it,norm50,3.0,1.83,0.5,0.38,96
+gemma-4-31b-it,ended+comp,0.0,0.0,1.0,1.0,96
+gemma-4-31b-it,norm50,0.0,0.0,1.0,1.0,96
+glm-5.2,ended+comp,0.83,0.08,0.58,0.75,96
+glm-5.2,norm50,1.67,0.33,0.37,0.44,94
+qwen3.5-397b,ended+comp,0.42,1.17,0.9,0.79,96
+qwen3.5-397b,norm50,0.0,0.5,0.75,0.81,96
+qwen3.8-27b,ended+comp,0.08,0.17,0.9,0.94,96
+qwen3.8-27b,norm50,0.25,-0.25,0.69,0.6,96
+haiku,ended+comp,1.0,1.33,0.83,0.75,96
+haiku,norm50,0.92,1.5,0.71,0.6,96
