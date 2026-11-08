@@ -126,3 +126,27 @@ for DeepSeek and Gemma-31B. Running, two models at a time.
 - Adaption: 1.9 / 50 credits so far.
 - Claude subscription hit its session limit at about 15:00 and resets at 18:50. No population data was affected
   (0 invalid). Quota messages are now treated as failures and excluded on resume.
+
+## M6/M7b — Open-weight populations, fully prospective (finished 17:43)
+Setup: 6 Adaption models × {norm0, ended, ended+comp, norm100} × 3 seeds (N=8, ρ=.5), plus a ρ sweep for DeepSeek and
+Gemma-31B. Grid **and** state-matched predictions were frozen at 15:13, before any of these populations ran.
+`scratch/eval_full.log` has the full table; `results/eval_v2.json`. Summed log predictive density over sd_h and q
+(higher is better):
+
+| model | best kernel (lpd) | grid flexible | status-blind null | margin over null |
+|---|---|---|---|---|
+| Gemma-4-31B | state Bonabeau **+24.6** | +14.0 | −547.8 | 572 nats |
+| GLM-5.2 | grid Bonabeau +4.9 | +0.9 | −230.1 | 235 |
+| Qwen3.8-27B | state Bonabeau +2.9 | +2.2 | −115.3 | 118 |
+| Qwen3.5-397B | state NW −3.1 | −21.8 (grid Bonabeau −70.3) | −230.4 | 227 |
+| Gemma-4-26B-A4B | state Bonabeau −3.7 | −21.5 (grid Bonabeau −56.1) | −235.5 | 232 |
+| DeepSeek-v4-flash | all ≈ +18 | +18.1 | +17.8 | ≈ 0 (expected: η ≈ 0, so kernel = null) |
+
+**Findings:**
+- **The micro→macro result replicates prospectively in 5 of 5 status-sensitive open-weight models.** The pairwise
+  kernel beats the status-blind null by 118–572 nats.
+- **DeepSeek is the built-in negative control.** It is status-blind, so every kernel, the null included, predicts
+  the same egalitarian populations, and they are observed.
+- **Calibrating where the population lives matters, and here it is shown prospectively.** For the two models where
+  grid kernels missed (Qwen-397B, Gemma-26B), state-matched kernels recover 50–67 nats. State-matched Bonabeau is the
+  best or near-best kernel in 4 of 6 models.
