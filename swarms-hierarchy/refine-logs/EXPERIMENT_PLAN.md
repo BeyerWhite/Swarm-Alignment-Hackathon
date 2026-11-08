@@ -44,3 +44,14 @@ Compute: subscription CLIs only. Claude runs at about 2 calls/s combined at curr
 - **A4 (new resource, 2026-11-07 ~15:45):** Adaption hosted open-weight models (deepseek-v4-flash, qwen3.8-27b,
   qwen3.5-397b, gemma-4-31b-it, gemma-4-26b-a4b-it, glm-5.2) with a hard 50-credit cap. These give a cross-family
   replication of M2–M7: the same 9 calibration conditions, then frozen predictions, then populations with more seeds.
+- **A5 (finite-size scaling, no LLM calls, 2026-11-07 ~16:00; `code/fss.py`, `results/fss_w.jsonl`):** fitted kernels
+  (Haiku, Gemma-31B, GLM-5.2, Qwen3.8-27B; flexible and Bonabeau) were simulated at N ∈ {8…700} across the norm weight w
+  (ρ = 0.5).
+  - **The order-parameter curves are N-independent up to N = 700, with no growing susceptibility peak.** Under
+    proportional (Bonabeau) forgetting, scores are capped at about Q/μ, so ±1 noise never vanishes. The mean-field
+    pitchfork does not survive, and no tipping point emerges with scale.
+  - Under **additive (BNR) forgetting**, toy kernels give a true transition:
+    - L = r/r_c, with r_c = 2 = the maximum per-agent win rate, independent of N;
+    - the leader's excess grows with N, consistent with √(t ln N);
+    - a status-blind control collapses at r_c = 1.
+  - Proposed follow-up: a BNR-protocol LLM test.
