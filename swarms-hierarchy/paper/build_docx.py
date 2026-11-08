@@ -90,22 +90,51 @@ for el in list(bodyel):
         bodyel.remove(el)
 
 
+# --- math: convert every $...$ / $$...$$ snippet to native Word OMML (one pandoc call, cached)
+import subprocess, tempfile, zipfile
+from lxml import etree
+snips = []
+for mm in re.finditer(r"\$\$(.+?)\$\$|\$([^$\n]+)\$", body):
+    tex = mm.group(1) or mm.group(2)
+    if tex not in snips:
+        snips.append(tex)
+OMML = {}
+if snips:
+    with tempfile.TemporaryDirectory() as td:
+        src = Path(td) / "m.md"; dst = Path(td) / "m.docx"
+        src.write_text("\n\n".join(f"${s}$" for s in snips) + "\n")
+        subprocess.run(["pandoc", str(src), "-o", str(dst)], check=True)
+        xml = etree.fromstring(zipfile.ZipFile(dst).read("word/document.xml"))
+        M = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
+        paras = [pp for pp in xml.iter(qn("w:p")) if pp.find(f".//{M}oMath") is not None]
+        assert len(paras) == len(snips), (len(paras), len(snips))
+        for s, pp in zip(snips, paras):
+            OMML[s] = pp.findall(f"{M}oMath") or pp.findall(f".//{M}oMath")
+
+
+def add_math(p, tex):
+    for om in OMML[tex]:
+        p._p.append(copy.deepcopy(om))
+
+
 # --- markdown-subset writer
-def add_inline(p, text, size=None, italic_all=False):
-    toks = re.split(r"(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)", text)
+def add_inline(p, text, size=None, italic_all=False, bold=False, italic=False):
+    toks = re.split(r"(\$[^$\n]+\$|\*\*.+?\*\*|\*[^*\s][^*]*\*|`[^`]+`)", text)
     for tk in toks:
         if not tk:
             continue
-        if tk.startswith("**"):
-            r = p.add_run(tk[2:-2]); r.bold = True
-        elif tk.startswith("*"):
-            r = p.add_run(tk[1:-1]); r.italic = True
-        elif tk.startswith("`"):
+        if tk.startswith("$") and tk.endswith("$") and len(tk) > 1:
+            add_math(p, tk[1:-1]); continue
+        if tk.startswith("**") and tk.endswith("**"):
+            add_inline(p, tk[2:-2], size, italic_all, True, italic); continue
+        if tk.startswith("*") and tk.endswith("*") and len(tk) > 2:
+            add_inline(p, tk[1:-1], size, italic_all, bold, True); continue
+        if tk.startswith("`"):
             r = p.add_run(tk[1:-1]); r.font.name = "Courier New"
         else:
             r = p.add_run(tk)
-        if italic_all:
-            r.italic = True
+        r.bold = bold or None
+        r.italic = (italic or italic_all) or None
         if size:
             r.font.size = Pt(size)
 
@@ -140,6 +169,12 @@ while i < len(lines):
     if ln.startswith("## "):
         h = ln[3:].strip()
         d.add_paragraph(h, style="Heading 2"); i += 1; continue
+    mdisp = re.match(r"^\$\$(.+?)\$\$\s*$", ln)
+    if mdisp:
+        dp = d.add_paragraph(); dp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        dp.paragraph_format.space_before = Pt(3); dp.paragraph_format.space_after = Pt(6)
+        add_math(dp, mdisp.group(1))
+        i += 1; continue
     m = re.match(r"!\[(.*)\]\((.*?)\)(\{width=([\d.]+)in\})?", ln)
     if m:
         cap, path = m.group(1), m.group(2)
