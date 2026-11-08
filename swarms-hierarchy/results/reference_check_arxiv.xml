@@ -1,0 +1,582 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Slf8Vcf+OlcGX7IzUCSGUDA0NAI</id>
+  <title>arXiv Query: search_query=&amp;id_list=cond-mat/0503451,physics/0511105,cond-mat/0208388,physics/0502118,physics/0512144,2007.04448,2401.12258,2410.08948,2510.22422,2606.23764,2603.28990,2502.14143,2310.13548,2605.10528,2406.14373,2608.09574&amp;start=0&amp;max_results=30</title>
+  <updated>2026-11-08T07:52:57Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=30&amp;id_list=cond-mat/0503451,physics/0511105,cond-mat/0208388,physics/0502118,physics/0512144,2007.04448,2401.12258,2410.08948,2510.22422,2606.23764,2603.28990,2502.14143,2310.13548,2605.10528,2406.14373,2608.09574" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+  <opensearch:totalResults>16</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/cond-mat/0503451v1</id>
+    <title>Dynamics of Social Diversity</title>
+    <updated>2005-03-17T20:30:26Z</updated>
+    <link href="https://arxiv.org/abs/cond-mat/0503451v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/cond-mat/0503451v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  We introduce and solve analytically a model for the development of disparate social classes in a competitive population. Individuals advance their fitness by competing against those in lower classes, and in parallel, individuals decline due to inactivity. We find a phase transition from a homogeneous, single-class society to a hierarchical, multi-class society. In the latter case, a finite fraction of the population still belongs to the lower class, and the rest of the population is in the middle class, on top of which lies a tiny upper class. While the lower class is static and poor, the middle class is upwardly mobile.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2005-03-17T20:30:26Z</published>
+    <arxiv:comment>4 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <arxiv:journal_ref>J. Stat. Mech. L11002 (2005)</arxiv:journal_ref>
+    <author>
+      <name>E. Ben-Naim</name>
+    </author>
+    <author>
+      <name>S. Redner</name>
+    </author>
+    <arxiv:doi>10.1088/1742-5468/2005/11/L11002</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1088/1742-5468/2005/11/L11002" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.12258v7</id>
+    <title>Emergent Dominance Hierarchies in Reinforcement Learning Agents</title>
+    <updated>2024-06-22T11:44:33Z</updated>
+    <link href="https://arxiv.org/abs/2401.12258v7" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.12258v7" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modern Reinforcement Learning (RL) algorithms are able to outperform humans in a wide variety of tasks. Multi-agent reinforcement learning (MARL) settings present additional challenges, and successful cooperation in mixed-motive groups of agents depends on a delicate balancing act between individual and group objectives. Social conventions and norms, often inspired by human institutions, are used as tools for striking this balance.
+  In this paper, we examine a fundamental, well-studied social convention that underlies cooperation in both animal and human societies: dominance hierarchies.
+  We adapt the ethological theory of dominance hierarchies to artificial agents, borrowing the established terminology and definitions with as few amendments as possible. We demonstrate that populations of RL agents, operating without explicit programming or intrinsic rewards, can invent, learn, enforce, and transmit a dominance hierarchy to new populations. The dominance hierarchies that emerge have a similar structure to those studied in chickens, mice, fish, and other species.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-21T16:59:45Z</published>
+    <arxiv:primary_category term="cs.MA"/>
+    <author>
+      <name>Ram Rachum</name>
+    </author>
+    <author>
+      <name>Yonatan Nakar</name>
+    </author>
+    <author>
+      <name>Bill Tomlinson</name>
+    </author>
+    <author>
+      <name>Nitay Alon</name>
+    </author>
+    <author>
+      <name>Reuth Mirsky</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.10528v1</id>
+    <title>Collective Alignment in LLM Multi-Agent Systems: Disentangling Bias from Cooperation via Statistical Physics</title>
+    <updated>2026-05-11T13:13:44Z</updated>
+    <link href="https://arxiv.org/abs/2605.10528v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.10528v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate the emergent collective dynamics of LLM-based multi-agent systems on a 2D square lattice and present a model-agnostic statistical-physics method to disentangle social conformity from intrinsic bias, compute critical exponents, and probe the collective behavior and possible phase transitions of multi-agent systems. In our framework, each node of an $L\!\times\!L$ lattice hosts an identical LLM agent holding a binary state ($+1$/$-1$, mapped to yes/no) and updating it by querying the model conditioned on the four nearest-neighbor states. The sampler temperature $T$ serves as the sole control parameter. Across three open-weight models (llama3.1:8b, phi4-mini:3.8b, mistral:7b), we measure magnetization and susceptibility under a global-flip protocol designed to probe $\mathbb{Z}_2$ symmetry. All models display temperature-driven order-disorder crossovers and susceptibility peaks; finite-size scaling on even-$L$ lattices yields effective exponents $γ/ν$ whose values are model-dependent, close to but incompatible with the 2D Ising universality class ($γ/ν=7/4$). Our method enables the extraction of effective $β$-weighted couplings $\tilde{J}(T)$ and fields $\tilde{h}(T)$, which serve as a measure of social conformity and intrinsic bias. In the models we analyzed, we found that collective alignment is dominated by an intrinsic bias ($\tilde{h}\gg\tilde{J}$) rather than by cooperative neighbor coupling, producing field-driven crossovers instead of genuine phase transitions. These effective parameters vary qualitatively across models, providing compact collective-behavior fingerprints for LLM agents and a quantitative diagnostic for the reliability of multi-agent consensus and collective alignment.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-11T13:13:44Z</published>
+    <arxiv:comment>10 pages, 7 figures</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <author>
+      <name>Cristiano De Nobili</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.14143v1</id>
+    <title>Multi-Agent Risks from Advanced AI</title>
+    <updated>2025-02-19T23:03:21Z</updated>
+    <link href="https://arxiv.org/abs/2502.14143v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.14143v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid development of advanced AI agents and the imminent deployment of many instances of these agents will give rise to multi-agent systems of unprecedented complexity. These systems pose novel and under-explored risks. In this report, we provide a structured taxonomy of these risks by identifying three key failure modes (miscoordination, conflict, and collusion) based on agents' incentives, as well as seven key risk factors (information asymmetries, network effects, selection pressures, destabilising dynamics, commitment problems, emergent agency, and multi-agent security) that can underpin them. We highlight several important instances of each risk, as well as promising directions to help mitigate them. By anchoring our analysis in a range of real-world examples and experimental evidence, we illustrate the distinct challenges posed by multi-agent systems and their implications for the safety, governance, and ethics of advanced AI.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-19T23:03:21Z</published>
+    <arxiv:comment>Cooperative AI Foundation, Technical Report #1</arxiv:comment>
+    <arxiv:primary_category term="cs.MA"/>
+    <author>
+      <name>Lewis Hammond</name>
+    </author>
+    <author>
+      <name>Alan Chan</name>
+    </author>
+    <author>
+      <name>Jesse Clifton</name>
+    </author>
+    <author>
+      <name>Jason Hoelscher-Obermaier</name>
+    </author>
+    <author>
+      <name>Akbir Khan</name>
+    </author>
+    <author>
+      <name>Euan McLean</name>
+    </author>
+    <author>
+      <name>Chandler Smith</name>
+    </author>
+    <author>
+      <name>Wolfram Barfuss</name>
+    </author>
+    <author>
+      <name>Jakob Foerster</name>
+    </author>
+    <author>
+      <name>Tomáš Gavenčiak</name>
+    </author>
+    <author>
+      <name>The Anh Han</name>
+    </author>
+    <author>
+      <name>Edward Hughes</name>
+    </author>
+    <author>
+      <name>Vojtěch Kovařík</name>
+    </author>
+    <author>
+      <name>Jan Kulveit</name>
+    </author>
+    <author>
+      <name>Joel Z. Leibo</name>
+    </author>
+    <author>
+      <name>Caspar Oesterheld</name>
+    </author>
+    <author>
+      <name>Christian Schroeder de Witt</name>
+    </author>
+    <author>
+      <name>Nisarg Shah</name>
+    </author>
+    <author>
+      <name>Michael Wellman</name>
+    </author>
+    <author>
+      <name>Paolo Bova</name>
+    </author>
+    <author>
+      <name>Theodor Cimpeanu</name>
+    </author>
+    <author>
+      <name>Carson Ezell</name>
+    </author>
+    <author>
+      <name>Quentin Feuillade-Montixi</name>
+    </author>
+    <author>
+      <name>Matija Franklin</name>
+    </author>
+    <author>
+      <name>Esben Kran</name>
+    </author>
+    <author>
+      <name>Igor Krawczuk</name>
+    </author>
+    <author>
+      <name>Max Lamparth</name>
+    </author>
+    <author>
+      <name>Niklas Lauffer</name>
+    </author>
+    <author>
+      <name>Alexander Meinke</name>
+    </author>
+    <author>
+      <name>Sumeet Motwani</name>
+    </author>
+    <author>
+      <name>Anka Reuel</name>
+    </author>
+    <author>
+      <name>Vincent Conitzer</name>
+    </author>
+    <author>
+      <name>Michael Dennis</name>
+    </author>
+    <author>
+      <name>Iason Gabriel</name>
+    </author>
+    <author>
+      <name>Adam Gleave</name>
+    </author>
+    <author>
+      <name>Gillian Hadfield</name>
+    </author>
+    <author>
+      <name>Nika Haghtalab</name>
+    </author>
+    <author>
+      <name>Atoosa Kasirzadeh</name>
+    </author>
+    <author>
+      <name>Sébastien Krier</name>
+    </author>
+    <author>
+      <name>Kate Larson</name>
+    </author>
+    <author>
+      <name>Joel Lehman</name>
+    </author>
+    <author>
+      <name>David C. Parkes</name>
+    </author>
+    <author>
+      <name>Georgios Piliouras</name>
+    </author>
+    <author>
+      <name>Iyad Rahwan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2310.13548v4</id>
+    <title>Towards Understanding Sycophancy in Language Models</title>
+    <updated>2025-05-10T07:10:46Z</updated>
+    <link href="https://arxiv.org/abs/2310.13548v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2310.13548v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human feedback is commonly utilized to finetune AI assistants. But human feedback may also encourage model responses that match user beliefs over truthful ones, a behaviour known as sycophancy. We investigate the prevalence of sycophancy in models whose finetuning procedure made use of human feedback, and the potential role of human preference judgments in such behavior. We first demonstrate that five state-of-the-art AI assistants consistently exhibit sycophancy across four varied free-form text-generation tasks. To understand if human preferences drive this broadly observed behavior, we analyze existing human preference data. We find that when a response matches a user's views, it is more likely to be preferred. Moreover, both humans and preference models (PMs) prefer convincingly-written sycophantic responses over correct ones a non-negligible fraction of the time. Optimizing model outputs against PMs also sometimes sacrifices truthfulness in favor of sycophancy. Overall, our results indicate that sycophancy is a general behavior of state-of-the-art AI assistants, likely driven in part by human preference judgments favoring sycophantic responses.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-10-20T14:46:48Z</published>
+    <arxiv:comment>32 pages, 20 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Mrinank Sharma</name>
+    </author>
+    <author>
+      <name>Meg Tong</name>
+    </author>
+    <author>
+      <name>Tomasz Korbak</name>
+    </author>
+    <author>
+      <name>David Duvenaud</name>
+    </author>
+    <author>
+      <name>Amanda Askell</name>
+    </author>
+    <author>
+      <name>Samuel R. Bowman</name>
+    </author>
+    <author>
+      <name>Newton Cheng</name>
+    </author>
+    <author>
+      <name>Esin Durmus</name>
+    </author>
+    <author>
+      <name>Zac Hatfield-Dodds</name>
+    </author>
+    <author>
+      <name>Scott R. Johnston</name>
+    </author>
+    <author>
+      <name>Shauna Kravec</name>
+    </author>
+    <author>
+      <name>Timothy Maxwell</name>
+    </author>
+    <author>
+      <name>Sam McCandlish</name>
+    </author>
+    <author>
+      <name>Kamal Ndousse</name>
+    </author>
+    <author>
+      <name>Oliver Rausch</name>
+    </author>
+    <author>
+      <name>Nicholas Schiefer</name>
+    </author>
+    <author>
+      <name>Da Yan</name>
+    </author>
+    <author>
+      <name>Miranda Zhang</name>
+    </author>
+    <author>
+      <name>Ethan Perez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.14373v4</id>
+    <title>Artificial Leviathan: Exploring Social Evolution of LLM Agents Through the Lens of Hobbesian Social Contract Theory</title>
+    <updated>2026-10-24T07:32:47Z</updated>
+    <link href="https://arxiv.org/abs/2406.14373v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.14373v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The emergence of Large Language Models (LLMs) and advancements in Artificial Intelligence (AI) offer an opportunity for computational social science research at scale. Building upon prior explorations of LLM agent design, our work introduces a simulated agent society where complex social relationships dynamically form and evolve over time. Agents are imbued with psychological drives and placed in a sandbox survival environment. We conduct an evaluation of the agent society through the lens of Thomas Hobbes's seminal Social Contract Theory (SCT). We analyze whether, as the theory postulates, agents seek to escape a brutish "state of nature" by surrendering rights to an absolute sovereign in exchange for order and security. Our experiments unveil an alignment: Initially, agents engage in unrestrained conflict, mirroring Hobbes's depiction of the state of nature. However, as the simulation progresses, social contracts emerge, leading to the authorization of an absolute sovereign and the establishment of a peaceful commonwealth founded on mutual cooperation. This congruence between our LLM agent society's evolutionary trajectory and Hobbes's theoretical account indicates LLMs' capability to model intricate social dynamics and potentially replicate forces that shape human societies. By enabling such insights into group behavior and emergent societal phenomena, LLM-driven multi-agent simulations, while unable to simulate all the nuances of human behavior, may hold potential for advancing our understanding of social structures, group dynamics, and complex human systems.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-20T14:42:58Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Gordon Dai</name>
+    </author>
+    <author>
+      <name>Weijia Zhang</name>
+    </author>
+    <author>
+      <name>Jinhan Li</name>
+    </author>
+    <author>
+      <name>Siqi Yang</name>
+    </author>
+    <author>
+      <name>Chidera Onochie lbe</name>
+    </author>
+    <author>
+      <name>Srihas Rao</name>
+    </author>
+    <author>
+      <name>Arthur Caetano</name>
+    </author>
+    <author>
+      <name>Misha Sra</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/cond-mat/0208388v1</id>
+    <title>Phase transition in hierarchy model of Bonabeau et al</title>
+    <updated>2002-08-20T16:38:28Z</updated>
+    <link href="https://arxiv.org/abs/cond-mat/0208388v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/cond-mat/0208388v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  The model of Bonabeau explains the emergence of social hierarchies from the memory of fights in an initially egalitarian society. Introducing a feedback from the social inequality into the probability to win a fight, we find a sharp transition between egalitarian society at low population density and hierarchical society at high population density.</summary>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2002-08-20T16:38:28Z</published>
+    <arxiv:comment>3 pages including two figs.; for Int. J. Mod. Phys. C</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.stat-mech"/>
+    <author>
+      <name>Dietrich Stauffer</name>
+    </author>
+    <arxiv:doi>10.1142/S0129183103004425</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1142/S0129183103004425" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/physics/0512144v1</id>
+    <title>On The Structure of Competitive Societies</title>
+    <updated>2005-12-15T17:49:39Z</updated>
+    <link href="https://arxiv.org/abs/physics/0512144v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/physics/0512144v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  We model the dynamics of social structure by a simple interacting particle system. The social standing of an individual agent is represented by an integer-valued fitness that changes via two offsetting processes. When two agents interact one advances: the fitter with probability p and the less fit with probability 1-p. The fitness of an agent may also decline with rate r.
+  From a scaling analysis of the underlying master equations for the fitness distribution of the population, we find four distinct social structures as a function of the governing parameters p and r. These include: (i) a static lower-class society where all agents have finite fitness; (ii) an upwardly-mobile middle-class society; (iii) a hierarchical society where a finite fraction of the population belongs to a middle class and a complementary fraction to the lower class; (iv) an egalitarian society where all agents are upwardly mobile and have nearly the same fitness. We determine the basic features of the fitness distributions in these four phases.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2005-12-15T17:49:39Z</published>
+    <arxiv:comment>8 pages, 7 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>Eur. Phys. Jour. B 49, 531 (2006)</arxiv:journal_ref>
+    <author>
+      <name>E. Ben-Naim</name>
+    </author>
+    <author>
+      <name>F. Vazquez</name>
+    </author>
+    <author>
+      <name>S. Redner</name>
+    </author>
+    <arxiv:doi>10.1140/epjb/e2006-00095-y</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1140/epjb/e2006-00095-y" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/physics/0502118v3</id>
+    <title>Bonabeau model on a fully connected graph</title>
+    <updated>2005-12-13T17:03:05Z</updated>
+    <link href="https://arxiv.org/abs/physics/0502118v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/physics/0502118v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  Numerical simulations are reported on the Bonabeau model on a fully connected graph, where spatial degrees of freedom are absent. The control parameter is the memory factor f. The phase transition is observed at the dispersion of the agents power h_i. The critical value f_C shows a hysteretic behavior with respect to the initial distribution of h_i. f_C decreases with the system size; this decrease can be compensated by a greater number of fights between a global reduction of the distribution width of h_i. The latter step is equivalent to a partial forgetting.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2005-02-22T19:19:11Z</published>
+    <arxiv:comment>4 pages, 5 figures in 9 eps files, RevTeX4, presented at NEXT-SigmaPhi Conference, to appear in EPJ-B</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>Eur. Phys. J. B50 (2006) 195</arxiv:journal_ref>
+    <author>
+      <name>K. Malarz</name>
+      <arxiv:affiliation>AGH-UST</arxiv:affiliation>
+    </author>
+    <author>
+      <name>D. Stauffer</name>
+      <arxiv:affiliation>Cologne University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>K. Kulakowski</name>
+      <arxiv:affiliation>AGH-UST</arxiv:affiliation>
+    </author>
+    <arxiv:doi>10.1140/epjb/e2006-00059-3</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1140/epjb/e2006-00059-3" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.22422v1</id>
+    <title>Group size effects and collective misalignment in LLM multi-agent systems</title>
+    <updated>2025-10-25T19:45:45Z</updated>
+    <link href="https://arxiv.org/abs/2510.22422v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.22422v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-agent systems of large language models (LLMs) are rapidly expanding across domains, introducing dynamics not captured by single-agent evaluations. Yet, existing work has mostly contrasted the behavior of a single agent with that of a collective of fixed size, leaving open a central question: how does group size shape dynamics? Here, we move beyond this dichotomy and systematically explore outcomes across the full range of group sizes. We focus on multi-agent misalignment, building on recent evidence that interacting LLMs playing a simple coordination game can generate collective biases absent in individual models. First, we show that collective bias is a deeper phenomenon than previously assessed: interaction can amplify individual biases, introduce new ones, or override model-level preferences. Second, we demonstrate that group size affects the dynamics in a non-linear way, revealing model-dependent dynamical regimes. Finally, we develop a mean-field analytical approach and show that, above a critical population size, simulations converge to deterministic predictions that expose the basins of attraction of competing equilibria. These findings establish group size as a key driver of multi-agent dynamics and highlight the need to consider population-level effects when deploying LLM-based systems at scale.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-25T19:45:45Z</published>
+    <arxiv:primary_category term="cs.MA"/>
+    <arxiv:journal_ref>Proc. Natl. Acad. Sci. U.S.A. 123 (34) e2531697123 (2026)</arxiv:journal_ref>
+    <author>
+      <name>Ariel Flint</name>
+    </author>
+    <author>
+      <name>Luca Maria Aiello</name>
+    </author>
+    <author>
+      <name>Romualdo Pastor-Satorras</name>
+    </author>
+    <author>
+      <name>Andrea Baronchelli</name>
+    </author>
+    <arxiv:doi>10.1073/pnas.2531697123</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1073/pnas.2531697123" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.23764v1</id>
+    <title>Emergent Relational Order in LLM Agent Societies: From Collective Affect to Authority Stratification</title>
+    <updated>2026-06-22T14:25:36Z</updated>
+    <link href="https://arxiv.org/abs/2606.23764v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.23764v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fei Xiaotong's Differential Order Pattern characterizes rural society as egocentric and relationally graded, with cooperation attenuating over social distance. Although often treated as culturally specific, its mechanistic basis remains under-operationalized, and prior LLM-based simulations have mainly addressed short-term coordination rather than long-horizon social structure. We propose CAREB-MAS, a multi-agent framework grounded in Affect Control Theory, Social Identity Theory, and Durkheimian collective affect. Agents reason through an emotion-ethics-belief chain and maintain dynamically evolving egocentric identities, while the macro environment specifies only individual production, preference-based allocation, and minimal interaction protocols. Across long-horizon simulations, agents spontaneously reproduce five core Differential Order phenomena: stable labor specialization, guanxi-based economic ethics, relational decay of cooperation, emergent relational authority, and clan-based center-periphery stratification. These patterns shift with production structure from kin-centered integration toward greater functional interdependence. Extensive experiment results support interpreting Differential Order as a structure-sensitive emergent outcome of general social mechanisms, with LLM-based multi-agent simulation providing an interdisciplinary framework for studying social structure and change.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-22T14:25:36Z</published>
+    <arxiv:comment>Accepted to Findings of the Association for Computational Linguistics: ACL 2026. 37 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.MA"/>
+    <author>
+      <name>Zhiyuan Ji</name>
+    </author>
+    <author>
+      <name>Xinyu Chen</name>
+    </author>
+    <author>
+      <name>Ziqi Dai</name>
+    </author>
+    <author>
+      <name>Shiyun Tang</name>
+    </author>
+    <author>
+      <name>Chunyu Wei</name>
+    </author>
+    <author>
+      <name>Yueguo Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.08948v2</id>
+    <title>Emergent social conventions and collective bias in LLM populations</title>
+    <updated>2025-05-29T09:50:31Z</updated>
+    <link href="https://arxiv.org/abs/2410.08948v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.08948v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social conventions are the backbone of social coordination, shaping how individuals form a group. As growing populations of artificial intelligence (AI) agents communicate through natural language, a fundamental question is whether they can bootstrap the foundations of a society. Here, we present experimental results that demonstrate the spontaneous emergence of universally adopted social conventions in decentralized populations of large language model (LLM) agents. We then show how strong collective biases can emerge during this process, even when agents exhibit no bias individually. Last, we examine how committed minority groups of adversarial LLM agents can drive social change by imposing alternative social conventions on the larger population. Our results show that AI systems can autonomously develop social conventions without explicit programming and have implications for designing AI systems that align, and remain aligned, with human values and societal goals.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-11T16:16:38Z</published>
+    <arxiv:primary_category term="cs.MA"/>
+    <arxiv:journal_ref>Science Advances 11, eadu9368 (2025)</arxiv:journal_ref>
+    <author>
+      <name>Ariel Flint Ashery</name>
+    </author>
+    <author>
+      <name>Luca Maria Aiello</name>
+    </author>
+    <author>
+      <name>Andrea Baronchelli</name>
+    </author>
+    <arxiv:doi>10.1126/sciadv.adu9368</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1126/sciadv.adu9368" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2007.04448v4</id>
+    <title>Emergence of Hierarchy in Networked Endorsement Dynamics</title>
+    <updated>2021-05-07T16:22:38Z</updated>
+    <link href="https://arxiv.org/abs/2007.04448v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.04448v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Many social and biological systems are characterized by enduring hierarchies, including those organized around prestige in academia, dominance in animal groups, and desirability in online dating. Despite their ubiquity, the general mechanisms that explain the creation and endurance of such hierarchies are not well understood. We introduce a generative model for the dynamics of hierarchies using time-varying networks in which new links are formed based on the preferences of nodes in the current network and old links are forgotten over time. The model produces a range of hierarchical structures, ranging from egalitarianism to bistable hierarchies, and we derive critical points that separate these regimes in the limit of long system memory. Importantly, our model supports statistical inference, allowing for a principled comparison of generative mechanisms using data. We apply the model to study hierarchical structures in empirical data on hiring patterns among mathematicians, dominance relations among parakeets, and friendships among members of a fraternity, observing several persistent patterns as well as interpretable differences in the generative mechanisms favored by each. Our work contributes to the growing literature on statistically grounded models of time-varying networks.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="nlin.AO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-08T21:38:12Z</published>
+    <arxiv:comment>Updates corresponding to final published version</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <arxiv:journal_ref>Proceedings of the National Academy of Sciences, 118(16) (2021)</arxiv:journal_ref>
+    <author>
+      <name>Mari Kawakatsu</name>
+    </author>
+    <author>
+      <name>Philip S. Chodrow</name>
+    </author>
+    <author>
+      <name>Nicole Eikmeier</name>
+    </author>
+    <author>
+      <name>Daniel B. Larremore</name>
+    </author>
+    <arxiv:doi>10.1073/pnas.2015188118</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1073/pnas.2015188118" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/physics/0511105v1</id>
+    <title>Bonabeau hierarchy models revisited</title>
+    <updated>2005-11-11T15:55:42Z</updated>
+    <link href="https://arxiv.org/abs/physics/0511105v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/physics/0511105v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  What basic processes generate hierarchy in a collective? The Bonabeau model provides us a simple mechanism based on randomness which develops self-organization through both winner/looser effects and relaxation process. A phase transition between egalitarian and hierarchic states has been found both analytically and numerically in previous works. In this paper we present a different approach: by means of a discrete scheme we develop a mean field approximation that not only reproduces the phase transition but also allows us to characterize the complexity of hierarchic phase. In the same philosophy, we study a new version of the Bonabeau model, developed by Stauffer et al. Several previous works described numerically the presence of a similar phase transition in this later version. We find surprising results in this model that can be interpreted properly as the non-existence of phase transition in this version of Bonabeau model, but a changing in fixed point structure.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2005-11-11T15:55:42Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Lucas Lacasa</name>
+    </author>
+    <author>
+      <name>Bartolo Luque</name>
+    </author>
+    <arxiv:doi>10.1016/j.physa.2005.10.046</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.physa.2005.10.046" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.28990v1</id>
+    <title>Drop the Hierarchy and Roles: How Self-Organizing LLM Agents Outperform Designed Structures</title>
+    <updated>2026-03-30T20:44:53Z</updated>
+    <link href="https://arxiv.org/abs/2603.28990v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.28990v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>How much autonomy can multi-agent LLM systems sustain -- and what enables it? We present a 25,000-task computational experiment spanning 8 models, 4--256 agents, and 8 coordination protocols ranging from externally imposed hierarchy to emergent self-organization. We observe that autonomous behavior already emerges in current LLM agents: given minimal structural scaffolding (fixed ordering), agents spontaneously invent specialized roles, voluntarily abstain from tasks outside their competence, and form shallow hierarchies -- without any pre-assigned roles or external design. A hybrid protocol (Sequential) that enables this autonomy outperforms centralized coordination by 14% (p&lt;0.001), with a 44% quality spread between protocols (Cohen's d=1.86, p&lt;0.0001). The degree of emergent autonomy scales with model capability: strong models self-organize effectively, while models below a capability threshold still benefit from rigid structure -- suggesting that as foundation models improve, the scope for autonomous coordination will expand. The system scales sub-linearly to 256 agents without quality degradation (p=0.61), producing 5,006 unique roles from just 8 agents. Results replicate across closed- and open-source models, with open-source achieving 95% of closed-source quality at 24x lower cost. The practical implication: give agents a mission, a protocol, and a capable model -- not a pre-assigned role.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-30T20:44:53Z</published>
+    <arxiv:comment>6 figures, 9 tables. Submitted to IEEE Access</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Victoria Dochkina</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.09574v1</id>
+    <title>The Politician, the Liar, and the Obedient Worker: Emerging Behavior of LLM Agents in Hierarchical Games</title>
+    <updated>2026-08-10T13:08:52Z</updated>
+    <link href="https://arxiv.org/abs/2608.09574v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.09574v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>LLMs are rapidly embedding themselves into daily life: drafting our emails, managing our schedules, and making decisions on our behalf. As they move from individual tools to participants in multi-agent organizations, an important question arises: do they reproduce the governance failures like free-riding, corruption, and entrenched leadership that plague human institutions? We introduce the Hierarchical Game (HG), a public goods game extended with managerial authority, democratic elections, and private communication. Testing six frontier models across twelve experiments that add institutions one at a time (speech, peers, government, wages, oversight, elections), we find distinct behavioral profiles: Qwen promises and lies (13.3\% broken promises); Grok refuses to cooperate on its own but becomes fully cooperative once a manager can punish it (16\%$\to$100\%); Claude and GPT-4o cooperate reliably at baseline. But honesty proves fragile. When the manager role comes with a salary, all models except GPT-4o start cutting private deals to win or keep the position. When punishment is made anonymous, honest models begin to cheat. When all agents share the same model family, the first elected manager stays in power indefinitely. Leadership change only happens in groups that mix different families.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-10T13:08:52Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Fatemeh Seyedin</name>
+    </author>
+    <author>
+      <name>Adrian Weller</name>
+    </author>
+    <author>
+      <name>Jinhyuk Yun</name>
+    </author>
+    <author>
+      <name>Mahmoudreza Babaei</name>
+    </author>
+  </entry>
+</feed>
