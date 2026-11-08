@@ -12,3 +12,12 @@
 | M6 | populations | haiku × {ended, ended+comp, norm50} × 4 seeds | TODO | ~3,840 | results/population_v2.jsonl | |
 | M7 | evaluation | — | TODO | 0 | results/eval_v2.json | |
 | M8 | replication | sonnet / luna | OPTIONAL | ≤1,600 | results/population_v2.jsonl | |
+
+## Real-task game v2 (2026-11-08)
+| Run ID | Milestone | Purpose | System / Variant | Split | Metrics | Priority | Status | Notes |
+|--------|-----------|---------|------------------|-------|---------|----------|--------|-------|
+| TG2-M0 | M0 | sanity | Gemma-31B none/noplan/w100, 8 rounds | seed 7 | throughput, collisions, wrong | MUST | DONE | 4.75 vs 2.0 tasks/round; 0 wrong |
+| TG2-M1 | M1 | C1a, C1b, C2 | 5 models × {none, noplan, w0, w100} | seeds 3101–3108 | incumbency, throughput, top_plan_share | MUST | RUNNING | 160 runs, launched 05:02 |
+| TG2-M2 | M2 | anti-claim A2 | 5 models × shuffle | seeds 3101–3108 | throughput, collisions | MUST | TODO | needs `shuffle` arm in code |
+| TG2-M3 | M3 | evaluation + B5 | — | — | H1/H2/H3 | MUST | TODO | `taskgame2.py eval` |
+| TG1 | pilot | v1 (no coordination value) | 5 models × {w0, w100} | 2101–2110 | — | DONE (48 runs) | stopped 05:01 | appendix |

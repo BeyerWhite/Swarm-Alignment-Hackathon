@@ -55,3 +55,8 @@ Compute: subscription CLIs only. Claude runs at about 2 calls/s combined at curr
     - the leader's excess grows with N, consistent with √(t ln N);
     - a status-blind control collapses at r_c = 1.
   - Proposed follow-up: a BNR-protocol LLM test.
+- **A6–A8 (loss-weight sweep, 2026-11-08 02:31–02:45):** fixed-η vs measured-s comparisons, ρ = 0.2, extra F = 3 seeds
+  (`results/fsweep_addendum_A6/A7/A8.json`); frozen, then cancelled before any run data.
+- **A9 (real-task game, 2026-11-08):** v1 (`code/taskgame.py`, predictions sha 9d492c3d…) stopped at 48 runs as a
+  pilot after coordination proved to have no throughput value; v2 (`code/taskgame2.py`, hypotheses sha b5beab6d…,
+  frozen 05:02 before any v2 data). Full plan: `refine-logs/EXPERIMENT_PLAN_TASKGAME2.md`.

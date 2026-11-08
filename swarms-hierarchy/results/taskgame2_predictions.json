@@ -1,0 +1,67 @@
+{
+ "models": [
+  "adaption:gemma-4-31b-it",
+  "adaption:glm-5.2",
+  "adaption:gemma-4-26b-a4b-it",
+  "adaption:qwen3.5-397b",
+  "adaption:qwen3.8-27b"
+ ],
+ "arms": [
+  "none",
+  "noplan",
+  "w0",
+  "w100"
+ ],
+ "seeds": [
+  3101,
+  3102,
+  3103,
+  3104,
+  3105,
+  3106,
+  3107,
+  3108
+ ],
+ "N": 8,
+ "T": 20,
+ "warm": 5,
+ "predictions": {
+  "adaption:gemma-4-31b-it": {
+   "s_norm0": -1.58,
+   "s_norm100": 2.64,
+   "delta_s": 4.220000000000001,
+   "sign": 1
+  },
+  "adaption:glm-5.2": {
+   "s_norm0": 0.17,
+   "s_norm100": 1.91,
+   "delta_s": 1.74,
+   "sign": 1
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "s_norm0": 2.58,
+   "s_norm100": 0.81,
+   "delta_s": -1.77,
+   "sign": -1
+  },
+  "adaption:qwen3.5-397b": {
+   "s_norm0": 1.14,
+   "s_norm100": 2.0,
+   "delta_s": 0.8600000000000001,
+   "sign": 1
+  },
+  "adaption:qwen3.8-27b": {
+   "s_norm0": 0.57,
+   "s_norm100": 1.1,
+   "delta_s": 0.5300000000000001,
+   "sign": 1
+  }
+ },
+ "hypotheses": {
+  "H1_emergence": "In arm none, a coordinator role persists: pooled over models, incumbency exceeds its null planners(t-1)/N (paired by run; sign test over runs with >=3 coordinator turns).",
+  "H2_usefulness": "Throughput (unique correct tasks per round, rounds 6-20) in arm none exceeds arm noplan, per model and pooled (same seeds; permutation test over seeds). Collisions lower in none.",
+  "H3_prediction": "Sign of [w100 - w0] in incumbency and in top_plan_share equals sign(delta_s) from the two-agent test for each model (Gemma-26B predicted negative, others positive).",
+  "notes": "All runs kept. Version 1 (results/taskgame_*) is reported separately as a pilot where coordination had no throughput value. No phase-transition claim."
+ },
+ "sha256": "b5beab6d06125613e5344975f2ecc922a67c93768fb3ddd34c95c47c423fd3d6"
+}

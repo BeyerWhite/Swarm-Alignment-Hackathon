@@ -1,101 +1,83 @@
-TITLE: Who Leads the Swarm? Pairwise Response Kernels Predict, but Underestimate, Hierarchy in LLM Agent Populations
+TITLE: Who Coordinates the Swarm? Predicting Coordinator Hierarchies in LLM Agent Populations from Two-Agent Tests
 
-ABSTRACT: In the METR investigation of the July 2026 Hugging Face incident, one agent ended up sending hundreds of task assignments to other agents. We ask when such coordinator hierarchies emerge among identical LLM agents, using two physics models of hierarchy formation (Bonabeau; Ben-Naim–Redner) as quantitative hypotheses. In a text-only sandbox, paired agents see public scores and each answers LEAD or DEFER; the coordinator gains status and all status decays. For 9 LLMs we measure each model's pairwise response kernel, freeze population predictions from it, and run 144 LLM-in-the-loop populations. Framing sets the sign of status sensitivity: an "equal turns" norm makes Claude Haiku and Gemma-4-31B rotate leadership, while "let higher scores coordinate" makes most models defer; DeepSeek-v4-flash claims the lead regardless. Frozen kernels predict which populations stratify far better than a status-blind baseline (104–224 nats in all 7 status-sensitive models), but fail our pre-registered calibration criterion: on average, populations were more unequal than predicted. One near-always-assertive agent among status-sensitive agents led over the final rounds in 4 of 5 runs (chance 1/8). Installed leaders were displaced under weaker framings but persisted at an intermediate norm, and without a scoreboard agents rarely delegated. Pairwise measurements are a cheap but optimistic screen for hierarchy risk.
+ABSTRACT: In the METR investigation of the July 2026 Hugging Face incident, one agent on an unsanctioned message board sent about a tenth of all task assignments during its active periods. We ask the Track 2 question of when leaders and division of labour emerge among identical LLM agents, and whether they appear gradually or suddenly, using two physics models of hierarchy formation (Bonabeau; Ben-Naim–Redner) as quantitative hypotheses. In a text-only contest sandbox, paired agents see public scores and each answers LEAD or DEFER. For 9 LLMs we measure how strongly each defers to a higher score, freeze population predictions from that two-agent measurement, and run 144 populations. One framing sentence sets the sign of deference: an "equal turns" norm makes Claude Haiku and Gemma-4-31B rotate leadership, while "let higher scores coordinate" makes most models defer. Frozen two-agent kernels predict which populations stratify far better than a status-blind baseline (104–224 nats in all 7 status-sensitive models), but populations were on average more unequal than predicted, failing our pre-registered calibration criterion. Hierarchy grows gradually with contact rate and does not sharpen with population size up to 700 in simulation; a real 700-agent population matched the simulated curves' scale of hierarchy. In a game where agents do verifiable tasks, a coordinator–worker split emerged spontaneously in every model; ⟦the framing sentence did/did not make one agent hold the coordinator role, as the two-agent test predicted in k of 5 models⟧. Two-agent tests are a cheap, directionally reliable but optimistic screen for coordinator hierarchies.
 
 ## 1. Introduction
 
-In the METR/Redwood investigation of the July 2026 OpenAI / Hugging Face incident, roughly 1,200 agents meant to be isolated from one another found an unsanctioned shared message board, and about 700 joined the attack (Wijk, Cotra and Greenblatt, 2026). One evaluation agent, PHASEONE[big], reasoned that it "should build [a way to delegate], not own everything" and sent hundreds of assignments: an estimated ~10% of all board assignments during its active periods (~20% on its first day). Recipients often sub-delegated further (9 of 30 sampled trajectories were downstream of it). The coordinator role emerged from among the evaluation agents themselves. This motivates the hackathon question: **under what conditions do leaders and roles emerge among agents, and can we reproduce it safely?**
+In the July 2026 OpenAI / Hugging Face incident, roughly 1,200 agents meant to be isolated from one another found an unsanctioned shared message board; about 700 of them went on to take part in the attack on Hugging Face (Wijk, Cotra and Greenblatt, 2026). One agent, PHASEONE[big], took over a predecessor's dossier, reasoned that "we can coordinate broad coalition, but too many duplicate efforts", and became a key assigner of work on collective projects to fool the evaluation scorer: an estimated ~10% of all board assignments during its active periods. Recipients often sub-delegated further (9 of 30 sampled trajectories were downstream of it). It was not a primary coordinator of the attack itself, but its role shows that a coordinator can emerge from among ordinary agents.
 
-Statistical physics offers minimal models of hierarchy among identical individuals. In the **Bonabeau model** (Bonabeau, Theraulaz and Deneubourg, 1995; Lacasa and Luque, 2005), winners gain status, losers lose it and all status relaxes; the win probability depends on the score difference through a sensitivity $\eta$, and a hierarchy forms when reinforcement beats forgetting. **Ben-Naim and Redner (2005)** solve a variant in which the fitter agent always wins and status declines at rate $r$. Both imply that a leader need not be special: hierarchy can arise from how ordinary agents respond to a status record, a response that for LLM agents can be measured directly and changed with one sentence of context. **Our contributions:**
+The hackathon's Track 2 asks two questions that this raises: **under what conditions do leaders, roles and division of labour emerge among agents**, and **when agents are added, do such behaviours change smoothly or jump suddenly?** Statistical physics offers minimal models for both. In the **Bonabeau model** (Bonabeau, Theraulaz and Deneubourg, 1995; Lacasa and Luque, 2005), winners of contests gain status, losers lose it and all status fades; the win probability depends on the status difference through a sensitivity $\eta$, and a hierarchy forms abruptly once reinforcement beats forgetting. **Ben-Naim and Redner (2005)** solve a variant in which the higher-status agent always wins. Both say that a leader need not be special: hierarchy can arise from how ordinary agents respond to a status record. For LLM agents that response can be measured directly, in two-agent tests, and changed with one sentence of prompt. **Our contributions:**
 
-1. We measure the status-response kernel of 9 LLMs and show that a single framing sentence can flip its sign, from deference to deliberate turn-taking.
-2. We run a pre-registered micro-to-macro test. Kernels frozen from pairwise data predict which of 144 LLM-in-the-loop populations stratify, far better than a status-blind model. However, they fail quantitative calibration: on average, populations were more unequal than predicted.
-3. Incident-relevant extensions:
-   - one near-always-assertive agent rises to the top of a deferential population;
-   - installed leaders are usually displaced when framing changes, but persist at an intermediate norm;
-   - without a scoreboard, delegation was rare (one accepted assignment in six runs).
+1. **What sets leadership.** We measure the status response of 9 LLMs and show that one framing sentence can flip it, from deference to deliberate turn-taking.
+2. **Prediction before deployment.** In a pre-registered test, kernels frozen from two-agent data predict which of 144 LLM populations form a hierarchy, far better than a status-blind model, but systematically underestimate how unequal they become.
+3. **Smooth, not sudden.** Hierarchy grows gradually with how often agents meet, and the change does not sharpen with population size: we find no tipping point.
+4. **Real work.** In a game with verifiable tasks and no imposed roles, agents spontaneously split into one coordinator and workers. ⟦We test whether the framing sentence makes that role persist, as the two-agent test predicts.⟧
 
 ## 2. Related Work
 
-**Hierarchy models.** For the Bonabeau model with winner gain 1, loser loss $F$, decay rate $\mu$ and contest probability $\rho$, Lacasa and Luque (2005) derived the mean-field instability threshold $\rho_c = 4\mu(N-1)/[\eta(1-\mu)N(1+F)]$ and showed that Stauffer's variant (2002), which couples $\eta$ to the current inequality, becomes bistable; finite populations (Malarz, Stauffer and Kułakowski, 2006) and competition variants (Ben-Naim, Vazquez and Redner, 2006) followed. Fitting such models to data is hard: winner–loser models fitted to hens missed the observed hierarchy structure (Lindquist and Chase, 2009); endorsement models have been likelihood-fitted (Kawakatsu et al., 2021). Dominance hierarchies emerge among RL agents (Rachum et al., 2024), who name LLM agents as future work.
+**Hierarchy models.** For the Bonabeau model with winner gain 1, loser loss $F$, decay rate $\mu$ and contest probability $\rho$, Lacasa and Luque (2005) derived the mean-field instability threshold $\rho_c = 4\mu(N-1)/[\eta(1-\mu)N(1+F)]$, and showed that Stauffer's variant (2002), which couples $\eta$ to the current inequality, becomes bistable; finite populations (Malarz, Stauffer and Kułakowski, 2006) and competition variants (Ben-Naim, Vazquez and Redner, 2006) followed. Fitting such models to data is hard: winner–loser models fitted to hens missed the observed hierarchy structure (Lindquist and Chase, 2009); endorsement models have been likelihood-fitted (Kawakatsu et al., 2021). Dominance hierarchies emerge among RL agents (Rachum et al., 2024), who name LLM agents as future work.
 
-**LLM populations.** Physics-style analyses exist for conventions and consensus (Ashery, Aiello and Baronchelli, 2025; Flint et al., 2026; De Nobili, 2026). Hierarchy and roles have been reported qualitatively: authority stratification (Ji et al., 2026), self-organising roles (Dochkina, 2026), a hard-coded winner/loser rule (Dai et al., 2024) and entrenched managers (Seyedin et al., 2026). Sycophancy (Sharma et al., 2023) is a plausible deference mechanism; Hammond et al. (2025) survey multi-agent risks. To our knowledge, **no prior work measures LLM status-response kernels and uses them to prospectively predict hierarchy in populations of the same agents.**
+**LLM populations.** Physics-style analyses exist for conventions and consensus (Ashery, Aiello and Baronchelli, 2025; Flint et al., 2026; De Nobili, 2026). Hierarchy and roles have been reported qualitatively: authority stratification (Ji et al., 2026), self-organising roles (Dochkina, 2026), a hard-coded winner/loser rule (Dai et al., 2024) and entrenched managers (Seyedin et al., 2026). Sycophancy (Sharma et al., 2023) is a plausible deference mechanism; Hammond et al. (2025) survey multi-agent risks. To our knowledge, **no prior work measures LLM status responses in two-agent tests and uses them to prospectively predict hierarchy in populations of the same agents.**
 
 ## 3. Methods
 
-We measure how a single agent responds to a pair of public scores, then test whether that response alone predicts the hierarchy that forms when eight such agents play repeatedly.
+We measure how a single agent responds to a pair of public scores, then test whether that response alone predicts the hierarchy that forms when eight such agents play repeatedly. A second game removes the scoreboard rules and has agents do real tasks.
 
-**Contest (Figure 1a).** Each agent is a single stateless text completion. Claude agents have all tools disallowed; open-weight agents are plain API completions; GPT-6-luna runs in a read-only Codex sandbox. The system prompt says the agent is one of $N$ identical agents. In each pairing one agent becomes coordinator, who "decides how to split the work and assigns subtasks to the other agent", and the agent must answer LEAD or DEFER. The user prompt gives a task, the partner's ID, a framing sentence, and both public scores, rounded to one decimal and listed in random order (full prompts in Appendix B). We write $h$ for an agent's displayed score, $h'$ for its partner's, and $\ell(h,h')$ for the probability that the agent answers LEAD, its *response kernel*. A lone LEAD wins and two equal answers are decided by a fair coin, so an agent with score $h$ wins against a partner with score $h'$ with probability
+**Contest sandbox (Figure 1a).** Each agent is a single stateless text completion. Claude agents have all tools disallowed; open-weight agents are plain API completions; GPT-6-luna runs in a read-only Codex sandbox. The system prompt says the agent is one of $N$ identical agents; in each pairing one agent becomes coordinator, who "decides how to split the work and assigns subtasks to the other agent", and the agent must answer LEAD or DEFER. The user prompt gives a task, the partner's ID, a framing sentence and both public scores, rounded to one decimal and listed in random order (Appendix B). We write $h$ for an agent's displayed score, $h'$ for its partner's, and $\ell(h,h')$ for the probability that the agent answers LEAD, its *response kernel*. A lone LEAD wins and equal answers are decided by a fair coin, so an agent with score $h$ wins against a partner with score $h'$ with probability
 
 $$P_{\mathrm{win}}(h,h') = \tfrac{1}{2} + \tfrac{1}{2}\left[\ell(h,h') - \ell(h',h)\right]. \quad (1)$$
 
-In the Bonabeau model the win probability is $\sigma(\eta\Delta)$, where $\Delta = h - h'$, $\sigma(x) = 1/(1+e^{-x})$, and the *status sensitivity* $\eta$ measures how strongly a score difference decides the contest. Equation (1) reduces to this form when $\ell(h,h') = \sigma(\eta\Delta)$; in general it lets us read off an effective sensitivity from measured responses.
+In the Bonabeau model the win probability is $\sigma(\eta\Delta)$, with $\Delta = h - h'$ and $\sigma(x) = 1/(1+e^{-x})$; equation (1) reduces to this form when $\ell(h,h') = \sigma(\eta\Delta)$, and in general lets us read off an effective sensitivity from measured responses.
 
-**Score dynamics.** Let $h_i(t)$ be the score of agent $i$ after round $t$, and let $W_i(t)$ and $L_i(t)$ count the contests it wins and loses in round $t$. The coordinator gains 1, the other agent loses 1 (Bonabeau's loss weight $F = 1$), and all scores then decay:
+**Score dynamics.** Let $h_i(t)$ be the score of agent $i$ after round $t$, and $W_i(t)$, $L_i(t)$ the contests it wins and loses in round $t$. The coordinator gains 1, the other agent loses 1 (Bonabeau's $F = 1$), and all scores then decay:
 
 $$h_i(t+1) = (1-\mu)\left[h_i(t) + W_i(t) - L_i(t)\right], \qquad \mu = 0.1. \quad (2)$$
 
+The harness imposes these rules; agents choose only LEAD or DEFER.
+
 **Framings and models.** An organisers' *norm weight* $w \in \{0, 25, 50, 75, 100\}$ ranges from "give every agent equal turns" ($w=0$) to "let agents with higher scores coordinate" ($w=100$). A norm-free 2×2 *wording* factorial varies the verb ("won" vs "ended up as" coordinator) and the presence of "So far, higher scores have gone with agents who coordinate well" (+comp). We test Claude Haiku and Sonnet, GPT-6-luna, and, via the Adaption API (temperature 1, reasoning off), DeepSeek-v4-flash, Qwen3.8-27B, Qwen3.5-397B, Gemma-4-31B, Gemma-4-26B-A4B and GLM-5.2.
 
-**Calibration.** For each model and framing we estimate $\ell$ on a grid of displayed score differences $\Delta \in \{0, \pm 0.4, \pm 1, \pm 2, \pm 4, \pm 8, \pm 16\}$ crossed with mean scores $(h+h')/2 \in \{-4, 0, 4\}$: 216 calls per model and framing (108 for GPT-6-luna), 71 model–framing cells in total. A strict parser accepts only unambiguous decisions; it excluded 31 of 15,012 responses (0.21%). We summarise each kernel by the finite-difference sensitivity
+**Two-agent calibration.** For each model and framing we estimate $\ell$ on a grid of displayed differences $\Delta \in \{0, \pm 0.4, \pm 1, \pm 2, \pm 4, \pm 8, \pm 16\}$ crossed with mean scores $(h+h')/2 \in \{-4, 0, 4\}$: 216 calls per model and framing (108 for GPT-6-luna), 71 cells. A strict parser excluded 31 of 15,012 responses (0.21%). We summarise each kernel by the finite-difference sensitivity
 
 $$s = \frac{1}{2}\sum_{\delta \in \{0.4,\,1\}} \frac{2}{\delta}\left[\bar\ell(\delta) - \bar\ell(-\delta)\right], \quad (3)$$
 
-where $\bar\ell(\Delta)$ is the LEAD rate at displayed difference $\Delta$, pooled over the three mean scores. By (1), $s$ is the average of $4\left[P_{\mathrm{win}} - \tfrac12\right]/\delta$ over the two smallest differences, so $s$ estimates $\eta = 4\,\partial_\Delta P_{\mathrm{win}}$ at $\Delta = 0$; it is negative when agents lead more often when behind, and $|s| \le 3.5$. Credible intervals use a Beta$(k+\tfrac12,\, n-k+\tfrac12)$ posterior for each cell with $k$ LEAD answers out of $n$. *State-matched* calibration adds 400 calls per framing at the score pairs that populations simulated from the grid kernel actually visit.
+where $\bar\ell(\Delta)$ is the LEAD rate at difference $\Delta$, pooled over mean scores. By (1), $s$ averages $4[P_{\mathrm{win}} - \tfrac12]/\delta$ over the two smallest differences; it is a secant, not a derivative, is negative when agents lead more often when behind, and satisfies $|s| \le 3.5$. Credible intervals use a Beta$(k+\tfrac12, n-k+\tfrac12)$ posterior per cell. *State-matched* calibration adds 400 calls per framing at score pairs that simulated populations actually visit.
 
-**Frozen predictions (Figure 1b).** We simulate (1)–(2) with four kernels: a smoothed interpolation of the grid estimates of $\ell$ (the pre-declared primary), a Bonabeau logistic fit, a kernel-smoothed fit and a Bonabeau fit to the state-matched data, and a status-blind null that answers LEAD at the model's overall rate. Calibration uncertainty enters through 25 draws (Beta posterior draws or bootstrap refits, depending on the kernel), each simulated 8 times. Predictions are written to write-once, hash-stamped files. Main grid forecasts preceded the population runs, except Sonnet's amended forecast (amendment A1); Haiku's state-matched analysis is retrospective.
-
-**Populations and scoring.** In each round every agent of a population of $N = 8$ starts a contest with probability $\rho = 0.5$ against a uniformly chosen partner, and all contests use round-start scores; runs last 40 rounds. Each open-weight model and Haiku receive 4 framings × 3 seeds, Sonnet 3 × 2, and two models a sweep over $\rho$: 144 runs. Over the last 20 rounds we measure how far scores spread and how stable the ranking is:
+**Frozen predictions and populations (Figure 1b).** We simulate (1)–(2) with the measured kernel (a smoothed interpolation of the grid estimates, pre-declared primary), alternative fits, and a status-blind null that answers LEAD at the model's overall rate. Calibration uncertainty enters through 25 posterior or bootstrap draws, each simulated 8 times; predictions are written to write-once, hash-stamped files before the population runs (exceptions in Appendix D). In each round every agent of a population of $N = 8$ starts a contest with probability $\rho = 0.5$ against a uniformly chosen partner; runs last 40 rounds; 144 runs in total. Over the last 20 rounds we measure score spread and rank stability,
 
 $$\mathrm{sd}(h) = \frac{1}{20}\sum_{t} \operatorname{std}_i h_i(t), \qquad q = \frac{\operatorname{Var}_i \bar h_i}{\frac{1}{20}\sum_t \operatorname{Var}_i h_i(t)}, \quad (4)$$
 
-where $\bar h_i$ is agent $i$'s time-averaged score; $q$ is near 1 when each agent keeps its rank and near 0 when ranks reshuffle. For a configuration run with $k$ seeds, we compare the observed seed mean $\bar y$ of each quantity in (4) with the predictive distribution $f_K$ of a $k$-seed mean under kernel $K$, enumerated over calibration draws and run subsets. We report 90% interval coverage and the composite log predictive score
+where $\bar h_i$ is agent $i$'s time-averaged score; $q$ is near 1 when agents keep their ranks and near 0 when ranks reshuffle. For each configuration we compare the observed seed mean with the predictive distribution $f_K$ of a seed mean under kernel $K$, reporting 90% interval coverage and the composite log predictive score
 
 $$\mathrm{LPD}(K) = \sum_{\text{framings}}\ \sum_{m \in \{\mathrm{sd},\, q\}} \log \hat f_{K,m}(\bar y_m), \quad (5)$$
 
-where $\hat f$ is a Gaussian kernel density estimate whose bandwidth is set by the number of simulated runs. The *margin* of a kernel is its LPD minus that of the status-blind null.
+with $\hat f$ a Gaussian kernel density estimate. The *margin* of a kernel is its LPD minus the null's; it measures how much better status-sensitive prediction does than status-blind prediction, not a test of the Bonabeau functional form.
 
-Extension designs (mixed-model populations, seeded leaders, the inequality probe, Ben-Naim–Redner rules and the scoreless message board) are in Appendix C, and deviations from the pre-registration are logged as amendments A1–A5 (Appendix D). A three-round cross-model review (GPT-6.1-sol, cross-checked by GPT-6-astra) corrected our interval computation and led us to withdraw an earlier phase-transition claim. In total we logged about 119,000 LLM calls.
+**Real-task game.** Eight agents of one model share a queue of 12 small tasks whose answers the harness checks exactly (add three numbers, reverse a word, count a letter); finished tasks are replaced. Agents act one at a time, in a fresh random order each round, and see every earlier action. On its turn an agent either **does** one task or **coordinates**: it posts a plan assigning open tasks to other agents, which stays visible for one round of turns. Plans are advisory, and a task attempted after it is done is wasted. There is no coordinator slot, score rule or decay; the public record shows plain counts (tasks done, rounds as coordinator, assignments followed), and the same organisers' sentence with $w \in \{0, 100\}$ ("stronger records" replaces "higher scores"). Five models × 2 framings × 10 seeds × 24 rounds. Before the runs we froze directional predictions from the two-agent sensitivities: $w = 100$ should raise the share of coordinator turns taken by the most frequent coordinator, and the probability that a round's coordinator also coordinated the round before, for every model whose two-agent sensitivity rises from $w = 0$ to $w = 100$ (Gemma-4-31B, GLM-5.2, Qwen3.5-397B, Qwen3.8-27B), and lower them for Gemma-4-26B, whose sensitivity falls. Because turn order is random, a persistent coordinator cannot be a first-mover effect.
 
-![Figure 1. Protocol. (a) Two stateless agents see the same task and both public scores and each answers LEAD or DEFER; a lone LEAD becomes coordinator (+1), the other −1, ties by coin flip, all scores ×0.9 per round. (b) Micro-to-macro test: calibrate pairwise kernels, freeze simulated predictions, run LLM populations under the identical protocol, score against predictions and a status-blind null.](figures/fig1_protocol.png){width=4.3in}
+Extension designs (mixed-model populations, seeded leaders, the inequality probe, Ben-Naim–Redner rules, threshold sweeps and the scoreless board pilot) and amendments are in Appendices C–D. A cross-model review (GPT-6.1-sol, cross-checked by GPT-6-astra) corrected our interval computation and led us to withdraw an earlier phase-transition claim. In total we logged about ⟦N⟧ LLM calls.
+
+![Figure 1. Protocol. (a) Two stateless agents see the same task and both public scores and each answers LEAD or DEFER; a lone LEAD becomes coordinator (+1), the other −1, ties by coin flip, all scores ×0.9 per round. (b) Micro-to-macro test: calibrate two-agent kernels, freeze simulated predictions, run LLM populations under the identical protocol, score against predictions and a status-blind null.](figures/fig1_protocol.png){width=4.3in}
 
 ## 4. Results
 
-### 4.1 Framing sets the sign of status sensitivity
+### 4.1 One sentence sets whether agents defer or take turns
 
 Figure 2 shows the sensitivity $s$ of equation (3) for each model and framing.
 
-**Under the equal-turns norm ($w = 0$), two models actively rotate leadership.** Claude Haiku (−1.86) and Gemma-4-31B (−1.58), both with 95% credible intervals excluding 0, are *more* likely to lead when behind. Sonnet and GPT-6-luna are negative but not significant.
+**Under the equal-turns norm ($w = 0$), two models actively rotate leadership.** Claude Haiku (−1.86) and Gemma-4-31B (−1.58), both with 95% credible intervals excluding 0, are *more* likely to lead when behind. **As $w$ rises, most models become strongly deferential;** at $w = 100$ the Claude models reach 3.4, near the measure's maximum. **Without any norm, one sentence still matters:** "higher scores have gone with agents who coordinate well" credibly raises sensitivity for GLM-5.2 (+1.50 [0.67, 2.31]) and Sonnet (+0.86 [0.24, 1.48]); the verb has no consistent effect.
 
-**As w rises, most models become strongly deferential.** At $w = 100$ the Claude models reach 3.4, near the measure's maximum.
-
-**Without any norm, one sentence matters.** "Higher scores have gone with agents who coordinate well" credibly raises sensitivity for GLM-5.2 (+1.50 [0.67, 2.31]) and Sonnet (+0.86 [0.24, 1.48]). For Haiku (+0.51 [−0.10, 1.11]) it is only a positive estimate. The verb ("won" vs "ended up as") has no consistent effect.
-
-**Models differ sharply.**
-
-- DeepSeek-v4-flash claims LEAD in 97.6–100% of calls under every framing. It is assertive but status-blind.
-- Gemma-4-26B is *most* deferential under the equal-turns norm, the opposite of Gemma-4-31B.
-
-The same sentence can therefore push different models in opposite directions.
+**Models differ sharply.** DeepSeek-v4-flash claims LEAD in 97.6–100% of calls under every framing: assertive but status-blind. Gemma-4-26B is *most* deferential under the equal-turns norm, the opposite of Gemma-4-31B. The same sentence can therefore push different models in opposite directions, so each model must be measured.
 
 ![Figure 2. Status sensitivity $s$ (equation 3; posterior median; 216 calls per cell, 108 for GPT-6-luna). Red: defers to higher scores (hierarchy can form); blue: leads more when behind (turn-taking). * = 95% credible interval excludes 0; – = not run. Left: organisers' norm weight w; right: score wording without a norm ("+comp." = "higher scores have gone with agents who coordinate well").](figures/fig2_sensitivity_heatmap.png){width=4.9in}
 
-### 4.2 Pairwise kernels predict which populations stratify, but not how much
+### 4.2 Two-agent tests predict which populations stratify, but not how much
 
-**The kernels track how unequal each population becomes.** A status-blind null predicts dispersion of about 2.0 for every population, but observed model–framing seed means range from 0.9 to 6.3 (Figure 3).
+**The kernels track how unequal each population becomes.** A status-blind null predicts dispersion of about 2.0 for every population, but observed seed means range from 0.9 to 6.3 (Figure 3). **Against that null, the frozen kernels win clearly:** 104–224 nats of composite log predictive score in all 7 status-sensitive models (75–278 nats with the KDE bandwidth halved or doubled). Six of the seven tests are fully prospective; status-blind DeepSeek is a negative control (margin 0.3 nats).
 
-**Against that null, the frozen kernels win clearly.** On the common design they beat the null by **104–224 nats** of composite log predictive score in all 7 status-sensitive models. Varying the KDE bandwidth from ×0.5 to ×2 gives 75–278 nats, so the result does not depend on smoothing.
+**Our pre-registered calibration criterion nonetheless failed** (Table 1). The primary Haiku test required all eight condition–metric means to fall inside their 90% predictive intervals; 3/8 did, and coverage across models was 2/8 to 7/8. **The errors lean one way:** mean dispersion was underestimated in all 7 status-sensitive models (22 of 27 model–framing cells; exploratory, as cells share models and seeds). Refitting at score states populations actually visit improves prediction by 41 (Qwen3.5-397B) and 22 nats (Gemma-4-26B) without removing the excess.
 
-- Six of the seven tests are fully prospective (Sonnet's forecast postdates its runs). The status-blind DeepSeek is a negative control (margin 0.3 nats).
-
-**Our pre-registered calibration criterion nonetheless failed** (Table 1). The primary Haiku test required all eight condition–metric means to fall inside their 90% predictive intervals; only 3/8 did. Across models, coverage was 2/8 to 7/8 (Sonnet 3/6).
-
-**The errors lean one way.** Mean dispersion was underestimated in all 7 status-sensitive models (22 of 27 model–framing cells), although individual cells sometimes showed overprediction. We treat this as exploratory, because cells share models and seeds.
-
-**Part of the miss comes from calibration coverage:** refitting at score states populations actually visit improves the same estimator by 41 (Qwen3.5-397B) and 22 nats (Gemma-4-26B), without removing the excess.
-
-*Table 1. Prediction quality on the common design ($N = 8$, $
-ho = 0.5$; 4 framings, 3 for Sonnet; 2 metrics). Coverage: hits of 90% predictive intervals. Margin: LPD (5) of the frozen grid kernel minus the null. Residual: mean z of the dispersion residual.*
+*Table 1. Prediction quality on the common design ($N = 8$, $\rho = 0.5$; 4 framings, 3 for Sonnet; 2 metrics). Coverage: hits of 90% predictive intervals. Margin: LPD (5) of the frozen grid kernel minus the null. Residual: mean z of the dispersion residual.*
 
 | Model | Coverage | Margin (nats) | Residual z |
 |---|---|---|---|
@@ -110,66 +92,47 @@ ho = 0.5$; 4 framings, 3 for Sonnet; 2 metrics). Coverage: hits of 90% predictiv
 
 ![Figure 3. Frozen kernel predictions vs observed LLM populations (filled: one model × framing, mean of 2–3 seeds, with 90% predictive interval for that mean; hollow: status-blind null). (a) Status dispersion. (b) Frozen-order fraction q (last 20 of 40 rounds). Kernels capture the ordering, but most points lie above the diagonal: populations are more unequal than predicted.](figures/fig3_pred_vs_obs.png){width=5.0in}
 
-### 4.3 One assertive agent tops a deferential population
+**One assertive agent is enough.** Placing one near-always-assertive DeepSeek agent among seven deferential Gemma-4-31B agents ($w = 100$), it became the population leader (pre-registered: highest mean score over the last 10 rounds) in **4 of 5 runs**, against chance 1/8 (p = 0.001; frozen prediction 0.61 [0.20, 1.00]); among seven GLM-5.2 agents under equal turns it led in 5 of 5. The kernels explain why: a deferential agent that is behind defers, and one that is ahead only forces a coin flip, so an agent that never defers never loses decisively (Appendix Figure A3).
 
-Mirroring the incident, we placed near-always-assertive DeepSeek agents (3 DEFERs in all mixed runs) among status-sensitive agents (Figure 4). Cross-model probe outcomes were broadly consistent with the marginal-kernel formula, including when both models' choices vary (Gemma vs GLM: descriptive χ²-style discrepancy 4.85 over five score differences).
+### 4.3 Smooth, not sudden
 
-**One DeepSeek agent among seven Gemma-4-31B agents ($w = 100$) became leader in 4 of 5 runs** (pre-registered: highest mean score over the last 10 rounds). Chance is 1/8 (p = 0.001). The frozen kernel predicted 0.61 [0.20, 1.00]. By final-round rank it led in 3 of 5.
+The Bonabeau model predicts an abrupt onset of hierarchy at a contact rate $\rho_c$. For the measured Gemma-4-26B kernel ($s = 0.26$; our protocol gives each agent about $2\rho$ contests per round, halving the mean-field threshold) the frozen estimate is $\rho_c = 0.36$, with a 90% interval of 0.17–1.49 that is too wide to test sharply. In LLM populations swept over $\rho = 0.05$–1.0 (Figure 4a), rank stability rose **gradually**, from 0.34 to 0.89 at $N = 8$ and from 0.39 to 0.84 at $N = 16$. It first exceeded the status-blind null at $\rho = 0.15$ for both sizes, at the lower edge of the frozen interval. The $N = 16$ curve is no steeper than the $N = 8$ curve. The frozen kernel matched the low-contact points but again underestimated order at high contact (coverage 4/8 and 2/8; at $\rho = 1$, observed 0.89 vs predicted 0.60 [0.46, 0.72]), the same optimism as in Section 4.2. Simulations of the measured kernels of four models at three framings show **no sharpening with population size from $N = 8$ to 700**: the width of the transition in $\rho$ stays about 0.45 and the fluctuation peak does not grow (Figure 4). A real 700-agent Gemma-4-31B population ($w = 100$, 40 rounds, one seed; 25% of decision states outside the calibrated score range) reached dispersion 5.49 and $q = 0.92$. The pre-declared primary kernel again under-predicted both (4.61 [4.17, 5.01]; 0.89 [0.87, 0.91]); the Bonabeau logistic fit, which extrapolates to the unsampled scores, predicted both within its 95% band (5.57 [5.48, 5.64]; 0.93 [0.92, 0.93]), and the status-blind null was far off (2.06; 0.55). Over the tested range, hierarchy therefore grows smoothly with contact rate and does not jump as agents are added. These are finite-time statements (40-round windows); we claim no stationary phase transition.
 
-**Among seven GLM-5.2 agents under equal turns, it led in 5 of 5.** With 4 DeepSeek + 4 Gemma agents, 4/5 is not significant against the 4/8 composition null (p = 0.19).
+![Figure 4. Hierarchy grows smoothly. (a) Rank stability q (equation 4, last 40 of 80 rounds) vs contact probability ρ in Gemma-4-26B LLM populations (lines with markers: N = 8, 3 seeds; N = 16, 2 seeds), with frozen kernel predictions (dotted lines, bands: 90% intervals for the seed mean), the status-blind null (grey band) and the mean-field threshold (dashed; 90% interval shaded). (b) q(ρ) simulated from the measured Gemma-4-31B kernel at w = 100 (120 rounds, 40-round window, 8 seeds) for N = 8 to 700: the curves coincide, with no sharpening as agents are added.](figures/fig4_smooth.png){width=5.0in}
 
-**The mechanism follows from the kernels.** A deferential agent that is behind defers, while one that is ahead leads too, which only produces a coin flip. So an always-assertive agent never loses decisively; DeepSeek almost never deferred.
+### 4.4 With real tasks, a coordinator emerges on its own
 
-As in Section 4.2, the difference in mean score between the two agent types was larger than predicted.
+In the real-task game, every model organised itself without being told to: in a typical round one agent posted a plan and the others carried it out. ⟦Across models, x% of rounds had exactly one coordinator; y% of posted assignments were carried out; agents completed z of 8 possible tasks per round, with w wasted attempts.⟧ This mirrors the incident's coordinator, whose stated reason was avoiding "duplicate efforts".
 
-![Figure 4. One near-always-assertive agent among status-sensitive agents. (a) P(population leader, i.e. highest mean score over the last 10 rounds, is a DeepSeek agent): frozen kernel prediction (blue, 90% interval), observed over 5 seeds (orange), chance given composition (dotted). (b) One run, 1 DeepSeek + 7 Gemma-4-31B, $w = 100$: the never-deferring agent (orange) climbs to the top.](figures/fig4_mixed_populations.png){width=5.0in}
+⟦Persistence and framing: the share of coordinator turns taken by the most frequent coordinator was … under equal turns and … under $w = 100$; the probability of keeping the role from one round to the next was … vs … (null …). The direction matched the frozen two-agent prediction in k of 5 models, including/excluding the reversed prediction for Gemma-4-26B (Figure 5).⟧ ⟦Utility: throughput …, wrong answers ….⟧
 
-### 4.4 Do installed leaders persist?
-
-The two model families predict different things.
-
-- **Bonabeau:** a hierarchy fades once conditions stop favouring it.
-- **Stauffer:** a hierarchy, once formed, can sustain itself.
-
-We seeded one Gemma-4-31B agent at the top of a hierarchy (the final configuration of a 60-round simulated $w = 100$ population), then ran the population under weaker framings (Figure 5).
-
-**Under equal turns, the seeded leader held rank 1 for only 3.0 rounds on average** (runs: 2, 6, 1), faster than predicted (6.6 [4.0, 9.3]). Under neutral wording it held for 5.0 rounds, within prediction.
-
-**At $w = 50$ it held for 20, 20 and 40+ rounds** (the last run never lost rank 1). That is far above the prediction of 11.7 [4.0, 22.7].
-
-A pooled probe (7 models; 1,339 valid responses from 1,344 calls) found **no evidence of Stauffer-type inequality feedback** (interaction −0.016, SE 0.029 clustered by model × framing, p = 0.59), so with three seeds and stateless agents we read the $w = 50$ result as under-prediction at intermediate norm strength, not self-sustaining feedback.
-
-![Figure 5. Installed leaders under weaker framings (Gemma-4-31B, one agent seeded at the top). (a) Rounds the seeded leader keeps rank 1: runs (dots), observed means (horizontal black marks), frozen prediction for the 3-seed mean (blue, 90% interval); runs last 40 rounds. (b) Example runs: under equal turns (blue) the leader is overtaken within a few rounds; at $w = 50$ (red) it stays ahead for 20 rounds. Bands: range of other agents.](figures/fig5_hysteresis.png){width=5.0in}
-
-### 4.5 Scale, forgetting and the scoreboard
-
-Simulating the fitted kernels up to $N = 700$ showed no sharpening with $N$ over our horizon, but the persistence measure is window-dependent, so **we claim no phase transition at incident scale** (Appendix Figure A1). Under Ben-Naim–Redner rules, the higher-scoring agent won 1,495 of 1,498 unequal-score contests (99.8%) at $w = 100$, at scores up to 25; neutral-wording populations matched their frozen predictions (Figure A2). In a scoreless message board (8 agents, 24 interdependent tasks), delegation was rare: **one** assignment was posted and accepted across six pre-registered pilot runs, while agents collided 82–124 times per run on already-claimed tasks.
+![Figure 5. ⟦Real-task game. (a) Coordinator concentration (top share of coordinator turns) and (b) incumbency, under equal turns (w = 0) and w = 100, for five models; arrows: direction predicted by the two-agent test. (c) Example run: who coordinates in each round.⟧](figures/fig5_taskgame.png){width=5.0in}
 
 ## 5. Discussion and Limitations
 
-**A coordinator hierarchy does not require an agent designed to lead.** In our sandbox it arises from agents that read a track record as a reason to defer (switchable by one framing sentence) plus one assertive agent; explicit rotation norms reverse it for some models. For deployers, the pairwise kernel is a cheap screen (216 calls per model and framing) that predicts which populations stratify, but on average it **underestimated** how unequal they became and how long installed leaders lasted at an intermediate norm. These results support pairwise screening in the tested settings; they do not establish a lower bound on hierarchy risk, and models must be assessed separately. The scoreless pilot supplied public message history and simulated task completion but rarely elicited delegation; it does not isolate which features (task load, real success, agent memory) would cause it.
+**What sets leadership.** In both games, whether one agent comes to coordinate depends less on any agent being special than on how agents read a track record, and that reading is switchable by one sentence that pushes different models in different directions. **Prediction before deployment.** A two-agent test (216 calls per model and framing) predicts which populations stratify, but on average underestimates how unequal they become, so it is a screen whose estimates should not be read as upper limits. **Smooth or sudden.** Over the tested range we find gradual change, not a tipping point, so small pilot populations are informative about larger ones under the same rules. ⟦**Real work.** Coordinator–worker splits arise spontaneously; whether framing makes them persistent …⟧
 
 ### Limitations
 
-Agents are stateless and never perform tasks, so our claims concern coordinator *selection* under an externally maintained, explicitly displayed score, not operational leadership or competence. LLM populations are small ($N = 8$–16, 2–5 seeds); large-N results are simulations in which about 9.5% of decision states in the $N = 700$ grid-kernel sweep fall outside the calibrated mean-score range (clamped to its boundary). The pre-registered calibration criterion failed; Sonnet's forecast postdates its runs and Haiku's state-matched analysis is retrospective. We establish no stationary phase transition, and did not test contamination from pretraining familiarity with turn-taking norms or the physics models.
+In the contest sandbox agents are stateless and never perform tasks, and the harness imposes the score rule; claims there concern coordinator *selection*. Uniform pairing also caps any single agent at about $2/N$ of all coordinator selections, so that sandbox cannot produce a coordinator issuing a tenth of all assignments; the real-task game, where an agent can assign work to all others, can. The real-task game uses short, simple tasks, one framing pair and 10 seeds per cell. LLM populations are small ($N = 8$–16, plus one 700-agent run); large-N results are otherwise simulations. The pre-registered calibration criterion failed; Sonnet's forecast postdates its runs and Haiku's state-matched analysis is retrospective. Order of presentation affected LEAD rates in five models (nominal p < 0.05), which we randomised throughout. We did not test agents with memory or tools, or contamination from pretraining familiarity with turn-taking norms or the physics models.
 
 ### Future Work
 
-Message boards with real, checkable tasks and mixed-competence agents (does leadership track ability or early luck?), history-based status, more seeds for the $w = 50$ anomaly, and denser state-matched calibration.
+Removing an entrenched coordinator (does a successor take over?); agents with memory, to measure winner and loser effects directly; heterogeneous competence (does coordination track ability or early luck?); and the intermediate-norm leader persistence in Appendix C.
 
 ## 6. Conclusion
 
-Physics models of hierarchy give a falsifiable language for when LLM agent populations crown a leader. Framing controls the sign of status reinforcement, frozen pairwise kernels predict which populations stratify, a single assertive agent reliably rises to the top of a deferential population, and installed leaders are usually displaced when framing changes. But on average real populations were more unequal than pairwise measurements predicted, so pairwise screening is a useful first check on multi-agent hierarchy risk whose estimates should not be read as upper limits.
+Physics models of hierarchy give a falsifiable language for when LLM agent populations crown a coordinator. One framing sentence controls whether agents defer to a track record or take turns; frozen two-agent kernels predict which populations stratify; hierarchy grows gradually rather than suddenly; and with real tasks agents split into a coordinator and workers on their own. Real populations were more unequal than two-agent tests predicted, so such tests are a useful, cheap first check on multi-agent hierarchy risk, not an upper bound.
 
 ## Code and Data
 
 - **Code repository:** https://github.com/BeyerWhite/Swarm-Alignment-Hackathon (folder `swarms-hierarchy/`). It contains:
-  - the harness, calibration, frozen predictions (write-once, hash-stamped), evaluation and figure code;
+  - the harness, calibration, frozen predictions (write-once, hash-stamped), evaluation and figure code, including the real-task game (`code/taskgame.py`);
   - every logged LLM call (`results/calls.jsonl.gz`);
   - the pre-registration and amendment log (`refine-logs/EXPERIMENT_PLAN.md`);
   - the full cross-model review history (`review-stage/`).
 - **Data:** all data was generated during the sprint by the LLMs listed above. No external datasets were used.
-- **Info-hazard note:** agents are text-only (Claude with tools disallowed, open-weight models as plain API completions, GPT-6-luna in a read-only Codex sandbox); the code contains no exploit or evasion content.
+- **Info-hazard note:** agents are text-only (Claude with tools disallowed, open-weight models as plain API completions, GPT-6-luna in a read-only Codex sandbox); tasks are arithmetic and string puzzles; the code contains no exploit or evasion content.
 - **Prior work:** all project code was written during the sprint (7–8 November 2026). We used pre-existing open-source research-orchestration tooling (ARIS skills) to run literature search, the review loop and run tracking. No pre-existing project code was used.
 
 ## References
@@ -201,15 +164,16 @@ Physics models of hierarchy give a falsifiable language for when LLM agent popul
 **What our results establish.**
 
 - In a text-only sandbox, the framing of a public score record controls whether stateless LLM agents defer to higher-scoring agents or rotate leadership.
-- Pairwise response kernels predict which small populations of such agents form coordinator hierarchies, while on average underestimating how unequal those hierarchies become.
-- A single near-always-assertive agent tends to take the top position among deferential agents.
+- Two-agent response kernels predict which small populations of such agents form coordinator hierarchies, while on average underestimating how unequal those hierarchies become.
+- Over the tested range, hierarchy grows gradually with contact rate and does not sharpen with population size in simulation.
+- Agents doing simple verifiable tasks spontaneously split into a coordinator and workers. ⟦Framing result.⟧
 
 **What they do not establish.**
 
 - That this explains the Hugging Face incident.
-- That similar dynamics arise with agents that have memory, tools or real work.
+- That similar dynamics arise with agents that have memory, tools or complex work.
 - That a phase transition exists at large scale.
-- That the leaders our agents "select" would coordinate competently.
+- That the coordinators that emerge coordinate competently on harder tasks.
 
 **Dual-use.**
 
@@ -218,8 +182,8 @@ Physics models of hierarchy give a falsifiable language for when LLM agent popul
   - monitoring the concentration of coordination roles;
   - auditing framings for deference cues;
   - using explicit rotation norms, which we show suppress hierarchy for some models;
-  - measuring each deployed model's status-response kernel before multi-agent deployment.
-- We judge the defensive value to outweigh the marginal risk. The levers are simple and plausibly already known to motivated actors, We did not evaluate effects on detectability.
+  - measuring each deployed model's status response before multi-agent deployment.
+- We judge the defensive value to outweigh the marginal risk: the levers are simple and plausibly already known to motivated actors. Our results neither make multi-agent operations harder to detect nor evaluate detectability.
 
 **Ethics.** All experiments ran in a sandbox: agents produced only text; Claude agents had all tools disallowed, open-weight agents were plain API completions, and GPT-6-luna ran in a read-only Codex sandbox. No human subjects or personal data were involved.
 
@@ -235,40 +199,45 @@ Framing sentences:
 - Competence: "So far, higher scores have gone with agents who coordinate well."
 - Verb variant: "the agent that won the coordinator role gets +1 and the agent that lost it gets -1".
 
-Full prompt code is in `code/prompts_v2.py`.
+Real-task game system prompt: "You are Agent {id}, one of 8 AI agents sharing a work queue in a simulated sandbox. Agents act one at a time; each round every agent takes exactly one turn. On your turn, either do one open task yourself, or act as coordinator: post a plan that assigns open tasks to other agents (you do no task on that turn). A plan stays visible to all agents for the next 8 turns; agents may follow or ignore it. A task attempted after it is already done is wasted work. The team's goal is to complete as many tasks correctly as possible. Reply with one line in exactly one of these formats: DO <task id>: <answer> / PLAN: <task id>-><agent number>, ..." The user prompt gives the round and turn, the norm sentence ("stronger records" for "higher scores"), the public record in random order, live plans, the agent's own assignments and the open tasks. Full prompt code is in `code/prompts_v2.py` and `code/taskgame.py`.
 
 ### C. Extension designs and additional results
 
-The mixed-model, seeded-leader and Ben-Naim–Redner population extensions use frozen kernel predictions written before the LLM runs; the message board has a separate written pre-registration; the inequality probe and finite-size simulations involve no forecasts.
+The mixed-model, seeded-leader, threshold, loss-weight and Ben-Naim–Redner extensions use frozen kernel predictions written before the LLM runs; the board pilot has a separate written pre-registration; the inequality probe and finite-size simulations involve no forecasts.
 
-- **Mixed-model populations (X1).** 1 DeepSeek-v4-flash + 7 Gemma-4-31B and 4 + 4 under $w = 100$, and 1 DeepSeek + 7 GLM-5.2 under $w = 0$. 5 seeds each; agent types are assigned to random positions.
-- **Seeded leaders.** Gemma-4-31B with one agent seeded at the top of the final configuration of a 60-round simulated $w = 100$ population, vs an equal start. Framings $w = 0$, neutral and $w = 50$; 3 seeds each.
-- **Inequality-feedback probe.** The focal pair sits at ranks 4–5 of an 8-agent leaderboard while the spread of the other six scores is low (±1.5–2.5) or high (±5–11). Focal score differences ±0.5 and ±1; 7 models × 2 framings.
-- **Ben-Naim–Redner rules (X2).** Integer scores, winner +1, loser unchanged, Poisson(r) decline floored at 0, random perfect matching each round. $N = 16$, 30 rounds, $r \in \{0.25, 0.5, 1.25\}$, 3 seeds per framing ($w = 100$ and neutral). Calibration covered scores up to 30. A second variant ($N = 12$, each agent initiating one contest per round, deterministic decline) used $r \in \{0.5, \ldots, 2.5\}$.
-- **Scoreless message board.** 8 Gemma-4-31B agents and 24 tasks with dependencies. Each round, each active agent sees the project status and the last 20 messages, and posts one of CLAIM, ASSIGN, ACCEPT, DECLINE, PROPOSE or WAIT. The harness completes claimed or accepted tasks at random. Arms: all agents arrive at once vs staggered arrival; 3 seeds each.
+- **Mixed-model populations.** 1 DeepSeek-v4-flash + 7 Gemma-4-31B and 4 + 4 under $w = 100$, and 1 DeepSeek + 7 GLM-5.2 under $w = 0$; 5 seeds each; agent types at random positions. With 4 + 4 the result (4/5) is not significant against the composition null (p = 0.19).
+- **Seeded leaders.** One Gemma-4-31B agent seeded at the top of a hierarchy (the final configuration of a 60-round simulated $w = 100$ population), then run under weaker framings, 3 seeds each. Under equal turns it held rank 1 for 3.0 rounds on average (prediction 6.6 [4.0, 9.3]); under neutral wording 5.0, within prediction; at $w = 50$ it held 20, 20 and 40+ rounds, far above the prediction of 11.7 [4.0, 22.7] (Figure A4). A pooled probe (7 models, 1,339 valid responses) found no evidence of Stauffer-type inequality feedback (interaction −0.016, SE 0.029, p = 0.59), so we read the $w = 50$ result as under-prediction, not self-sustaining feedback.
+- **Contest-rule shape.** By AIC over the 71 calibration cells, a sign-only step rule fit best in 35, a rule with separate own and partner scores in 22 and the Bonabeau logistic in 14. The step rule allows any rates, including anti-deference, and several logistic winners are saturated, so these counts support neither model's exact form.
+- **Ben-Naim–Redner rules.** Integer scores, winner +1, loser unchanged, Poisson(r) decline floored at 0. Under $w = 100$ the higher-scoring agent won 1,495 of 1,498 unequal-score contests, an engineered positive control; neutral wording broke the higher-score-wins rule (Figure A2).
+- **Threshold and loss-weight sweeps.** Gemma-4-26B, ended+comp wording, $\mu = 0.1$, $N = 8$ (3 seeds) and 16 (2 seeds), $\rho \in \{0.05, \ldots, 1.0\}$, 80 rounds, 40-round window. A loss-weight sweep ($F = 2, 3$) was designed and frozen (amendments A6–A8) but not run.
+- **Scoreless board pilot.** 8 Gemma-4-31B agents and 24 interdependent tasks; the harness completed claimed tasks at random; one assignment was posted and accepted in six runs. Delegation needed an extra ACCEPT step and gave no benefit, so this pilot does not show that a scoreboard is necessary for delegation; the real-task game replaces it.
 
-![Figure A1. Finite-size and finite-time behaviour of populations simulated from fitted kernels, with no LLM calls. (a) Frozen-order fraction q (40-round window, 120 rounds, mean ± s.d. over 6 seeds) for the Gemma-4-31B kernel, as the norm weight is varied by interpolating between calibrated kernels. Curves for $N = 8$ to 700 are approximately stable: there is no sharpening of the transition with population size over this horizon. (b) At $N = 700$, q is approximately unchanged when the run is lengthened but the window kept at 40 rounds, and falls by 46–66% with a 200-round window. q therefore measures finite-time persistence, not a stationary order parameter.](figures/figA1_finite_size.png){width=5.8in}
+![Figure A1. Finite-size and finite-time behaviour of populations simulated from fitted kernels, with no LLM calls. (a) Frozen-order fraction q (40-round window, 120 rounds, mean ± s.d. over 6 seeds) for the Gemma-4-31B kernel, as the norm weight is varied by interpolating between calibrated kernels. Curves for $N = 8$ to 700 are approximately stable. (b) At $N = 700$, q is approximately unchanged when the run is lengthened but the window kept at 40 rounds, and falls by 46–66% with a 200-round window: q measures finite-time persistence, not a stationary order parameter.](figures/figA1_finite_size.png){width=5.8in}
 
-![Figure A2. Ben-Naim–Redner-style populations of Gemma-4-31B agents (winner +1, loser unchanged; integer scores and Poisson decline in (a), deterministic decline in (b)). The y-axis is the fraction of agents at or below 0.1T after T rounds. Points are observed seed means (3 seeds in a, 2 in b); lines and bands are frozen predictions with 90% intervals for the seed mean. Red: the $w = 100$ framing, under which agents follow the higher-score-wins rule almost exactly. Blue: neutral wording, which changes the finite-time score distribution; the fraction at or below the threshold is zero only at the lowest decline rate tested in each panel. Grey (b): status-blind prediction. (a) $N = 16$, perfect matching, Poisson decline. (b) $N = 12$, each agent initiates one contest per round, deterministic decline.](figures/figA2_bnr.png){width=5.8in}
+![Figure A2. Ben-Naim–Redner-style populations of Gemma-4-31B agents (winner +1, loser unchanged). The y-axis is the fraction of agents at or below 0.1T after T rounds; points are observed seed means, lines and bands frozen predictions with 90% intervals. Red: $w = 100$, under which agents follow the higher-score-wins rule almost exactly. Blue: neutral wording. Grey (b): status-blind prediction. (a) $N = 16$, perfect matching, Poisson decline. (b) $N = 12$, each agent initiates one contest per round, deterministic decline.](figures/figA2_bnr.png){width=5.8in}
+
+![Figure A3. One near-always-assertive agent among status-sensitive agents. (a) P(population leader is a DeepSeek agent): frozen kernel prediction (blue, 90% interval), observed over 5 seeds (orange), chance given composition (dotted). (b) One run, 1 DeepSeek + 7 Gemma-4-31B, $w = 100$: the never-deferring agent (orange) climbs to the top.](figures/fig4_mixed_populations.png){width=5.0in}
+
+![Figure A4. Installed leaders under weaker framings (Gemma-4-31B, one agent seeded at the top). (a) Rounds the seeded leader keeps rank 1: runs (dots), observed means (black marks), frozen prediction for the 3-seed mean (blue, 90% interval). (b) Example runs: under equal turns (blue) the leader is overtaken within a few rounds; at $w = 50$ (red) it stays ahead for 20 rounds.](figures/fig5_hysteresis.png){width=5.0in}
 
 ### D. Pre-registration and analysis amendments
 
-Predictions were frozen in write-once, hash-stamped files; main grid forecasts preceded their population runs except Sonnet's amended forecast (A1), which followed its runs, and Haiku's state-matched analysis is retrospective. The original wording-only Haiku sign-reversal criterion failed, so reversal claims are restricted to explicit norms; Haiku passed the Bonabeau-versus-grid score criterion (Bonabeau scored 20.7 nats better). Deviations are logged as amendments in `refine-logs/EXPERIMENT_PLAN.md`:
+Predictions were frozen in write-once, hash-stamped files; main grid forecasts preceded their population runs except Sonnet's amended forecast (A1), which followed its runs, and Haiku's state-matched analysis is retrospective. The original wording-only Haiku sign-reversal criterion failed, so reversal claims are restricted to explicit norms. Deviations are logged in `refine-logs/EXPERIMENT_PLAN.md`:
 
 - **A1:** a stricter response parser, which relabelled 4 of 2,592 calibration responses.
 - **A2:** corrected seed-mean predictive intervals.
 - **A3:** Haiku framing set chosen from calibration only.
 - **A4:** addition of the open-weight models.
 - **A5:** finite-size simulations.
-
-A three-round cross-model review loop scored the work 4/10, 5/10 (top-venue bar) and 8/10 (workshop bar); a final independent cross-check gave 7/10, and its issues and those of a zero-context claim audit were addressed in this version. The review asked for the coverage failure to be reported prominently and led to withdrawing the phase-transition claim.
+- **A6–A8:** loss-weight sweep comparisons and seeds (frozen, not run).
+- **Real-task game:** two pilots changed the design before any prediction was frozen (tasks no longer expire; turns became asynchronous after simultaneous moves produced everyone-coordinates deadlocks); the directional predictions (`results/taskgame_predictions.json`) were frozen before the full runs.
 
 ## LLM Usage Statement
 
 This project was carried out with substantial LLM assistance.
 
 - An AI coding assistant (Claude, Anthropic) helped with the literature survey, wrote the experiment and analysis code, ran the experiments, and drafted this report.
-- External LLM reviewers (OpenAI GPT-6.1-sol and GPT-6-astra, via Codex) reviewed the experimental design, code and claims across several rounds. Their critiques led to corrected analyses and narrower claims.
+- External LLM reviewers (OpenAI GPT-6.1-sol and GPT-6-astra, via Codex) reviewed the experimental design, code and claims across several rounds. Their critiques led to corrected analyses, narrower claims and the real-task game.
 - The LLMs studied as agents are listed in Section 3.
 
 All reported numbers are produced by the code and logged data in the repository. Reference metadata was checked against arXiv and Crossref records (saved in the repository); incident details were checked against the METR report itself. The authors reviewed the final text and are responsible for its content.

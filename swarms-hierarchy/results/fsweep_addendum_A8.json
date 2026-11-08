@@ -1,0 +1,37 @@
+{
+ "written": "2026-11-08T02:33:42",
+ "written_before_fsweep_run_data": true,
+ "extra": [
+  {
+   "F": 3.0,
+   "rho": 0.35,
+   "seeds": [
+    1304,
+    1305,
+    1306
+   ]
+  },
+  {
+   "F": 3.0,
+   "rho": 0.5,
+   "seeds": [
+    1304,
+    1305,
+    1306
+   ]
+  },
+  {
+   "F": 3.0,
+   "rho": 0.7,
+   "seeds": [
+    1304,
+    1305,
+    1306
+   ]
+  }
+ ],
+ "rule": "Power addendum. F=3 is the primary fixed-eta vs measured-s test. Pooled F=3 LPD (NW measured-s vs fixed_eta from A7) uses all seeds available per cell (6 at rho 0.35/0.5/0.7, 3 elsewhere), with seed-mean predictive distributions computed for the actual k per cell. F=2 is reported as secondary and expected to be inconclusive. Claim wording: measured sensitivity changes predict the response of population hierarchy to loss cost beyond the (1+F) factor; no rho_c threshold claim.",
+ "a6_sha": "e3b8ccd2ae41c705bbc543763912119cd7e8a227ca6348a22fd5005adfbab87e",
+ "a7_sha": "a6f7a31351445875b39d96942875a0ef466b358d17f81eb33139a818d50363d6",
+ "sha256": "353e8f2251e987f75ad7162f45aade3481e3a6328352213d9503b362f212fc5c"
+}

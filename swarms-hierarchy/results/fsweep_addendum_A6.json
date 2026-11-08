@@ -1,0 +1,19 @@
+{
+ "written": "2026-11-08T02:31:06",
+ "written_before_fsweep_run_data": true,
+ "note": "Addendum A6: fixed-eta comparison. Separates the mechanical (1+F) factor from the measured rise in s.",
+ "s_F1": 0.2627325932776673,
+ "fixed_eta_rho_c": {
+  "1": 0.37004248696115727,
+  "2": 0.24669499130743816,
+  "3": 0.18502124348057863
+ },
+ "measured_s_rho_c": {
+  "1": 0.37004248696115727,
+  "2.0": 0.16771205570134234,
+  "3.0": 0.09306672900616025
+ },
+ "onset_criterion": "smallest rho whose seed-mean q exceeds the 95th percentile of the frozen null (status-blind) seed-mean distribution; same as fsweep.py eval / physics_tests_eval.py. Crossover at N=8, so the test is ordering of onsets across F and agreement with intervals, not a sharp point.",
+ "fsweep_pred_sha": "610385b53ba488df7d3fc40f96f2623da8758b7ebe428295a87280d4b6362809",
+ "sha256": "e3b8ccd2ae41c705bbc543763912119cd7e8a227ca6348a22fd5005adfbab87e"
+}

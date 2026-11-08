@@ -170,6 +170,11 @@ def cmd_run(a):
     if not (ROOT / "results" / "x2b_predictions.json").exists():
         sys.exit("freeze predictions first")
     cfgs = [(c, r, s) for c in CONDS for r in RS for s in (911, 912)]
+    done_f = ROOT / "results" / "x2b_pop.jsonl"
+    if done_f.exists():                                   # resume: skip completed runs
+        have = {(x["cond"], x["r"], x["seed"]) for x in map(json.loads, open(done_f))}
+        cfgs = [c for c in cfgs if c not in have]
+        print(f"resuming: {len(cfgs)} runs left", flush=True)
     with ThreadPoolExecutor(a.parallel) as ex:
         list(ex.map(lambda x: run_llm(*x), cfgs))
 

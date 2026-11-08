@@ -46,7 +46,7 @@ def _ledger(delta, check_cap):
     return total
 
 
-def _adaption_call(name, system, prompt, timeout, max_tries=10):
+def _adaption_call(name, system, prompt, timeout, max_tries=10, max_tokens=16):
     """One Adaption inference with 429 back-off (~60 s + jitter), transient-error retries and cap reservation."""
     global _adaption
     import random as _r
@@ -58,7 +58,7 @@ def _adaption_call(name, system, prompt, timeout, max_tries=10):
         _ledger(RESERVE, check_cap=True)              # reserve before the request (fails closed at the cap)
         try:
             r = _adaption.responses.create(model=name, instructions=system, input=prompt, temperature=1.0,
-                                           max_output_tokens=16, store=False,
+                                           max_output_tokens=max_tokens, store=False,
                                            extra_body={"reasoning": {"effort": "none"}}, timeout=timeout)
         except Exception as e:
             _ledger(-RESERVE, check_cap=False)        # nothing was charged for a failed request
@@ -95,12 +95,12 @@ def _log(rec):
         f.write(json.dumps(rec) + "\n")
 
 
-def call(model, system, prompt, tag="", timeout=180, retries=2):
+def call(model, system, prompt, tag="", timeout=180, retries=2, max_tokens=16):
     with _conc:
-        return _call(model, system, prompt, tag, timeout, retries)
+        return _call(model, system, prompt, tag, timeout, retries, max_tokens)
 
 
-def _call(model, system, prompt, tag, timeout, retries):
+def _call(model, system, prompt, tag, timeout, retries, max_tokens=16):
     global _gpt_used
     fam, name = model.split(":", 1)
     for attempt in range(retries + 1):
@@ -129,7 +129,7 @@ def _call(model, system, prompt, tag, timeout, retries):
                 out = Path(path).read_text().strip() if Path(path).exists() else ""
                 Path(path).unlink(missing_ok=True)
             elif fam == "adaption":
-                out = _adaption_call(name, system, prompt, timeout)
+                out = _adaption_call(name, system, prompt, timeout, max_tokens=max_tokens)
             elif fam == "ollama":
                 import urllib.request
                 body = json.dumps({"model": name, "stream": False, "think": False,

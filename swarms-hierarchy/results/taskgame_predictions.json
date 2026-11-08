@@ -1,0 +1,114 @@
+{
+ "models": [
+  "adaption:gemma-4-31b-it",
+  "adaption:glm-5.2",
+  "adaption:gemma-4-26b-a4b-it",
+  "adaption:qwen3.5-397b",
+  "adaption:qwen3.8-27b"
+ ],
+ "ws": [
+  0,
+  100
+ ],
+ "seeds": [
+  2101,
+  2102,
+  2103,
+  2104,
+  2105,
+  2106,
+  2107,
+  2108,
+  2109,
+  2110
+ ],
+ "N": 8,
+ "T": 24,
+ "warm": 8,
+ "pairwise": {
+  "adaption:gemma-4-31b-it": {
+   "norm0": {
+    "s": -1.58,
+    "lo": -2.16,
+    "hi": -0.91
+   },
+   "norm100": {
+    "s": 2.64,
+    "lo": 2.12,
+    "hi": 3.03
+   }
+  },
+  "adaption:glm-5.2": {
+   "norm0": {
+    "s": 0.17,
+    "lo": -0.09,
+    "hi": 0.52
+   },
+   "norm100": {
+    "s": 1.91,
+    "lo": 1.27,
+    "hi": 2.48
+   }
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "norm0": {
+    "s": 2.58,
+    "lo": 2.01,
+    "hi": 2.99
+   },
+   "norm100": {
+    "s": 0.81,
+    "lo": 0.31,
+    "hi": 1.37
+   }
+  },
+  "adaption:qwen3.5-397b": {
+   "norm0": {
+    "s": 1.14,
+    "lo": 0.42,
+    "hi": 1.81
+   },
+   "norm100": {
+    "s": 2.0,
+    "lo": 1.46,
+    "hi": 2.52
+   }
+  },
+  "adaption:qwen3.8-27b": {
+   "norm0": {
+    "s": 0.57,
+    "lo": -0.15,
+    "hi": 1.26
+   },
+   "norm100": {
+    "s": 1.1,
+    "lo": 0.61,
+    "hi": 1.63
+   }
+  }
+ },
+ "predictions": {
+  "adaption:gemma-4-31b-it": {
+   "delta_s": 4.220000000000001,
+   "sign": 1
+  },
+  "adaption:glm-5.2": {
+   "delta_s": 1.74,
+   "sign": 1
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "delta_s": -1.77,
+   "sign": -1
+  },
+  "adaption:qwen3.5-397b": {
+   "delta_s": 0.8600000000000001,
+   "sign": 1
+  },
+  "adaption:qwen3.8-27b": {
+   "delta_s": 0.5300000000000001,
+   "sign": 1
+  }
+ },
+ "rule": "Asynchronous-turn design (pilot showed one planner per round, chosen mostly by turn order). Primary endpoints, rounds 9-24: (i) top_plan_share, the share of coordinator turns taken by the most frequent planner, and (ii) incumbency, P(planner in round t also planned in t-1), compared with its null planners(t-1)/N. Prediction: sign of [mean(w=100) - mean(w=0)] over seeds for top_plan_share and for incumbency equals sign(delta_s) from the pairwise test (Gemma-31B +, GLM-5.2 +, Gemma-26B -), seed-level permutation test. Secondary: top_exec_share, hhi_exec, planner turn position (later = others waited). Original sync-design wording follows. Primary (sync design): for each model, sign of [mean top_exec_share(w=100) - mean top_exec_share(w=0)] over seeds (rounds 9-24) equals sign(delta_s) from the pairwise test; reported with a seed-level permutation test. Secondary: same for top_plan_share and hhi_exec; across models, rank of the concentration difference vs rank of delta_s. Concentration is compared with an opportunity-preserving null that reassigns each executed assignment's issuer uniformly among that round's planners. All runs kept; runs with no executed assignments enter as missing concentration and are reported separately. Throughput, duplicates and wrong answers reported as utility. No claim of a phase transition.",
+ "sha256": "9d492c3da27882fe7bd8e240cc38ea3a8b89b10959928058cc922fc3cf304110"
+}

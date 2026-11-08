@@ -139,6 +139,7 @@ def cmd_eval(a):
             for m in ("sd_h", "q"):
                 s = np.array(p[m]); lo, hi = np.quantile(s, [0.05, 0.95])
                 line += f" {m}={s.mean():.2f} [{lo:.2f},{hi:.2f}] {'IN ' if lo <= o[m] <= hi else 'OUT'}"
+            line += f" | pred off_support={np.mean(p['off_support']):.3f}"
             print(line)
 
 
