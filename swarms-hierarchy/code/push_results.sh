@@ -10,9 +10,10 @@ cd $REPO && git fetch -q origin && git reset -q --hard origin/main   # scratch c
 DST=$REPO/swarms-hierarchy; mkdir -p $DST
 rsync -a --delete \
   --exclude '.secrets/' --exclude 'scratch/' --exclude '.aris/' --exclude '__pycache__/' --exclude '.DS_Store' \
-  --exclude 'results/calls.jsonl' --exclude '.gitignore' --exclude 'README.md' \
-  $SRC/RESEARCH_BRIEF.md $SRC/code $SRC/figures $SRC/idea-stage $SRC/refine-logs $SRC/results $DST/
+  --exclude 'results/calls.jsonl' --exclude '.gitignore' --exclude 'README.md' --exclude 'preview_*' --exclude '.run_id' \
+  $SRC/RESEARCH_BRIEF.md $SRC/code $SRC/figures $SRC/idea-stage $SRC/refine-logs $SRC/results $SRC/review-stage $SRC/paper $DST/
 [ -f $SRC/NARRATIVE_REPORT.md ] && cp $SRC/NARRATIVE_REPORT.md $DST/
+[ -f $SRC/README_repo.md ] && cp $SRC/README_repo.md $DST/README.md
 gzip -9 -c $SRC/results/calls.jsonl > $DST/results/calls.jsonl.gz
 # secret scan (key prefix + the literal key value from the local secrets file)
 KEY=$(sed -n 's/^ADAPTION_API_KEY=//p' $SRC/.secrets/adaption.env 2>/dev/null || true)

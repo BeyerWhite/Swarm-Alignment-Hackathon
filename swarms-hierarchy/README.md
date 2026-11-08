@@ -1,26 +1,39 @@
-# Emergent hierarchy in LLM agent populations
+# Who Leads the Swarm? Pairwise response kernels and hierarchy in LLM agent populations
 
-Track 2, "The Science of Agent Networks". Can classical models of hierarchy formation among identical agents explain who ends up coordinating in populations of LLM agents? The two models are Bonabeau / Lacasa–Luque 2005 and Ben-Naim–Redner 2005. The work is motivated by the METR (Aug 2026) Hugging Face incident.
+Swarm Alignment Hackathon (Apart Research, Nov 2026), Track 2: "The Science of Agent Networks".
 
-**Snapshot taken 2026-11-07 23:29 PST.**
+We test whether classical models of hierarchy formation among identical agents (Bonabeau / Lacasa & Luque 2005;
+Ben-Naim & Redner 2005) explain who ends up coordinating in populations of LLM agents. The method:
+1. measure each model's pairwise response to a public score record;
+2. freeze population predictions;
+3. run LLM-in-the-loop populations and score them against those predictions.
+
+**Report:** `paper/` (`Swarm_Hierarchy_Apart_Report.docx` from the official template; `paper.md` is the source).
+
+## Prior work / pre-existing code
+**All project code in this folder was written during the sprint (7–8 November 2026). No pre-existing project code was
+used.** We used pre-existing open-source research-orchestration tooling (ARIS Claude Code skills) for literature search,
+the cross-model review loop and run tracking. That tooling is not included here.
 
 ## Layout
 | Path | Contents |
 |---|---|
-| `RESEARCH_BRIEF.md` | Question, source models, mapping to LLM agents |
-| `refine-logs/` | Proposal, experiment plan (with amendments), **living results** (`EXPERIMENT_RESULTS.md`), tracker |
-| `idea-stage/` | Idea report and pilot results |
-| `code/` | Harness: prompts, LLM backends, calibration, population engine, frozen predictions, evaluation, figures |
-| `results/` | Raw and summary data (see below) |
-| `figures/` | Figures (PNG and PDF) |
+| `paper/` | Report source (`paper.md`), docx built from the Apart template, figures (`paper/figures/`, produced by `paper/figs.py`) |
+| `code/` | Harness and analysis: `prompts_v2.py`, `llm.py`, `calibrate.py`, `statecal.py`, `population2.py`, `predict.py`, `evaluate.py`, `reeval_followups.py`, extensions (`x1.py`, `hysteresis.py`, `x2.py`, `bnr_exp.py`, `board.py`), simulations (`fss.py`, `bnr_x2.py`) |
+| `results/` | Raw data and analysis outputs (see below) |
+| `refine-logs/` | Pre-registration, experiment plan with amendments A1–A5, lab log |
+| `review-stage/` | Final claims (`CLAIMS.md`) and full cross-model review history |
+| `idea-stage/` | Literature survey and idea selection |
 
 ## Data (`results/`)
 | File | Contents |
 |---|---|
-| `calls.jsonl.gz` | Every LLM call: model, system prompt, prompt, response, latency |
-| `calib_v2*.jsonl`, `statecal_*.jsonl` | Pairwise calibration: P(LEAD \| own score, partner score) by framing |
-| `population_v2*.jsonl` | LLM-in-the-loop populations (N=8, 40 rounds) |
-| `predictions_v2*.json` | Predictions frozen and hash-stamped *before* the matching population runs |
-| `eta_table.csv`, `probe_table.csv`, `eval_v2.json` | Fitted status sensitivity η, inequality probe, prediction-vs-observation scores |
+| `calls.jsonl.gz` | Every LLM call: model, system prompt, prompt, response |
+| `calib_v2*.jsonl`, `statecal_*.jsonl` | Pairwise calibration |
+| `predictions_v2*.json`, `x1_predictions.json`, `hyst_predictions.json`, `x2_predictions.json` | Predictions frozen *before* the matching runs |
+| `population_v2*.jsonl` | Main LLM populations |
+| `x1_pop.jsonl`, `hyst_pop.jsonl`, `x2_pop.jsonl`, `bnr_pop.jsonl`, `board_pilot.jsonl` | Extension runs |
+| `eval_v2.json`, `coverage_common_design.csv`, `reeval_followups.json` | Authoritative evaluations |
+| `eta_fd_beta.csv`, `competence_contrast.csv`, `probe_table.csv` | Kernel summaries |
 
-Agents are text-only (no tools, no network, no code execution). Models: Claude Haiku and Sonnet, GPT-6-luna, and open-weight models via the Adaption API. API keys are not included.
+Agents are text-only: no tools, no network, no code execution. API keys are not included.

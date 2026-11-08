@@ -1,0 +1,14 @@
+@page { size: Letter; margin: 1in; }
+body { font-family: Arial, "Helvetica Neue", sans-serif; font-size: 11pt; line-height: 1.15; color: #111; max-width: none; }
+h1.title { font-size: 17pt; text-align: center; margin: 0 0 6pt; }
+.authors { text-align: center; font-size: 10pt; margin-bottom: 10pt; }
+.abstract { border: 1px solid #bbb; padding: 8pt 12pt; margin: 6pt 0 14pt; text-align: justify; }
+h2 { font-size: 13pt; margin: 14pt 0 4pt; }
+h3 { font-size: 11pt; margin: 10pt 0 3pt; }
+p { margin: 0 0 5pt; text-align: justify; }
+img { max-width: 6.3in; display: block; margin: 6pt auto 2pt; }
+figure { margin: 0; break-inside: avoid; }
+figcaption { font-size: 9pt; margin-bottom: 8pt; }
+table { border-collapse: collapse; font-size: 9pt; margin: 4pt auto 8pt; }
+td, th { border: 1px solid #999; padding: 2pt 6pt; }
+ol, ul { margin: 0 0 5pt 0; padding-left: 18pt; }
