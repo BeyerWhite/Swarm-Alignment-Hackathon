@@ -150,3 +150,38 @@ Gemma-31B. Grid **and** state-matched predictions were frozen at 15:13, before a
 - **Calibrating where the population lives matters, and here it is shown prospectively.** For the two models where
   grid kernels missed (Qwen-397B, Gemma-26B), state-matched kernels recover 50–67 nats. State-matched Bonabeau is the
   best or near-best kernel in 4 of 6 models.
+
+## X1 / X2 / BNR-rules / hysteresis — evaluation (2026-11-07 22:45; all predictions frozen before runs)
+```
+== x1
+ds1_gemma7: rank1=minority 4/5 (binom p vs 1/8 = 0.001) | type_gap obs=9.84 nw=7.87[6.12,9.39] null=0.05[-4.12,4.32] | pb_corr obs=0.54 nw=0.49[0.38,0.58] null=0.01[-0.28,0.28] | sd_h obs=6.29 nw=5.16[4.85,5.46] null=5.09[4.83,5.35]
+ds4_gemma4: rank1=minority 4/5 (binom p vs 1/8 = 0.001) | type_gap obs=9.24 nw=8.43[7.31,9.45] null=0.27[-2.59,3.10] | pb_corr obs=0.79 nw=0.83[0.74,0.87] null=0.03[-0.26,0.31] | sd_h obs=5.36 nw=4.83[4.50,5.16] null=5.08[4.81,5.35]
+ds1_glm7_w0: rank1=minority 5/5 (binom p vs 1/8 = 0.000) | type_gap obs=11.69 nw=9.70[8.55,10.86] null=-0.11[-2.04,1.78] | pb_corr obs=0.58 nw=0.58[0.58,0.58] null=-0.00[-0.31,0.31] | sd_h obs=4.28 nw=3.79[3.43,4.16] null=2.23[1.94,2.54]
+== x2
+norm100  r=0.25  obs L=0.40 kmax=25.0 (n=3) | bnr_q0: L=0.35 90%[0.31,0.40] | kernel: L=0.33 90%[0.27,0.38]
+norm100  r=0.5   obs L=0.58 kmax=20.7 (n=3) | bnr_q0: L=0.54 90%[0.48,0.60] | kernel: L=0.54 90%[0.48,0.60]
+norm100  r=1.25  obs L=0.98 kmax=4.0 (n=3) | bnr_q0: L=0.95 90%[0.90,1.00] | kernel: L=0.97 90%[0.94,1.00]
+ended    r=0.25  obs L=0.00 kmax=11.0 (n=3) | kernel: L=0.01 90%[0.00,0.04]
+ended    r=0.5   obs L=0.67 kmax=5.7 (n=3) | kernel: L=0.72 90%[0.58,0.85]
+ended    r=1.25  obs L=1.00 kmax=1.3 (n=3) | kernel: L=1.00 90%[1.00,1.00]
+norm100 decisive contests: 1492 of 2160
+ended decisive contests: 664 of 2160
+== bnr_exp
+norm100  r=0.5  obs L=0.33 (n=2) v=1.56 | grid: L=0.29 [0.25,0.33] | blind: L=0.00 [0.00,0.00] | BNR theory r/2=0.25, blind r_c=1
+norm100  r=1.0  obs L=0.50 (n=2) v=1.00 | grid: L=0.53 [0.42,0.58] | blind: L=0.68 [0.50,0.83] | BNR theory r/2=0.50, blind r_c=1
+norm100  r=1.5  obs L=0.75 (n=2) v=0.54 | grid: L=0.76 [0.67,0.83] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=0.75, blind r_c=1
+norm100  r=2.0  obs L=0.96 (n=2) v=0.10 | grid: L=0.97 [0.92,1.00] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=1.00, blind r_c=1
+norm100  r=2.5  obs L=1.00 (n=2) v=0.03 | grid: L=1.00 [1.00,1.00] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=1.00, blind r_c=1
+ended    r=0.5  obs L=0.00 (n=2) v=0.68 | grid: L=0.00 [0.00,0.00] | blind: L=0.00 [0.00,0.00] | BNR theory r/2=0.25, blind r_c=1
+ended    r=1.0  obs L=1.00 (n=2) v=0.07 | grid: L=1.00 [1.00,1.00] | blind: L=0.68 [0.50,0.83] | BNR theory r/2=0.50, blind r_c=1
+ended    r=1.5  obs L=1.00 (n=2) v=0.04 | grid: L=1.00 [1.00,1.00] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=0.75, blind r_c=1
+ended    r=2.0  obs L=1.00 (n=2) v=0.02 | grid: L=1.00 [1.00,1.00] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=1.00, blind r_c=1
+ended    r=2.5  obs L=1.00 (n=2) v=0.01 | grid: L=1.00 [1.00,1.00] | blind: L=1.00 [1.00,1.00] | BNR theory r/2=1.00, blind r_c=1
+== hysteresis
+norm0      equal  obs sd_late=0.92 | nw sd_late=0.98 [0.83,1.16] | bonabeau sd_late=1.06 [0.85,1.31]
+norm0      seeded obs sd_late=0.95 leader_rank1=3.0 | nw sd_late=0.99 [0.79,1.21] rank1=6.6 [2,12] | bonabeau sd_late=1.06 [0.80,1.28] rank1=4.0 [1,8]
+ended      equal  obs sd_late=2.37 | nw sd_late=2.06 [1.45,2.83] | bonabeau sd_late=2.00 [1.41,2.77]
+ended      seeded obs sd_late=1.45 leader_rank1=5.0 | nw sd_late=2.00 [1.34,2.71] rank1=8.7 [1,22] | bonabeau sd_late=2.04 [1.42,2.72] rank1=7.5 [1,17]
+norm50     equal  obs sd_late=2.70 | nw sd_late=2.55 [1.83,3.31] | bonabeau sd_late=2.30 [1.61,3.25]
+norm50     seeded obs sd_late=3.32 leader_rank1=26.7 | nw sd_late=2.68 [2.13,3.39] rank1=11.7 [1,36] | bonabeau sd_late=2.33 [1.56,3.34] rank1=8.0 [1,23]
+```

@@ -2,7 +2,7 @@
 
 Track 2, "The Science of Agent Networks". Can classical models of hierarchy formation among identical agents explain who ends up coordinating in populations of LLM agents? The two models are Bonabeau / Lacasa–Luque 2005 and Ben-Naim–Redner 2005. The work is motivated by the METR (Aug 2026) Hugging Face incident.
 
-**Snapshot taken 2026-11-07 19:04 PST.**
+**Snapshot taken 2026-11-07 22:42 PST.**
 
 ## Layout
 | Path | Contents |
