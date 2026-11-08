@@ -53,7 +53,7 @@ def fig_norm_sweep(t):
                     marker=MARKERS[k], capsize=2, elinewidth=1, label=NICE[m])
     ax.axhline(0, color=INK2, lw=1)
     ax.set_xlabel("norm weight w  (0 = equal turns, 100 = defer to higher scores)")
-    ax.set_ylabel("status sensitivity η  (=4·P′win(0))")
+    ax.set_ylabel("finite-difference status sensitivity\n(|Δ| ≤ 1; posterior median, 95% CI)")
     ax.legend(frameon=False, fontsize=7, ncol=2)
     save(fig, "fig1_eta_vs_norm")
 
@@ -72,14 +72,14 @@ def fig_wording(t):
                error_kw=dict(lw=1, capsize=1.5, ecolor=INK2))
     ax.axhline(0, color=INK2, lw=1)
     ax.set_xticks(x); ax.set_xticklabels([NICE[m] for m in models], rotation=25, ha="right", fontsize=7)
-    ax.set_ylabel("status sensitivity η"); ax.legend(frameon=False, fontsize=7, ncol=4)
+    ax.set_ylabel("finite-difference status sensitivity\n(posterior median, 95% CI)"); ax.legend(frameon=False, fontsize=7, ncol=4)
     save(fig, "fig2_wording_factorial")
 
 
 def fig_pred_vs_obs(metric="sd_h"):
     """Fig 3: observed seed-mean vs flexible-kernel 90% predictive interval; null as hollow markers."""
     ev = json.load(open(ROOT / "results" / "eval_v2.json"))
-    t = pd.DataFrame(ev["table"]); t = t[t.metric == metric]
+    t = pd.DataFrame(ev["table"]); t = t[(t.metric == metric) & (t.rho == 0.5) & (t.N == 8) & (t.design == "grid")]
     f = t[t.kernel == "flexible"].reset_index(drop=True); nl = t[t.kernel == "null"].set_index(["model", "cond"])
     fig, ax = plt.subplots(figsize=(4.2, 4.0))
     lo = [float(s.strip("[]").split(",")[0]) for s in f.pred90]; hi = [float(s.strip("[]").split(",")[1]) for s in f.pred90]
@@ -130,18 +130,21 @@ def fig_rho_sweep(model, metric="sd_h", conds=("norm0", "ended+comp", "norm100")
         lo = [float(s.strip("[]").split(",")[0]) for s in e.pred90]; hi = [float(s.strip("[]").split(",")[1]) for s in e.pred90]
         ax.fill_between(e.rho, lo, hi, color=SERIES[k], alpha=.18, lw=0)
         ax.plot(e.rho, e.pred_mean, color=SERIES[k], lw=1, ls="--")
-        obs = [(r["rho"], order_params(r)[metric]) for r in recs if r["model"] == model and r["cond"] == c]
-        if obs:
-            x, y = zip(*obs)
-            ax.scatter(x, y, color=SERIES[k], marker=MARKERS[k], s=24, label=c, zorder=3, edgecolors=SURF, linewidths=.8)
+        obs = pd.DataFrame([(r["rho"], order_params(r)[metric]) for r in recs if r["model"] == model and r["cond"] == c],
+                           columns=["rho", "v"])
+        if len(obs):
+            g = obs.groupby("rho").v.mean()                      # same statistic as the band: mean over seeds
+            ax.scatter(g.index, g.values, color=SERIES[k], marker=MARKERS[k], s=28, label=f"{c} (seed mean)",
+                       zorder=3, edgecolors=SURF, linewidths=.8)
     ax.set_xlabel("interaction rate ρ"); ax.set_ylabel({"sd_h": "status dispersion sd(h)", "q": "frozen order q"}[metric])
-    ax.set_title(NICE.get(model, model) + "  (band: frozen pairwise-kernel 90% PI)", fontsize=8)
+    ax.set_title(NICE.get(model, model) + ": observed seed means vs frozen kernel 90% PI for the seed mean", fontsize=7.5)
     ax.legend(frameon=False, fontsize=7)
     save(fig, f"fig5_rho_sweep_{model.split(':')[-1]}_{metric}")
 
 
 if __name__ == "__main__":
-    t = eta_table()
+    eta_table()
+    t = pd.read_csv(ROOT / "results" / "eta_fd_beta.csv").rename(columns={"fd_sens": "eta"})
     fig_norm_sweep(t); fig_wording(t)
     if (ROOT / "results" / "eval_v2.json").exists():
         fig_pred_vs_obs("sd_h"); fig_pred_vs_obs("q")

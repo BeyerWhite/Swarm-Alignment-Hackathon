@@ -80,6 +80,7 @@ def cmd_run(a):
 
 
 def cmd_eval(a):
+    print("NOTE: legacy single-run intervals. Authoritative seed-mean evaluation: python3 code/reeval_followups.py")
     P = json.load(open(ROOT / "results" / "hyst_predictions.json"))
     recs = [json.loads(l) for l in open(ROOT / "results" / "hyst_pop.jsonl")]
     for cond in a.conds:

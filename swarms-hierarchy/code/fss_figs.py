@@ -42,8 +42,8 @@ def fig_bnr():
             L = [np.mean([bnr_L(ker, N, r, seed=s) for s in range(3)]) for r in rs]
             ax.plot(rs, L, color=SERIES[k], marker=MARKERS[n_i], ms=4, lw=1.5, ls="-" if N == 700 else ":",
                     label=f"{lab}, N={N}")
-    ax.plot([0, 2], [0, 1], color=INK2, lw=1, ls="--"); ax.text(1.0, 0.42, "BNR: L = r / r_c,  r_c = 2", fontsize=7, color=INK2)
-    ax.set_xlabel("additive forgetting per round r"); ax.set_ylabel("lower-class fraction L")
+    ax.plot([0, 2], [0, 1], color=INK2, lw=1, ls="--"); ax.text(0.9, 0.38, "continuum guide r / r_c (r_c = 2);\nF(0.05T) is not the asymptotic lower-class mass", fontsize=6.5, color=INK2)
+    ax.set_xlabel("additive forgetting r (discrete sim., T=300)"); ax.set_ylabel("F(0.05 T): fraction at or below 0.05 T")
     ax.legend(frameon=False, fontsize=6.5); save(fig, "fig7_bnr_additive")
 
 def off_support(model="adaption:gemma-4-31b-it", cond="norm100", N=700, rho=0.5):

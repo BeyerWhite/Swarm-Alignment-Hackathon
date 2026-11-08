@@ -156,12 +156,14 @@ def cmd_eval(a):
             continue
         obs = [metrics(r, r["types"], spec["minority"]) for r in rr]
         k = sum(o["rank1_minority"] for o in obs)
-        line = f"{arm}: rank1=minority {k}/{len(obs)} (binom p vs 1/8 = {binomtest(k, len(obs), 1/8, 'greater').pvalue:.3f})"
+        null_p = spec["k"] / N                      # composition null: minority share of agents
+        line = f"{arm}: rank1(last-10 mean)=minority {k}/{len(obs)} (binom p vs composition null {null_p:.3f} = {binomtest(k, len(obs), null_p, 'greater').pvalue:.3f})"
         for m in ("type_gap", "pb_corr", "sd_h"):
             line += f" | {m} obs={np.mean([o[m] for o in obs]):.2f}"
             for kern in ("nw", "null"):
-                v = np.array(P["arms"][arm]["preds"][kern][m], float); mm = np.random.default_rng(0)
-                dist = mm.choice(v, (4000, len(obs))).mean(1)
+                from evaluate import seed_mean_dist
+                v = np.array(P["arms"][arm]["preds"][kern][m], float)
+                dist = seed_mean_dist(v, 20, 8, len(obs))
                 line += f" {kern}={v.mean():.2f}[{np.quantile(dist,.05):.2f},{np.quantile(dist,.95):.2f}]"
         print(line)
 

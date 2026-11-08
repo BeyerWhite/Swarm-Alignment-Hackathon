@@ -1,5 +1,19 @@
 # Experiment Results (living document; updated 2026-11-07)
 
+> **SUPERSEDED-IN-PART NOTICE (auto-review rounds 1–2, 2026-11-07/08).** This is the chronological lab log. Where it
+> conflicts with `review-stage/CLAIMS.md`, the claims file is authoritative. In particular, the following are
+> superseded:
+> - "all within 1 SD";
+> - η from the global logistic (now finite-difference sensitivity, `results/eta_fd_beta.csv`);
+> - 572-nat and 67-nat margins (now common-design and same-estimator figures, `results/coverage_common_design.csv`);
+> - "N-independent / no tipping point / additive forgetting required / master-equation agreement" (C3 reframed as
+>   finite-time);
+> - L read as the lower-class mass (it is F(0.1T));
+> - X1 4+4 tested against 1/8 (the composition null is 4/8, p = 0.19);
+> - follow-up intervals built from single runs (now in `results/reeval_followups.json`);
+> - hysteresis norm50 "inside" (it is outside).
+
+
 All numbers come from files in `results/`. Every LLM call is logged in `results/calls.jsonl`. Predictions are
 frozen in write-once, hash-stamped files before the corresponding population data is inspected (see the plan's
 Amendments).

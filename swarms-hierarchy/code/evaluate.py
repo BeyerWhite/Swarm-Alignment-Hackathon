@@ -22,27 +22,29 @@ PROTO = ("mu", "rounds")
 
 
 def seed_mean_dist(samples, B, S, k, n=4000, seed=0):
-    """Predictive distribution of the mean of k NEW runs: variance tau^2 + sigma^2/k in expectation, where
-    tau^2 = between-calibration-draw variance (block means shrunk by their sampling noise sigma^2/S) and
-    sigma^2 = within-draw run variance (k distinct runs, finite-population corrected)."""
-    rng = np.random.default_rng(seed)
+    """Predictive distribution of the mean of k NEW runs, support-preserving: each calibration replicate b is shared
+    by all k seeds, and the k runs are distinct simulations from that replicate's S runs. When B*C(S,k) <= 200k the
+    distribution is enumerated exactly (every replicate x every k-subset, equally weighted); otherwise sampled."""
+    from itertools import combinations
+    from math import comb
     A = np.asarray(samples, float).reshape(B, S)
-    mu_b = A.mean(1); mu = mu_b.mean()
-    sig2 = A.var(axis=1, ddof=1).mean()
-    var_mu = mu_b.var(ddof=1) if B > 1 else 0.0
-    tau2 = max(var_mu - sig2 / S, 0.0)
-    c = np.sqrt(tau2 / var_mu) if var_mu > 0 else 0.0
+    if k <= S and B * comb(S, k) <= 200_000:
+        idx = np.array(list(combinations(range(S), k)))
+        return A[:, idx].mean(2).ravel()
+    rng = np.random.default_rng(seed)
     b = rng.integers(0, B, n)
-    s = np.argsort(rng.random((n, S)), axis=1)[:, :k]
-    dev = (A[b[:, None], s].mean(1) - mu_b[b]) * np.sqrt(S / (S - k)) if S > k else 0.0
-    return mu + c * (mu_b[b] - mu) + dev
+    s = np.argsort(rng.random((n, S)), axis=1)[:, :k] if k <= S else rng.integers(0, S, (n, k))
+    return A[b[:, None], s].mean(1)
 
 
-def lpd(x, dist):
+def lpd(x, dist, n_eff, bw_scale=1.0):
+    """Log predictive density by Gaussian KDE. Bandwidth = Scott factor computed from n_eff, the number of
+    independent simulated runs behind the distribution (B*S), not from the enumeration count, so repeating the same
+    empirical distribution does not change the score. bw_scale is used for sensitivity checks."""
     dist = np.asarray(dist)
     if dist.std() < 1e-9:
         return 0.0 if abs(x - dist.mean()) < 1e-6 else -50.0      # convention for degenerate predictions
-    return float(np.log(max(gaussian_kde(dist)(x)[0], 1e-22)))
+    return float(np.log(max(gaussian_kde(dist, bw_method=bw_scale * n_eff ** (-1 / 5))(x)[0], 1e-22)))
 
 
 def displayed_states(rec):
@@ -107,12 +109,14 @@ def main():
                     dist = seed_mean_dist(e[kern][m]["samples"], P["B"], P["S"], k)
                     x = obs[m].mean()
                     lo, hi = np.quantile(dist, [.05, .95])
+                    n_eff = P["B"] * P["S"]
                     rows.append(dict(file=fpath.name, design="state" if "nw" in kerns else "grid", model=e["model"], cond=e["cond"], rho=e["rho"], N=e["N"],
                                      kernel=kern, metric=m, seeds=k, obs_mean=round(x, 3),
                                      obs_sd=round(obs[m].std(ddof=1), 3) if k > 1 else None,
                                      pred_mean=round(dist.mean(), 3), pred90=f"[{lo:.2f}, {hi:.2f}]",
-                                     covered=bool(lo <= x <= hi),
-                                     z=round((x - dist.mean()) / max(dist.std(), 1e-9), 2), lpd=round(lpd(x, dist), 2)))
+                                     covered=bool(lo - 1e-9 <= x <= hi + 1e-9),
+                                     z=round((x - dist.mean()) / max(dist.std(), 1e-9), 2), lpd=round(lpd(x, dist, n_eff), 2), lpd_bw_half=round(lpd(x, dist, n_eff, 0.5), 2),
+                                     lpd_bw_double=round(lpd(x, dist, n_eff, 2.0), 2)))
             src = calib_st if "nw" in kerns else calib
             d = src[(src.model == e["model"]) & (src.cond == e["cond"])]
             ks = {kern: KERNELS[kern](d) for kern in kerns}
