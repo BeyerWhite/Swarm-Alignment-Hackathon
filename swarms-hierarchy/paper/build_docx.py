@@ -1,55 +1,75 @@
-"""Build the submission .docx from the official Apart template (scratch/template/template.docx) and paper/paper.md.
-Keeps the template's title block, styles and footnote; replaces guidance text; removes the 'How to use' box."""
-import re, copy, sys
+"""Build the submission .docx from the user's copy of the official Apart template and paper/paper.md.
+
+Every paragraph we write clones the template's own formatting: Heading 2 / Heading 3 paragraphs (Old Standard TT,
+14 pt / 13 pt bold, grey), body text (Old Standard TT 11 pt), the template's real Word lists (numbered list for
+contributions, numbered list for references, bulleted list elsewhere). The title block, author table, abstract box
+and footnote are the template's own; only their text changes. The 'How to use this template' box and all guidance
+text are removed. Equations ($...$, $$...$$) become native Word math (OMML) via pandoc.
+"""
+import copy, re, subprocess, tempfile, zipfile
 from pathlib import Path
 import docx
-from docx.shared import Inches, Pt, RGBColor
+from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.text.paragraph import Paragraph
+from lxml import etree
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "paper" / "paper.md"
+TEMPLATE = ROOT / "scratch" / "template" / "user_template.docx"
 OUT = ROOT / "paper" / "Swarm_Hierarchy_Apart_Report.docx"
-AUTHORS = [("Sara Ansari", "University of Texas at Austin"), ("Beyer White", "Independent")]   # authors 2-6 left blank for the team to fill
+AUTHORS = [("Sara Ansari", "University of Texas at Austin"), ("Beyer White", "Independent")]
 
 md = SRC.read_text()
 title = re.search(r"^TITLE: (.*)$", md, re.M).group(1).strip()
 abstract = re.search(r"^ABSTRACT: (.*?)\n\n", md, re.S | re.M).group(1).strip()
-body = md.split("\n## ", 1)[1]
-body = "## " + body
+body = "## " + md.split("\n## ", 1)[1]
 
-d = docx.Document(ROOT / "scratch" / "template" / "template.docx")
+d = docx.Document(TEMPLATE)
 t0 = d.tables[0]
 
 
-def set_runs(p, text, italic=None, bold=None):
-    runs = p.runs
-    keep = runs[0]
-    keep.text = text
-    if italic is not None:
-        keep.italic = italic
-    if bold is not None:
-        keep.bold = bold
-    for r in runs[1:]:
-        r._element.getparent().remove(r._element)
+# ---------------------------------------------------------------- prototypes from the template
+def proto(prefix):
+    for p in d.paragraphs:
+        if p.text.strip().startswith(prefix):
+            return copy.deepcopy(p._p.find(qn("w:pPr"))), copy.deepcopy(p.runs[0]._r.find(qn("w:rPr")))
+    raise KeyError(prefix)
 
 
-# --- title (keep footnote reference run)
+def strip(rpr, *tags):
+    if rpr is None:
+        return rpr
+    for t in tags:
+        for e in rpr.findall(qn(f"w:{t}")):
+            rpr.remove(e)
+    return rpr
+
+
+H2_PPR, H2_RPR = proto("1. Introduction")
+H3_PPR, H3_RPR = proto("Limitations")
+BODY_PPR, BODY_RPR = proto("What problem are you")
+strip(BODY_RPR, "i", "iCs"); strip(BODY_PPR.find(qn("w:rPr")), "i", "iCs")
+NUM_PPR, _ = proto("[First contribution")
+REF_PPR, _ = proto("[Reference 1]")
+BUL_PPR, _ = proto("Code repository")
+
+
+# ---------------------------------------------------------------- title, authors, abstract
 for p in t0.rows[0].cells[0].paragraphs:
     for r in p.runs:
         if "PROJECT TITLE" in r.text:
             r.text = title
 
-# --- authors: find the 2x3 author table and rewrite each cell's paragraph wholesale (runs are fragmented)
-from docx.text.paragraph import Paragraph
 done = set()
 for tbl in t0._tbl.iter(qn("w:tbl")):
-    tcs = [tc for tr in tbl.findall(qn("w:tr")) for tc in tr.findall(qn("w:tc"))]   # direct cells only
-    if any(tc.find(qn("w:tbl")) is not None for tc in tcs):                        # skip tables that nest others
+    tcs = [tc for tr in tbl.findall(qn("w:tr")) for tc in tr.findall(qn("w:tc"))]
+    if any(tc.find(qn("w:tbl")) is not None for tc in tcs) or id(tbl) in done:
         continue
     texts = ["".join(t.text or "" for t in tc.iter(qn("w:t"))) for tc in tcs]
-    if not any(x.startswith("Author name 1") for x in texts) or id(tbl) in done:
+    if not any(x.startswith("Author name 1") for x in texts):
         continue
     done.add(id(tbl))
     k = 0
@@ -60,15 +80,21 @@ for tbl in t0._tbl.iter(qn("w:tbl")):
         k += 1
         ps = tc.findall(qn("w:p"))
         par = Paragraph(ps[0], None)
-        runs = par.runs
-        rpr = copy.deepcopy(runs[0]._element.find(qn("w:rPr"))) if runs and runs[0]._element.find(qn("w:rPr")) is not None else None
-        for r in runs:
-            r._element.getparent().remove(r._element)
+        rpr = copy.deepcopy(par.runs[0]._r.find(qn("w:rPr"))) if par.runs else None
+        for r in par.runs:
+            r._r.getparent().remove(r._r)
         for extra in ps[1:]:
             tc.remove(extra)
-        r1 = par.add_run(name); r1.bold = True
+        r1 = par.add_run(name)
+        if rpr is not None:
+            r1._r.insert(0, copy.deepcopy(rpr))
+        r1.bold = True
         if aff:
-            r1.add_break(); par.add_run(aff)
+            r1.add_break()
+            r2 = par.add_run(aff)
+            if rpr is not None:
+                r2._r.insert(0, copy.deepcopy(rpr))
+            r2.bold = False
 
 for cell in t0.rows[1].cells:
     for nt in cell.tables:
@@ -76,115 +102,136 @@ for cell in t0.rows[1].cells:
             for cc in row.cells:
                 for p in cc.paragraphs:
                     if p.text.strip().startswith("Summarize your project"):
-                        set_runs(p, abstract, italic=False)
+                        keep = p.runs[0]
+                        for r in p.runs[1:]:
+                            r._r.getparent().remove(r._r)
+                        keep.text = abstract; keep.italic = False; keep.underline = False
                         p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 
-# --- remove everything after the title table (info box + guidance), keep sectPr
+# remove everything after the title block (guidance box and guidance text), keep sectPr
 bodyel = d.element.body
-started = False
+after = False
 for el in list(bodyel):
     if el is t0._tbl:
-        started = True
-        continue
-    if started and el.tag != qn("w:sectPr"):
+        after = True; continue
+    if after and el.tag != qn("w:sectPr"):
         bodyel.remove(el)
+SECTPR = bodyel.find(qn("w:sectPr"))
 
 
-# --- math: convert every $...$ / $$...$$ snippet to native Word OMML (one pandoc call, cached)
-import subprocess, tempfile, zipfile
-from lxml import etree
+# ---------------------------------------------------------------- math (OMML via one pandoc call)
 snips = []
 for mm in re.finditer(r"\$\$(.+?)\$\$|\$([^$\n]+)\$", body):
     tex = mm.group(1) or mm.group(2)
     if tex not in snips:
         snips.append(tex)
 OMML = {}
+M = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
 if snips:
     with tempfile.TemporaryDirectory() as td:
         src = Path(td) / "m.md"; dst = Path(td) / "m.docx"
         src.write_text("\n\n".join(f"${s}$" for s in snips) + "\n")
         subprocess.run(["pandoc", str(src), "-o", str(dst)], check=True)
         xml = etree.fromstring(zipfile.ZipFile(dst).read("word/document.xml"))
-        M = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
         paras = [pp for pp in xml.iter(qn("w:p")) if pp.find(f".//{M}oMath") is not None]
         assert len(paras) == len(snips), (len(paras), len(snips))
         for s, pp in zip(snips, paras):
             OMML[s] = pp.findall(f"{M}oMath") or pp.findall(f".//{M}oMath")
 
 
-def add_math(p, tex):
-    for om in OMML[tex]:
-        p._p.append(copy.deepcopy(om))
+# ---------------------------------------------------------------- paragraph factory using template formatting
+def new_par(ppr):
+    p = OxmlElement("w:p")
+    p.append(copy.deepcopy(ppr))
+    SECTPR.addprevious(p)
+    return Paragraph(p, d._body)
 
 
-# --- markdown-subset writer
-def add_inline(p, text, size=None, italic_all=False, bold=False, italic=False):
-    toks = re.split(r"(\$[^$\n]+\$|\*\*.+?\*\*|\*[^*\s][^*]*\*|`[^`]+`)", text)
-    for tk in toks:
+def run(par, text, rpr=None, bold=False, italic=False, size=None):
+    r = par.add_run(text)
+    r._r.insert(0, copy.deepcopy(rpr if rpr is not None else BODY_RPR))
+    if bold:
+        r.bold = True
+    if italic:
+        r.italic = True
+    if size:
+        r.font.size = Pt(size)
+    return r
+
+
+def inline(par, text, size=None, bold=False, italic=False):
+    for tk in re.split(r"(\$[^$\n]+\$|\*\*.+?\*\*|\*[^*\s][^*]*\*|`[^`]+`)", text):
         if not tk:
             continue
         if tk.startswith("$") and tk.endswith("$") and len(tk) > 1:
-            add_math(p, tk[1:-1]); continue
-        if tk.startswith("**") and tk.endswith("**"):
-            add_inline(p, tk[2:-2], size, italic_all, True, italic); continue
-        if tk.startswith("*") and tk.endswith("*") and len(tk) > 2:
-            add_inline(p, tk[1:-1], size, italic_all, bold, True); continue
-        if tk.startswith("`"):
-            r = p.add_run(tk[1:-1]); r.font.name = "Courier New"
+            for om in OMML[tk[1:-1]]:
+                par._p.append(copy.deepcopy(om))
+        elif tk.startswith("**") and tk.endswith("**"):
+            inline(par, tk[2:-2], size, True, italic)
+        elif tk.startswith("*") and tk.endswith("*") and len(tk) > 2:
+            inline(par, tk[1:-1], size, bold, True)
+        elif tk.startswith("`"):
+            r = run(par, tk[1:-1], size=size, bold=bold, italic=italic); r.font.name = "Courier New"
         else:
-            r = p.add_run(tk)
-        r.bold = bold or None
-        r.italic = (italic or italic_all) or None
-        if size:
-            r.font.size = Pt(size)
+            run(par, tk, size=size, bold=bold, italic=italic)
 
 
-def para(text, style="normal", size=None, align=None, italic_all=False, space_after=4):
-    p = d.add_paragraph(style=style)
-    add_inline(p, text, size, italic_all)
-    p.paragraph_format.space_after = Pt(space_after)
-    if align:
-        p.alignment = align
-    return p
+def heading(text, level):
+    p = new_par(H2_PPR if level == 2 else H3_PPR)
+    run(p, text, H2_RPR if level == 2 else H3_RPR)
 
 
-def set_cell_border(cell):
-    tcPr = cell._tc.get_or_add_tcPr()
-    b = OxmlElement("w:tcBorders")
+def list_item(text, kind, level=0):
+    ppr = copy.deepcopy({"num": NUM_PPR, "ref": REF_PPR, "bul": BUL_PPR}[kind])
+    ppr.find(qn("w:numPr")).find(qn("w:ilvl")).set(qn("w:val"), str(level))
+    ind = ppr.find(qn("w:ind"))
+    if ind is not None:
+        ind.set(qn("w:left"), str(720 + 360 * level)); ind.set(qn("w:hanging"), "360")
+        for a in ("right",):
+            if ind.get(qn(f"w:{a}")) is not None:
+                del ind.attrib[qn(f"w:{a}")]
+    p = new_par(ppr)
+    p.paragraph_format.space_after = Pt(2)
+    inline(p, text)
+
+
+def borders(cell):
+    tcPr = cell._tc.get_or_add_tcPr(); b = OxmlElement("w:tcBorders")
     for edge in ("top", "left", "bottom", "right"):
         e = OxmlElement(f"w:{edge}"); e.set(qn("w:val"), "single"); e.set(qn("w:sz"), "4"); e.set(qn("w:color"), "999999")
         b.append(e)
     tcPr.append(b)
 
 
+# ---------------------------------------------------------------- write the body
 lines = body.split("\n")
+section = ""
 i = 0
-fig_n = 0
 while i < len(lines):
     ln = lines[i].rstrip()
     if not ln.strip():
         i += 1; continue
     if ln.startswith("### "):
-        d.add_paragraph(ln[4:].strip(), style="Heading 3"); i += 1; continue
+        heading(ln[4:].strip(), 3); i += 1; continue
     if ln.startswith("## "):
-        h = ln[3:].strip()
-        d.add_paragraph(h, style="Heading 2"); i += 1; continue
-    mdisp = re.match(r"^\$\$(.+?)\$\$\s*$", ln)
-    if mdisp:
-        dp = d.add_paragraph(); dp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        dp.paragraph_format.space_before = Pt(3); dp.paragraph_format.space_after = Pt(6)
-        add_math(dp, mdisp.group(1))
+        section = ln[3:].strip(); heading(section, 2); i += 1; continue
+    md_ = re.match(r"^\$\$(.+?)\$\$\s*$", ln)
+    if md_:
+        p = new_par(BODY_PPR); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(3); p.paragraph_format.space_after = Pt(6)
+        for om in OMML[md_.group(1)]:
+            p._p.append(copy.deepcopy(om))
         i += 1; continue
-    m = re.match(r"!\[(.*)\]\((.*?)\)(\{width=([\d.]+)in\})?", ln)
-    if m:
-        cap, path = m.group(1), m.group(2)
-        width = float(m.group(4)) if m.group(4) else 6.3
-        pic = d.add_paragraph(); pic.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        pic.add_run().add_picture(str(ROOT / "paper" / path), width=Inches(width))
-        mm = re.match(r"(Figure [A-Z]?\d+\.)\s*(.*)", cap)
-        cp = d.add_paragraph(); cp.paragraph_format.space_after = Pt(8)
-        r = cp.add_run(mm.group(1) + " "); r.bold = True; r.font.size = Pt(9)
-        add_inline(cp, mm.group(2), size=9)
+    mf = re.match(r"!\[(.*)\]\((.*?)\)(\{width=([\d.]+)in\})?", ln)
+    if mf:
+        cap, path = mf.group(1), mf.group(2)
+        width = float(mf.group(4)) if mf.group(4) else 6.0
+        p = new_par(BODY_PPR); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(ROOT / "paper" / path), width=Inches(width))
+        mc = re.match(r"(Figure [A-Z]?\d+\.)\s*(.*)", cap)
+        cp = new_par(BODY_PPR); cp.paragraph_format.space_after = Pt(8)
+        run(cp, mc.group(1) + " ", bold=True, size=9.5)
+        inline(cp, mc.group(2), size=9.5)
         i += 1; continue
     if ln.startswith("|"):
         rows = []
@@ -193,30 +240,26 @@ while i < len(lines):
                 rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
             i += 1
         tb = d.add_table(rows=len(rows), cols=len(rows[0]))
+        SECTPR.addprevious(tb._tbl)
         tb.alignment = 1
         for ri, row in enumerate(rows):
             for ci, val in enumerate(row):
-                cell = tb.cell(ri, ci); set_cell_border(cell)
-                cp = cell.paragraphs[0]; add_inline(cp, val, size=9)
-                if ri == 0:
-                    for r in cp.runs:
-                        r.bold = True
-        d.add_paragraph().paragraph_format.space_after = Pt(2)
+                cell = tb.cell(ri, ci); borders(cell)
+                cp = cell.paragraphs[0]
+                cp._p.insert(0, copy.deepcopy(BODY_PPR))
+                inline(cp, val, size=9.5, bold=(ri == 0))
+        sp = new_par(BODY_PPR); sp.paragraph_format.space_after = Pt(2)
         continue
-    if re.match(r"^\s*(\d+\. |- )", ln):
-        indent = (len(ln) - len(ln.lstrip())) // 2
-        s = ln.lstrip()
-        num = re.match(r"^(\d+)\. ", s)
-        txt = s[len(num.group(0)):] if num else s[2:]
-        p = d.add_paragraph(style="normal")
-        p.paragraph_format.left_indent = Inches(0.3 + 0.25 * indent); p.paragraph_format.first_line_indent = Inches(-0.2)
-        p.paragraph_format.space_after = Pt(2)
-        p.add_run((num.group(1) + ". ") if num else ("◦ " if indent else "• "))
-        add_inline(p, txt)
-        i += 1; continue
+    ml = re.match(r"^(\s*)(\d+\.|-) (.*)$", ln)
+    if ml:
+        level = len(ml.group(1)) // 2
+        numbered = ml.group(2) != "-"
+        kind = "ref" if section.startswith("References") else ("num" if numbered else "bul")
+        list_item(ml.group(3), kind, level); i += 1; continue
     if ln.startswith("*Table"):
-        para(ln.strip("*"), size=9, italic_all=True); i += 1; continue
-    para(ln); i += 1
+        p = new_par(BODY_PPR); inline(p, ln.strip("*"), size=9.5, italic=True); i += 1; continue
+    p = new_par(BODY_PPR); p.paragraph_format.space_after = Pt(4)
+    inline(p, ln); i += 1
 
 d.save(OUT)
 print("wrote", OUT)

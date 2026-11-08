@@ -149,7 +149,13 @@ Simulating the fitted kernels up to $N = 700$ showed no sharpening with $N$ over
 
 **A coordinator hierarchy does not require an agent designed to lead.** In our sandbox it arises from agents that read a track record as a reason to defer (switchable by one framing sentence) plus one assertive agent; explicit rotation norms reverse it for some models. For deployers, the pairwise kernel is a cheap screen (216 calls per model and framing) that predicts which populations stratify, but on average it **underestimated** how unequal they became and how long installed leaders lasted at an intermediate norm. These results support pairwise screening in the tested settings; they do not establish a lower bound on hierarchy risk, and models must be assessed separately. The scoreless pilot supplied public message history and simulated task completion but rarely elicited delegation; it does not isolate which features (task load, real success, agent memory) would cause it.
 
-**Limitations.** Agents are stateless and never perform tasks, so our claims concern coordinator *selection* under an externally maintained, explicitly displayed score, not operational leadership or competence. LLM populations are small ($N = 8$–16, 2–5 seeds); large-N results are simulations in which about 9.5% of decision states in the $N = 700$ grid-kernel sweep fall outside the calibrated mean-score range (clamped to its boundary). The pre-registered calibration criterion failed; Sonnet's forecast postdates its runs and Haiku's state-matched analysis is retrospective. We establish no stationary phase transition, and did not test contamination from pretraining familiarity with turn-taking norms or the physics models. **Future work:** message boards with real, checkable tasks and mixed-competence agents (does leadership track ability or early luck?), history-based status, more seeds for the $w = 50$ anomaly, and denser state-matched calibration.
+### Limitations
+
+Agents are stateless and never perform tasks, so our claims concern coordinator *selection* under an externally maintained, explicitly displayed score, not operational leadership or competence. LLM populations are small ($N = 8$–16, 2–5 seeds); large-N results are simulations in which about 9.5% of decision states in the $N = 700$ grid-kernel sweep fall outside the calibrated mean-score range (clamped to its boundary). The pre-registered calibration criterion failed; Sonnet's forecast postdates its runs and Haiku's state-matched analysis is retrospective. We establish no stationary phase transition, and did not test contamination from pretraining familiarity with turn-taking norms or the physics models.
+
+### Future Work
+
+Message boards with real, checkable tasks and mixed-competence agents (does leadership track ability or early luck?), history-based status, more seeds for the $w = 50$ anomaly, and denser state-matched calibration.
 
 ## 6. Conclusion
 

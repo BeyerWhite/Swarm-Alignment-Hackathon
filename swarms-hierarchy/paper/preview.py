@@ -16,7 +16,7 @@ for name, text in (("main", head + main), ("full", head + body)):
     (P / f"preview_{name}.md").write_text(text)
     subprocess.run(["pandoc", f"preview_{name}.md", "-f", "markdown+pipe_tables+implicit_figures", "-s", "--mathml", "--css",
                     "preview.css", "--metadata", "title= ", "-o", f"preview_{name}.html"], cwd=P, check=True)
-    subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer",
+    subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=8000",
                     f"--print-to-pdf={P / f'preview_{name}.pdf'}", f"file://{P / f'preview_{name}.html'}"],
                    capture_output=True, timeout=150)
     pages[name] = len(re.findall(rb"/Type\s*/Page[^s]", (P / f"preview_{name}.pdf").read_bytes()))
