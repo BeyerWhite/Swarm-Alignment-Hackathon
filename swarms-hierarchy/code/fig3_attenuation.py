@@ -10,11 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "paper"))
 from figs import S, MK, INK2, save, plt, NICE, ORDER
 
-D = pd.read_csv(ROOT / "results" / "posthoc_attenuation.csv")
+D = pd.read_csv(ROOT / "results" / "posthoc_attenuation.csv", keep_default_na=False)   # estimator "null" is a name, not NaN
 D = D[(D.design == "common") & (D.metric == "sd_h")]
 fig, axs = plt.subplots(1, 2, figsize=(6.6, 3.1), sharey=True)
 mx = 7.2
-for ax, est, title in ((axs[0], "flexible", "(a) pre-registered kernel (prospective)"),
+for ax, est, title in ((axs[0], "flexible", "(a) frozen pre-registered kernel"),
                        (axs[1], "flex_iso", "(b) unshrunk kernel (post hoc)")):
     f = D[D.estimator == est]
     for k, m in enumerate([m for m in ORDER if m in set(f.model)]):
