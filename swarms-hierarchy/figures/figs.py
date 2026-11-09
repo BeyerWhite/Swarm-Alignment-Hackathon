@@ -1,4 +1,4 @@
-"""Paper figures (Apart template, US Letter, 6.5 in text width). Writes paper/figures/*.png (300 dpi) + .pdf.
+"""Paper figures (Apart template, US Letter, 6.5 in text width). Writes figures/*.png (300 dpi) + .pdf.
 Palette: validated categorical slots in fixed order; diverging blue (turn-taking) <-> red (defers to status),
 grey midpoint. Every figure is self-contained in its caption."""
 import json, sys
@@ -12,7 +12,7 @@ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "code"))
-R, OUT = ROOT / "results", ROOT / "paper" / "figures"
+R, OUT = ROOT / "results", ROOT / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
 S = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
 MK = ["o", "s", "^", "D", "v", "P", "X", "*"]

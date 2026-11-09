@@ -13,7 +13,7 @@ All project material is in [`swarms-hierarchy/`](swarms-hierarchy/). See its [RE
 
 | What | Path |
 |---|---|
-| Paper figures and the code that draws them | [`swarms-hierarchy/paper/`](swarms-hierarchy/paper/) |
+| Paper figures and the code that draws them (`figs.py`) | [`swarms-hierarchy/figures/`](swarms-hierarchy/figures/) |
 | Harness, calibration, prediction, evaluation and figure code | [`swarms-hierarchy/code/`](swarms-hierarchy/code/) |
 | Real-task game (planner/worker roles) | [`swarms-hierarchy/code/taskgame2.py`](swarms-hierarchy/code/taskgame2.py) |
 | Pre-registration and amendment log | [`swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md`](swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md) |
