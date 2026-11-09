@@ -17,6 +17,5 @@ All project material is in [`swarms-hierarchy/`](swarms-hierarchy/). See its [RE
 | Pre-registration and amendment log | [`swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md`](swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md) |
 | Every logged LLM call | [`swarms-hierarchy/results/calls.jsonl.gz`](swarms-hierarchy/results/) |
 | Frozen (hash-stamped) predictions, population logs, evaluations | [`swarms-hierarchy/results/`](swarms-hierarchy/results/) |
-| Claims and cross-model review history | [`swarms-hierarchy/review-stage/`](swarms-hierarchy/review-stage/) |
 
 All data was generated during the sprint (7–8 November 2026). The agents are text-only: no tools, no network access, no code execution. API keys are not included.
