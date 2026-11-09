@@ -22,7 +22,6 @@ the cross-model review loop and run tracking. That tooling is not included here.
 | `code/` | Harness and analysis: `prompts_v2.py`, `llm.py`, `calibrate.py`, `statecal.py`, `population2.py`, `predict.py`, `evaluate.py`, `reeval_followups.py`, extensions (`x1.py`, `hysteresis.py`, `x2.py`, `bnr_exp.py`, `board.py`), simulations (`fss.py`, `bnr_x2.py`) |
 | `results/` | Raw data and analysis outputs (see below) |
 | `refine-logs/` | Pre-registration, experiment plan with amendments A1–A5, lab log |
-| `idea-stage/` | Literature survey and idea selection |
 
 ## Data (`results/`)
 | File | Contents |
