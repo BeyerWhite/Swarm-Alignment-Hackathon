@@ -5,13 +5,15 @@ Swarm Alignment Hackathon, Apart Research, November 2026. Track 2: The Science o
 
 When many AI agents share a workspace, one of them can end up directing the rest. We measure how pairs of LLM agents respond to a public status record, freeze forecasts for whole populations, and then run the populations. The two-agent tests predict which populations become hierarchical.
 
+**Paper:** [`Artificial_Sociology_BCW_SA.pdf`](Artificial_Sociology_BCW_SA.pdf) (Word version: [`Artificial_Sociology_BCW_SA.docx`](Artificial_Sociology_BCW_SA.docx))
+
 ## Where everything is
 
 All project material is in [`swarms-hierarchy/`](swarms-hierarchy/). See its [README](swarms-hierarchy/README.md) for the full file guide.
 
 | What | Path |
 |---|---|
-| Report (Apart template) and figures | [`swarms-hierarchy/paper/`](swarms-hierarchy/paper/) |
+| Paper figures and the code that draws them | [`swarms-hierarchy/paper/`](swarms-hierarchy/paper/) |
 | Harness, calibration, prediction, evaluation and figure code | [`swarms-hierarchy/code/`](swarms-hierarchy/code/) |
 | Real-task game (planner/worker roles) | [`swarms-hierarchy/code/taskgame2.py`](swarms-hierarchy/code/taskgame2.py) |
 | Pre-registration and amendment log | [`swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md`](swarms-hierarchy/refine-logs/EXPERIMENT_PLAN.md) |

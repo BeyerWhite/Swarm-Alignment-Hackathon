@@ -1,4 +1,4 @@
-# Who Leads the Swarm? Pairwise response kernels and hierarchy in LLM agent populations
+# Artificial Sociology: Predicting Who Coordinates an LLM Agent Swarm from Two-Agent Tests
 
 Swarm Alignment Hackathon (Apart Research, Nov 2026), Track 2: "The Science of Agent Networks".
 
@@ -8,7 +8,7 @@ Ben-Naim & Redner 2005) explain who ends up coordinating in populations of LLM a
 2. freeze population predictions;
 3. run LLM-in-the-loop populations and score them against those predictions.
 
-**Report:** `paper/` (`Swarm_Hierarchy_Apart_Report.docx` from the official template; `paper.md` is the source).
+**Report:** the final paper is at the top of the repository (`Artificial_Sociology_BCW_SA.pdf`, with the `.docx`).
 
 ## Prior work / pre-existing code
 **All project code in this folder was written during the sprint (7–8 November 2026). No pre-existing project code was
@@ -18,7 +18,7 @@ the cross-model review loop and run tracking. That tooling is not included here.
 ## Layout
 | Path | Contents |
 |---|---|
-| `paper/` | Report source (`paper.md`), docx built from the Apart template, figures (`paper/figures/`, produced by `paper/figs.py`) |
+| `paper/` | Paper figures (`paper/figures/`), produced by `paper/figs.py` |
 | `code/` | Harness and analysis: `prompts_v2.py`, `llm.py`, `calibrate.py`, `statecal.py`, `population2.py`, `predict.py`, `evaluate.py`, `reeval_followups.py`, extensions (`x1.py`, `hysteresis.py`, `x2.py`, `bnr_exp.py`, `board.py`), simulations (`fss.py`, `bnr_x2.py`) |
 | `results/` | Raw data and analysis outputs (see below) |
 | `refine-logs/` | Pre-registration, experiment plan with amendments A1–A5, lab log |
