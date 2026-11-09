@@ -116,10 +116,16 @@ def cmd_anchors(a):
 def cmd_calib(a):
     A = json.load(open(ANCH))
     rng = random.Random(77)
+    have = {}                                                     # resume: count calls already made per anchor
+    if CAL.exists():
+        for l in open(CAL):
+            r = json.loads(l)
+            k_ = (r["model"], r["cond"], round(r["h_me"] - r["h_other"], 1), round((r["h_me"] + r["h_other"]) / 2, 1))
+            have[k_] = have.get(k_, 0) + 1
     jobs = []
     for m, c in CONDITIONS:
         for dl, ms in A[f"{m}|{c}"]["anchors"]:
-            for _ in range(CALLS_PER_ANCHOR):
+            for _ in range(max(0, CALLS_PER_ANCHOR - have.get((m, c, round(dl, 1), round(ms, 1)), 0))):
                 me, ot = rng.sample(range(1, 100), 2)
                 hm, ho = ms + dl / 2, ms - dl / 2
                 jobs.append(dict(model=m, cond=c, h_me=hm, h_other=ho, sys=SYSTEM.format(me=me, n=8),

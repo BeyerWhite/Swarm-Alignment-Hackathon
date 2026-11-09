@@ -16,7 +16,7 @@ LOG = ROOT / "results" / "calls.jsonl"
 GPT_BUDGET = int(os.environ.get("GPT_CALL_BUDGET", "1500"))   # protect the reviewer quota
 _lock = threading.Lock()
 _gpt_used = 0
-ADAPTION_CAP = float(os.environ.get("ADAPTION_CREDIT_CAP", "50"))       # hard project cap set by Sara: 50 of 1,500 credits
+ADAPTION_CAP = float(os.environ.get("ADAPTION_CREDIT_CAP", "100"))      # hard project cap set by Sara: 100 of 1,500 credits
 SPEND = ROOT / "results" / "adaption_spend.jsonl"            # per-call ledger (append-only)
 SPEND_TOTAL = ROOT / "results" / "adaption_spend_total.json" # locked running total shared by all processes
 RESERVE = 0.002            # credits reserved per in-flight call (conservative; real calls cost ~1e-5..5e-4)
@@ -46,7 +46,7 @@ def _ledger(delta, check_cap):
     return total
 
 
-def _adaption_call(name, system, prompt, timeout, max_tries=10, max_tokens=16):
+def _adaption_call(name, system, prompt, timeout, max_tries=None, max_tokens=16):
     """One Adaption inference with 429 back-off (~60 s + jitter), transient-error retries and cap reservation."""
     global _adaption
     import random as _r
@@ -54,6 +54,7 @@ def _adaption_call(name, system, prompt, timeout, max_tries=10, max_tokens=16):
         if _adaption is None:
             from adaption import Adaption
             _adaption = Adaption(max_retries=0)       # we handle retries; reads ADAPTION_API_KEY from env
+    max_tries = max_tries or int(os.environ.get("ADAPTION_MAX_TRIES", "10"))
     for attempt in range(max_tries):
         _ledger(RESERVE, check_cap=True)              # reserve before the request (fails closed at the cap)
         try:
@@ -64,7 +65,8 @@ def _adaption_call(name, system, prompt, timeout, max_tries=10, max_tokens=16):
             _ledger(-RESERVE, check_cap=False)        # nothing was charged for a failed request
             status = getattr(e, "status_code", None)
             if status == 429 or "rate limit" in str(e).lower():
-                time.sleep(60 + _r.uniform(0, 15))
+                base = float(os.environ.get("ADAPTION_429_SLEEP", "60"))     # shorter back-off on request
+                time.sleep(base + _r.uniform(0, base / 4))
             else:
                 time.sleep(min(60, 2 ** attempt) + _r.uniform(0, 1))
             continue
