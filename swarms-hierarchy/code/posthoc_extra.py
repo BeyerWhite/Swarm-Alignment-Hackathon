@@ -31,7 +31,7 @@ out = {}
 
 def interval(samples, B, S, k):
     d = seed_mean_dist(samples, B, S, k); lo, hi = np.quantile(d, [.05, .95])
-    return dict(pred=round(float(d.mean()), 3), lo=round(float(lo), 3), hi=round(float(hi), 3))
+    return dict(pred=float(d.mean()), lo=float(lo), hi=float(hi))      # full precision; round only for display
 
 
 def draws(kfun, B, S, simf, seed):

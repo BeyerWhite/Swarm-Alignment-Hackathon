@@ -31,7 +31,7 @@ def main():
                yerr=[np.std(v, ddof=1) / np.sqrt(len(v)) for v in vals], error_kw=dict(lw=.7, capsize=1.5))
     ax.set_xticks(x); ax.set_xticklabels(lab, fontsize=6.5, rotation=15)
     ax.set_ylabel("correct unique tasks per round (max 8)"); ax.set_ylim(0, 9.2)
-    ax.set_title("(a) Coordination doubles output, but shuffling beats it", loc="left", fontsize=8.2, weight="bold")
+    ax.set_title("(a) Planning raises output; own task order raises it most", loc="left", fontsize=8.2, weight="bold")
     ax.legend(fontsize=6, frameon=False, loc="upper left", ncol=3)
     ax = axs[1]
     for i, m in enumerate(models):
@@ -47,11 +47,11 @@ def main():
         ax.annotate("", xy=(i + .15, np.mean(d1)), xytext=(i + .15, np.mean(d0)),
                     arrowprops=dict(arrowstyle="->", color=col, lw=1.4))
         ax.text(i, -.09, "pred. " + ("+" if pred > 0 else "−"), fontsize=5.5, color=INK2, ha="center")
-    ax.plot([], [], "o", color=S[0], label="free: incumbency"); ax.plot([], [], "_", color=INK2, mew=1.5, label="random-order null")
+    ax.plot([], [], "o", color=S[0], label="free: recurrence"); ax.plot([], [], "_", color=INK2, mew=1.5, label="random-order null")
     ax.plot([], [], color=S[1], label="w0→w100, as predicted"); ax.plot([], [], color="#9a9893", label="w0→w100, not as predicted")
     ax.set_xticks(range(len(models))); ax.set_xticklabels(lab, fontsize=6.5, rotation=15)
     ax.set_ylabel("P(coordinator keeps role)"); ax.set_ylim(-.12, .95)
-    ax.set_title("(b) A sticky coordinator; framing effect", loc="left", fontsize=8.2, weight="bold")
+    ax.set_title("(b) Planner recurrence; framing effect", loc="left", fontsize=8.2, weight="bold")
     ax.legend(fontsize=5.5, frameon=False, loc="upper left", ncol=2)
     fig.tight_layout(); save(fig, "fig5_taskgame")
 
