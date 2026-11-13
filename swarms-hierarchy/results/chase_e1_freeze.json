@@ -1,0 +1,16 @@
+{
+ "created": "2026-11-12T19:49:24",
+ "stage": "E1 bystander kernel",
+ "seed": 20261112,
+ "sha256": {
+  "code/chase_prompts.py": "454d24aad16cd3cb7e43c40cac2485f7d440159333cc65c80cce68a0c178b7c1",
+  "code/chase_e1.py": "29419326d748702079aa083cca73cd92edf8e8b7d53d2bf599b6b3718bb210e8",
+  "code/chase_e1_analyze.py": "8057f824197a457b78e64fdd7d5d20b415e75a88361e6e839b4b2d83300554b6",
+  "code/chase_metrics.py": "c82cb009cc13ab8377a39c851da53a00c900046326adb2b0153879220da63576",
+  "code/llm.py": "eec72cea32bf7a996530e7748c7dcbeb6705dfb3a981a35e06abce80097d8de8",
+  "code/prompts_v2.py": "f1e7affbac9e457754a5218240feb0833e3b2294dc490c180ded87136967cc1e",
+  "refine-logs/CHASE_PREREGISTRATION.md": "a531caf3f2d7b1d895293cbb5a1f4d7a4ce7272b5517dfe2bf575d884f07dfa7"
+ },
+ "note": "Frozen after a 444-call pipeline smoke test (scratch/chase_e1_smoke.jsonl, norm100 only, not analysed for effects beyond parse rate and a count of DEFER cells) and before any row of results/chase_e1_kernel.jsonl existed.",
+ "sha256_all": "d65f44cc9fa56dee634c033684d841283ada318ac582673209947cffea711d2c"
+}
