@@ -232,3 +232,15 @@ Frozen analysis rerun on `results/chase_e1_kernel_ABHG.jsonl` (Holm over 13 cell
 β_p: `comp` −0.079 ± 0.010, `norm100` −0.092 ± 0.010 (both Holm < 0.001). T `comp` +0.208 ± 0.095 (Holm 0.37).
 Redaction contrast R non-zero in GPT only (−0.146 ± 0.068, −0.312 ± 0.061). Addendum in the E1 report.
 Remaining for the final E1 table: batch C (after E3 and E4); Sonnet not started.
+
+**Branch pushed (17:53).** Commit 454d89a on `chase-bystander`, pushed to `origin`. Left out because the running
+E3 queue is still writing them: `results/chase_e3_pop.jsonl` and the Adaption spend ledger.
+
+**E1 Sonnet arm started 17:53 and paused 17:56** (owner allowed it if it could run in parallel). `claude:sonnet`
+× `comp`, `norm100`: 340 of 4,224 rows written, all parsed; no outcome looked at. Paused by hand because of plan
+usage: the owner's 5-hour window went from 9% to 24% over these calls (this session's own use included), so the
+full arm needs roughly one and a half to two windows and would lock the session out mid-run. The rows stay in
+`results/chase_e1_kernel.jsonl`; a restart continues from them. How to run the remainder is with the owner.
+
+**Batch C not started.** It uses the same Adaption account as E3, and the 50-per-minute limit is per user, so
+running it now would only take calls from E3. It stays after E3 and E4 (amendment C2).
