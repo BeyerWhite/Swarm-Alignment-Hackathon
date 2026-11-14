@@ -312,7 +312,7 @@ partial. Evaluated once with `code/chase_e3_eval.py` (hash unchanged, 3e16161b�
   forecast; 5 of 7 LOG − OWN contrasts inside.
 - Adaption spend at completion: 31.26 total, 13.2 credits since the baseline of 18.06 (cap 60).
 
-**2026-11-14 16:12 — E4 and E1 batch C queued (before any E4 call).** One paced process at a time, as in amendment
+**2026-11-14 16:10 — E4 and E1 batch C queued (before any E4 call).** One paced process at a time, as in amendment
 C2: first E4, then batch C. Script `scratch/chase_e4c_queue.sh`.
 - E4 as pre-registered (section 8): fixed membership Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek-v4-flash, one agent
   each; framing `comp`; arms OWN and LOG; 40 re-runs per arm, seeds 9000–9039, the same seeds in both arms; 24
