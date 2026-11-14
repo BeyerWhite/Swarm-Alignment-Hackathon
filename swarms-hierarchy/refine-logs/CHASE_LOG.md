@@ -298,3 +298,16 @@ calibration rows.
   have this problem because the partner-record response was already strong inside the E1 grid.
 - The leave-one-seed-out bound (0.71) is still below the observed 0.78 but the observation is inside its interval;
   whether features outside the kernel (order or recency of the lines) add anything is not established.
+
+**2026-11-14 16:00 — E3 complete.** The queue of amendment C5 finished with every stage at exit 0: Gemma-31B
+`norm100` (13 Nov 12:20–19:19), Gemma-31B `comp` with its extra groups (19:19–06:50), GLM-5.2 `comp` (06:50–13:26),
+DeepSeek `comp` control (13:26–16:00). 508 groups in `results/chase_e3_pop.jsonl` (sha256 5967fb05…878e6868), none
+partial. Evaluated once with `code/chase_e3_eval.py` (hash unchanged, 3e16161b…); forecast file unchanged (stamp
+9f2241d0…). Report: `refine-logs/CHASE_E3_REPORT.md`.
+- LOG − OWN, groups of four: Gemma-31B `comp` +0.25 [+0.10, +0.40], Fisher p = 0.0025, Holm 0.008 (80 groups per
+  arm); Gemma-31B `norm100` +0.17 [+0.03, +0.32], p = 0.048, Holm 0.095; GLM-5.2 `comp` 0.00, p = 1.
+- LOG − OWN, N = 8 t_tri: Gemma-31B `comp` +0.54 [+0.35, +0.73], Mann–Whitney p = 0.0002 (12 seeds);
+  `norm100` +0.46 [+0.04, +0.86], p = 0.056 (6 seeds); control +0.14 [+0.02, +0.27], p = 0.14 (4 seeds).
+- Frozen forecasts: 17 of 22 arm forecasts inside their 90% interval, all five misses toward more hierarchy than
+  forecast; 5 of 7 LOG − OWN contrasts inside.
+- Adaption spend at completion: 31.26 total, 13.2 credits since the baseline of 18.06 (cap 60).
