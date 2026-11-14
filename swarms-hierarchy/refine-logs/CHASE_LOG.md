@@ -244,3 +244,39 @@ full arm needs roughly one and a half to two windows and would lock the session 
 
 **Batch C not started.** It uses the same Adaption account as E3, and the 50-per-minute limit is per user, so
 running it now would only take calls from E3. It stays after E3 and E4 (amendment C2).
+
+**E1 Sonnet arm in chunks (owner's choice, 20:41).** `scratch/chase_e1_sonnet_chunks.sh` runs the normal E1 runner
+and stops it after a fixed number of new rows, one chunk per 5-hour plan window (starts 5 h 5 min apart). First
+chunk 20:41–20:45: 413 rows, total 753 of 4,224, all parsed. The window then stood at 55%, so 753 Sonnet calls cost
+about 40% of a window, more than the third estimated. Remaining chunks cut from 750 to 600 rows; next start 01:46,
+six chunks, last one about 03:10 on 2026-11-15. No Sonnet outcome is looked at until the arm is complete.
+
+**E3, first cell complete (19:19): Gemma-31B `norm100`.** 144 groups; stage 2 (Gemma-31B `comp`) running.
+Evaluation by the hash-logged `code/chase_e3_eval.py` (sha256 3e16161b…, unchanged) on a snapshot of complete
+records; output `results/chase_e3_eval.json` (will be rewritten as cells complete). Invalid replies at most 0.6% of
+decisions per arm.
+
+| Arm | Statistic | Observed | Frozen forecast [5%, 95%] | In interval | Leave-one-seed-out bound |
+|---|---|---|---|---|---|
+| OWN, groups of four | linear | 0.78 (31/40) | 0.56 [0.42, 0.70] | no | 0.71 |
+| LOG, groups of four | linear | 0.95 (38/40) | 0.95 [0.90, 1.00] | yes | 0.96 |
+| DYAD, groups of four | linear | 0.55 (11/20) | 0.37 [0.20, 0.55] | yes (edge) | 0.38 |
+| REDACT, groups of four | linear | 0.75 (15/20) | 0.60 [0.40, 0.80] | yes | 0.68 |
+| OWN, N = 8 | t_tri | 0.32 | 0.08 [−0.08, 0.24] | no | 0.29 |
+| LOG, N = 8 | t_tri | 0.79 | 0.75 [0.62, 0.86] | yes | 0.88 |
+| SCORE+LOG, N = 8 | t_tri | 0.98 | 0.99 [0.96, 1.00] | yes | 0.99 |
+| SCORE, N = 8 | t_tri | 1.00 | 0.83 [0.68, 0.94] | no | n/a |
+
+- **LOG minus OWN.** Groups of four: +0.17, bootstrap 95% interval [+0.03, +0.32], Fisher p = 0.048 (Holm pending
+  the other two cells); frozen forecast +0.39 [+0.25, +0.53], observed outside. N = 8: +0.46 [+0.04, +0.86],
+  Mann–Whitney p = 0.056; frozen +0.68 [+0.44, +0.89], observed inside.
+- **Reading.** The LOG forecast was right. The OWN forecast was too low: groups whose agents see only their own
+  record are much more linear than the E2 kernel said (0.78 against 0.56; kernel-null 0.38), and a kernel refitted
+  on those populations' own decisions reaches 0.71. So the direction of H3 holds, but the bystander gain is less
+  than half the forecast because the baseline was underestimated, not because LOG fell short.
+- **Chase's sequences.** DD + DS share under LOG is 0.70 at both sizes (OWN 0.53 and 0.51), above the frozen
+  forecast (0.59 [0.53, 0.65]) and above the leave-one-seed-out bound (0.57, 0.63). The bystander-dominates-
+  initial-dominant sequence is rare under LOG (0.09 and 0.11; a quarter under OWN). The frozen forecast that the
+  sequence signature would be weak is wrong for this cell.
+- **Kernel form.** For LOG the ladder forecast is on target (0.95; LIN 0.98; FLEX 0.77, observed outside). For OWN
+  every form is too low.
