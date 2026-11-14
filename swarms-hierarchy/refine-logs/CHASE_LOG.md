@@ -280,3 +280,21 @@ decisions per arm.
   sequence signature would be weak is wrong for this cell.
 - **Kernel form.** For LOG the ladder forecast is on target (0.95; LIN 0.98; FLEX 0.77, observed outside). For OWN
   every form is too low.
+
+**Post hoc (not pre-registered): why the OWN forecast was low in Gemma-31B `norm100`.** Asked by the owner after
+the first cell. Population decisions of the OWN arm were tabulated against the frozen K2 kernel and its
+calibration rows.
+- Populations reach deep losing records that the calibration barely sampled. In groups of four, 10% of decisions
+  (382 of 3,824) were made at an own net record of −6 or worse; the state-matched calibration has 2 of 299 rows
+  there, and the E1 grid stops at ±2.
+- In those states agents nearly stop leading: LEAD 0.16 (groups of four) and 0.30 (N = 8). The frozen kernel,
+  evaluated on the same states, gives 0.33 and 0.61. At −6 to −3 it is 0.50 against 0.60, and 0.69 against 0.81.
+  From −3 upward kernel and populations agree within 0.05.
+- Refitting the same kernel form on population decisions raises the own-record coefficient from 0.69 to 1.05
+  (groups of four) and 1.31 (N = 8), and the direct-record coefficient from 1.68 to 2.08 and 2.32.
+- Reading: the loser effect is a threshold beyond the measured range, and it feeds itself (deferring produces
+  losses, which deepen the record). The calibration states came from surrogate groups driven by the E1 kernel,
+  which had almost no own-record response, so those surrogates rarely produced deep losers. The LOG kernel did not
+  have this problem because the partner-record response was already strong inside the E1 grid.
+- The leave-one-seed-out bound (0.71) is still below the observed 0.78 but the observation is inside its interval;
+  whether features outside the kernel (order or recency of the lines) add anything is not established.
