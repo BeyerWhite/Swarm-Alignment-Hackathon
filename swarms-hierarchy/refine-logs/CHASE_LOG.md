@@ -311,3 +311,23 @@ partial. Evaluated once with `code/chase_e3_eval.py` (hash unchanged, 3e16161b�
 - Frozen forecasts: 17 of 22 arm forecasts inside their 90% interval, all five misses toward more hierarchy than
   forecast; 5 of 7 LOG − OWN contrasts inside.
 - Adaption spend at completion: 31.26 total, 13.2 credits since the baseline of 18.06 (cap 60).
+
+**2026-11-14 16:12 — E4 and E1 batch C queued (before any E4 call).** One paced process at a time, as in amendment
+C2: first E4, then batch C. Script `scratch/chase_e4c_queue.sh`.
+- E4 as pre-registered (section 8): fixed membership Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek-v4-flash, one agent
+  each; framing `comp`; arms OWN and LOG; 40 re-runs per arm, seeds 9000–9039, the same seeds in both arms; 24
+  rounds. About 7,680 calls. Qwen3.8-27B enters E4 before its E1 cells exist (batch C runs afterwards); the
+  pre-registration fixed the membership, so this is not a deviation, but nothing is known yet about how that
+  model responds to records.
+- Batch C: Gemma-4-26B-A4B, Qwen3.8-27B, Qwen3.5-397B × `comp`, `norm100`, `norm0`, 2,112 calls each (65 rows
+  already exist from the stray start on 12 Nov and are skipped). It appends to the same kernel file as the Sonnet
+  chunks; rows are written one line at a time.
+- No E4 outcome is read until both arms are complete and the E4 evaluation script's hash is in this log.
+
+**2026-11-14 16:11 — E4 launched (16:10) and its evaluation fixed.** `code/chase_e4_eval.py`, sha256
+d7c05405da783e38993e2b2584fa96c347982f0f87e9d19aef1dd65d1ecf254d, written and tested only on E3 groups relabelled as a fake rewind file
+(`scratch/e4test/`); 0 E4 groups were on disk at that moment and none was read. Fixed in the script: a re-run's
+hierarchy is its set of final relationships over the six dyads; modal share and the probability that two re-runs
+are identical, per arm; LOG versus OWN by Fisher exact on linear and on modal counts; bootstrap intervals over
+re-runs with the modal pattern held fixed and copies of the same re-run excluded from pairs. It refuses to run
+unless both arms hold all 40 re-runs. Chase's 2002 figures are quoted only as the pre-registration quotes them.
