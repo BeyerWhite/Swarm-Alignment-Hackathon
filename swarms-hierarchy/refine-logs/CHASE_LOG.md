@@ -347,3 +347,13 @@ since the baseline (cap 60).
 - Two models respond to the partner's record under `norm0`. The pre-registration makes a `norm0` population run
   (H5, exploratory) conditional on this. None is planned in amendment C5 and none has been started.
 - Sonnet: 3,771 of 4,224 rows; last chunk due 03:11. Not analysed.
+
+**2026-11-15 03:15 — Sonnet arm complete; final E1 table.** Last chunk 03:11–03:14, runner exit 0; 4,224 rows, 4,224
+distinct jobs, none invalid. Frozen analysis (hash unchanged, 8057f824…) on the full
+`results/chase_e1_kernel.jsonl`, 50,688 rows, 24 cells, Holm over 24.
+- Sonnet `comp`: LEAD in 2,112 of 2,112 calls; unresponsive. Sonnet `norm100`: β_p −0.069 ± 0.008 (Holm < 0.001),
+  LEAD 1.00 up to p = +1 and 0.54 at p = +3; β_d +0.191 ± 0.019; T +0.021 ± 0.021; R −0.010 ± 0.010.
+- Final: 15 of 24 cells responsive, all through β_p < 0; no T survives adjustment (largest GPT `comp`, Holm 0.69).
+  Earlier verdicts unchanged. Addendum and the 24-cell table are in `refine-logs/CHASE_E1_REPORT.md`.
+- Every stage of amendments C2 and C5 is now complete. Nothing is running. The conditional `norm0` population run
+  (H5) has not been started and awaits the owner's decision.

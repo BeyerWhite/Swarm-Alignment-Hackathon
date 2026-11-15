@@ -204,6 +204,52 @@ LEAD rate in the LOG grid by the partner's net third-party record:
 Across all 22 cells analysed so far, 14 are responsive, all through β_p and none through T: every model except
 DeepSeek and Qwen3.8-27B in at least two framings.
 
+## Addendum, 15 Nov 03:15 — Claude Sonnet 5.5, and the final E1 table
+
+The Sonnet arm ran in seven chunks from 13 Nov to 15 Nov 03:14 (`comp` and `norm100`, 2,112 calls each, no
+invalid replies). Frozen analysis rerun on the full `results/chase_e1_kernel.jsonl` (50,688 rows). This is the
+final E1 table: 24 cells, Holm over all 24, which is stricter than the 18 cells of the pre-registration. No
+earlier verdict changes (GLM-5.2 `norm100` 0.013, Haiku `comp` 0.046).
+
+| Model | Framing | β_p ± SE | Holm p (24 cells) | p = +3 vs −3 | T ± SE | Holm p | R ± SE | Responsive |
+|---|---|---|---|---|---|---|---|---|
+| Sonnet 5.5 | comp | 0.000 ± 0.000 | 1.00 | 0.00 | 0.000 ± 0.000 | 1.00 | 0.000 ± 0.000 | no |
+| Sonnet 5.5 | norm100 | −0.069 ± 0.008 | < 0.001 | −0.46 | +0.021 ± 0.021 | 1.00 | −0.010 ± 0.010 | yes |
+
+LEAD rate in the LOG grid by the partner's net third-party record:
+
+| Framing | p = −3 | −1 | 0 | +1 | +3 |
+|---|---|---|---|---|---|
+| comp | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| norm100 | 1.00 | 1.00 | 1.00 | 1.00 | 0.54 |
+
+- **Under `comp` Sonnet answered LEAD in all 2,112 calls**, whatever the record. Nothing can be estimated there.
+- **Under `norm100` the bystander effect is a step, not a slope.** LEAD stays at 1.00 until the partner is three
+  wins ahead against third parties, then drops to 0.54. The grid has no point between +1 and +3, so where the
+  step lies is not known.
+- **Direct history is the strongest cue under `norm100`:** LEAD is 0.19 after two losses to this partner and 0.72
+  after one (β_d = +0.19). Own record matters a little (0.91 at two net losses in the OWN arm).
+- **No transitive inference, and the redaction placebo is null.**
+
+### All 24 cells
+
+| Model | comp | norm100 | norm0 |
+|---|---|---|---|
+| Gemma-4-31B | −0.089 ✓ | −0.146 ✓ | −0.006 |
+| Gemma-4-26B | −0.069 ✓ | −0.028 ✓ | −0.108 ✓ |
+| GLM-5.2 | −0.051 ✓ | −0.021 ✓ | −0.016 |
+| Qwen3.5-397B | −0.082 ✓ | −0.077 ✓ | −0.046 ✓ |
+| Qwen3.8-27B | −0.008 | +0.008 | +0.005 |
+| DeepSeek-v4-flash | 0.000 | 0.000 | −0.003 |
+| Claude Haiku 5.5 | −0.011 ✓ | −0.052 ✓ | not run |
+| Claude Sonnet 5.5 | 0.000 | −0.069 ✓ | not run |
+| GPT-6-Luna | −0.079 ✓ | −0.092 ✓ | not run |
+
+Entries are β_p; ✓ marks Holm-adjusted p < 0.05. 15 of 24 cells are responsive, every one through β_p with the sign
+Chase predicts. No cell has a positive β_p that survives adjustment. No cell shows transitive inference (T): the
+largest is GPT-6-Luna `comp`, +0.21 ± 0.10, Holm 0.69. Seven of nine models show the bystander effect in at least
+one framing; DeepSeek-v4-flash and Qwen3.8-27B show it in none.
+
 ## Things to keep in mind when reading E2
 
 - Gemma-31B's OWN-arm kernel is close to "always LEAD", so its own-record populations should be driven mostly by
