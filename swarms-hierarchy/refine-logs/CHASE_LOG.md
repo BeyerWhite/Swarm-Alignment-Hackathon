@@ -357,3 +357,38 @@ distinct jobs, none invalid. Frozen analysis (hash unchanged, 8057f824…) on th
   Earlier verdicts unchanged. Addendum and the 24-cell table are in `refine-logs/CHASE_E1_REPORT.md`.
 - Every stage of amendments C2 and C5 is now complete. Nothing is running. The conditional `norm0` population run
   (H5) has not been started and awaits the owner's decision.
+
+### Amendment C6 (E5: equal-turns population run; written 2026-11-15 16:49, before any E5 call)
+
+The owner approved this run on 15 Nov ("Yes, run it") after the batch C result. It is the conditional, exploratory
+population test of H5 (pre-registration section 2): under `norm0` the LOG − OWN difference reverses or vanishes.
+
+1. **Cell.** Gemma-4-26B-A4B under `norm0`, chosen because it has the largest partner-record slope under `norm0`
+   in E1 (β_p −0.108 ± 0.009; Qwen3.5-397B −0.046). One cell only. No control cell.
+2. **Arms and counts.** Groups of four, 24 rounds: OWN 40, LOG 40, DYAD 20, REDACT 20, seeds 4000+. N = 8, 40
+   rounds: OWN 6, LOG 6, seeds 8000+. No score arms: the legacy score kernel does not cover this model.
+3. **Calibration.** Pass 1 exactly as E2 (1,800 state-matched calls). Pass 2 is new: 825 further calls at records
+   visited by surrogate groups driven by the kernels refitted on E1 + pass-1 rows at the population's own group
+   size. Reason: the post hoc diagnosis of 13 Nov found that surrogates driven by E1 kernels under-sample the
+   records real populations reach. On the old Gemma-31B `norm100` data (dry run, no calls) pass 2 raises the share
+   of own-record states at −6 or worse in groups of four from 2 of 299 to about 5%. Forecasts in this cell are
+   therefore not made by the same procedure as the E3 forecasts.
+4. **Forecast.** `code/chase_e5.py predict` → `results/chase_e5_predictions.json`, write-once and stamped, same
+   kernels, bootstrap and intervals as E2. The queue starts the populations as soon as the forecast is frozen and
+   writes the stamp into this log first. Deviation from pre-registration section 6: the owner does not see this
+   forecast before the populations start; the approval covered the run as a whole.
+5. **Tests, fixed now.** As E3: LOG versus OWN by Fisher exact on linear groups of four and Mann–Whitney on
+   per-group t_tri at N = 8, group-bootstrap 95% intervals, every arm against its frozen interval, the
+   leave-one-seed-out bound. Evaluation by the unchanged `code/chase_e3_eval.py` (3e16161b…) through
+   `code/chase_e5_eval.py` (73d07343…), which only sets the cell, the counts and the file names. The cell is
+   exploratory, reported unadjusted, and is not added to the Holm family of E3.
+6. **Reading of H5, fixed now.** "Reverses": LOG − OWN linear share below zero with a 95% interval excluding zero.
+   "Contradicted": LOG − OWN above zero with p < 0.05. Anything else is reported as the interval it is; a
+   non-significant difference is not counted as "vanishes" unless the interval excludes +0.17, the smaller of the
+   two differences found for Gemma-31B in E3.
+7. **No outcome is read until the cell is complete.** Operational checks (group counts, error lines) only.
+8. **Budget.** About 18,000 calls, 7 hours, 1.6 credits (34.01 total spent, cap 78.06). The estimate given to the
+   owner was 14,000 calls and 5 hours; the difference is the DYAD and REDACT arms and the second pass.
+9. **Files.** Calibration rows go to `results/chase_e5_statecal.jsonl`; the frozen E2 files are not touched.
+   Populations are appended to `results/chase_e3_pop.jsonl`; the E3 hash 5967fb05… refers to its first 508 lines.
+   Wrapper `code/chase_e5.py` 7f2cf7b0…; queue `scratch/chase_e5_queue.sh` db475bde….
