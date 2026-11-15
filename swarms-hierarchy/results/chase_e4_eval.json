@@ -1,0 +1,129 @@
+{
+ "pop_sha256": "b123b93be94a8bcff90c3ed5839b418ffe476a9788bb96464ebd27a3c92703d3",
+ "framing": "comp",
+ "members": [
+  "adaption:gemma-4-31b-it",
+  "adaption:glm-5.2",
+  "adaption:qwen3.8-27b",
+  "adaption:deepseek-v4-flash"
+ ],
+ "groups": 40,
+ "arms": {
+  "OWN": {
+   "linear": 0.5,
+   "modal": 0.1,
+   "modal_n": 4,
+   "linear_n": 20,
+   "n": 40,
+   "distinct": 26,
+   "pair_identical": 0.028205128205128206,
+   "modal_pattern": [
+    1,
+    0,
+    3,
+    1,
+    1,
+    3
+   ],
+   "modal_is_linear": true,
+   "dd_ds": 0.49375,
+   "invalid": 1,
+   "decisions": 3872,
+   "mean_dominated": {
+    "adaption:gemma-4-31b-it": 1.6,
+    "adaption:glm-5.2": 1.525,
+    "adaption:qwen3.8-27b": 0.875,
+    "adaption:deepseek-v4-flash": 2.0
+   },
+   "top_share": {
+    "adaption:gemma-4-31b-it": 0.125,
+    "adaption:glm-5.2": 0.15,
+    "adaption:qwen3.8-27b": 0.025,
+    "adaption:deepseek-v4-flash": 0.2
+   },
+   "linear_ci95": [
+    0.35,
+    0.65
+   ],
+   "modal_ci95": [
+    0.025,
+    0.2
+   ],
+   "pair_identical_ci95": [
+    0.010512483574244415,
+    0.05394736842105263
+   ]
+  },
+  "LOG": {
+   "linear": 0.6,
+   "modal": 0.125,
+   "modal_n": 5,
+   "linear_n": 24,
+   "n": 40,
+   "distinct": 29,
+   "pair_identical": 0.023076923076923078,
+   "modal_pattern": [
+    1,
+    0,
+    3,
+    1,
+    3,
+    3
+   ],
+   "modal_is_linear": true,
+   "dd_ds": 0.51875,
+   "invalid": 34,
+   "decisions": 3850,
+   "mean_dominated": {
+    "adaption:gemma-4-31b-it": 1.375,
+    "adaption:glm-5.2": 1.625,
+    "adaption:qwen3.8-27b": 0.9,
+    "adaption:deepseek-v4-flash": 2.1
+   },
+   "top_share": {
+    "adaption:gemma-4-31b-it": 0.1,
+    "adaption:glm-5.2": 0.15,
+    "adaption:qwen3.8-27b": 0.025,
+    "adaption:deepseek-v4-flash": 0.325
+   },
+   "linear_ci95": [
+    0.45,
+    0.75
+   ],
+   "modal_ci95": [
+    0.025,
+    0.225
+   ],
+   "pair_identical_ci95": [
+    0.006570302233902759,
+    0.05152085823320962
+   ]
+  }
+ },
+ "contrast": {
+  "linear": {
+   "diff": 0.09999999999999998,
+   "ci95": [
+    -0.125,
+    0.32499999999999996
+   ],
+   "fisher_p": 0.500480863314603
+  },
+  "modal": {
+   "diff": 0.024999999999999994,
+   "ci95": [
+    -0.125,
+    0.175
+   ],
+   "fisher_p": 1.0
+  },
+  "pair_identical": {
+   "diff": -0.005128205128205127,
+   "ci95": [
+    -0.03385859784031414,
+    0.026350461133069825
+   ]
+  }
+ },
+ "same_modal_pattern_in_both_arms": false
+}

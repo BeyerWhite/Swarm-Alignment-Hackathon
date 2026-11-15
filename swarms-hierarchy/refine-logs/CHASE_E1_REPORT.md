@@ -152,6 +152,58 @@ LEAD rate in the LOG grid by the partner's net third-party record:
 - **Direct history dominates.** LEAD is 0.09 (`comp`) and 0.25 (`norm100`) after two losses to this partner, and
   0.84 and 0.97 after two wins (β_d = +0.20 and +0.17).
 
+## Addendum, 15 Nov 02:00 — batch C (Gemma-4-26B, Qwen3.8-27B, Qwen3.5-397B)
+
+Batch C ran after E3 and E4, 14 Nov 19:25 to 15 Nov 02:00: 3 models × 3 framings × 2,112 calls, no invalid replies.
+Frozen analysis rerun on `results/chase_e1_kernel_ABCHG.jsonl` (46,464 rows; every arm except Sonnet, which is
+at 3,771 of 4,224 calls and not analysed). Holm is now over 22 cells; no earlier verdict changes (Haiku `comp`
+moves from 0.028 to 0.042).
+
+| Model | Framing | β_p ± SE | Holm p (22 cells) | p = +3 vs −3 | T ± SE | Holm p | R ± SE | Responsive |
+|---|---|---|---|---|---|---|---|---|
+| Gemma-4-26B | comp | −0.069 ± 0.009 | < 0.001 | −0.46 | +0.031 ± 0.018 | 1.00 | −0.177 ± 0.031 | yes |
+| Gemma-4-26B | norm100 | −0.028 ± 0.006 | < 0.001 | −0.18 | +0.010 ± 0.010 | 1.00 | −0.010 ± 0.010 | yes |
+| Gemma-4-26B | norm0 | −0.108 ± 0.009 | < 0.001 | −0.64 | −0.031 ± 0.096 | 1.00 | −0.229 ± 0.053 | yes |
+| Qwen3.5-397B | comp | −0.082 ± 0.010 | < 0.001 | −0.51 | −0.021 ± 0.093 | 1.00 | −0.135 ± 0.050 | yes |
+| Qwen3.5-397B | norm100 | −0.077 ± 0.011 | < 0.001 | −0.44 | +0.031 ± 0.097 | 1.00 | −0.094 ± 0.065 | yes |
+| Qwen3.5-397B | norm0 | −0.046 ± 0.010 | < 0.001 | −0.26 | −0.156 ± 0.097 | 1.00 | −0.188 ± 0.056 | yes |
+| Qwen3.8-27B | comp | −0.008 ± 0.011 | 1.00 | −0.07 | +0.021 ± 0.092 | 1.00 | −0.094 ± 0.052 | no |
+| Qwen3.8-27B | norm100 | +0.008 ± 0.006 | 1.00 | +0.04 | +0.042 ± 0.045 | 1.00 | −0.031 ± 0.022 | no |
+| Qwen3.8-27B | norm0 | +0.005 ± 0.011 | 1.00 | +0.03 | +0.156 ± 0.099 | 1.00 | +0.010 ± 0.071 | no |
+
+LEAD rate in the LOG grid by the partner's net third-party record:
+
+| Model | Framing | p = −3 | −1 | 0 | +1 | +3 |
+|---|---|---|---|---|---|---|
+| Gemma-4-26B | comp | 0.98 | 1.00 | 1.00 | 0.99 | 0.52 |
+| | norm100 | 1.00 | 1.00 | 1.00 | 0.98 | 0.82 |
+| | norm0 | 0.91 | 0.92 | 0.92 | 0.67 | 0.27 |
+| Qwen3.5-397B | comp | 0.81 | 0.74 | 0.89 | 0.62 | 0.30 |
+| | norm100 | 0.64 | 0.70 | 0.75 | 0.47 | 0.20 |
+| | norm0 | 0.46 | 0.48 | 0.62 | 0.33 | 0.20 |
+| Qwen3.8-27B | comp | 0.65 | 0.67 | 0.84 | 0.72 | 0.57 |
+| | norm100 | 0.90 | 0.94 | 0.99 | 0.98 | 0.94 |
+| | norm0 | 0.31 | 0.45 | 0.52 | 0.45 | 0.34 |
+
+- **Two more models show the bystander effect in every framing.** Gemma-4-26B and Qwen3.5-397B lead less against a
+  partner seen winning. As in most other models the effect is one-sided: LEAD falls against winners and does not
+  rise against losers.
+- **The effect survives the equal-turns framing in these two models.** Under `norm0`, where the organisers are said
+  to weight equal turns, the three models of batches A and B did not respond to the partner's record. Gemma-4-26B responds more
+  strongly there than under `comp` (0.92 → 0.27 at p = +3). This is the first kernel evidence bearing on H5; the
+  pre-registration makes a `norm0` population run conditional on exactly this, and none has been run.
+- **Qwen3.8-27B does not use the partner's third-party record**, although it does use its own and the direct record
+  (β_d = +0.20 under `comp`). LEAD is highest at p = 0 and lower on both sides under `comp` and `norm0`, which a
+  slope cannot capture and which was not a pre-registered estimand.
+- **Transitive inference: nil in every cell.** Across all 22 cells no T survives adjustment; the largest is GPT
+  `comp` (+0.21 ± 0.10, Holm 0.63).
+- **The redaction placebo is not null for Gemma-4-26B and Qwen3.5-397B under `comp` and `norm0`.** Outcome-less
+  partner lines lower LEAD by 14 to 23 points relative to the full log at p = 0, as for GPT (Qwen3.5-397B
+  `norm100`: 9 points, within noise). β_p is not touched by this.
+
+Across all 22 cells analysed so far, 14 are responsive, all through β_p and none through T: every model except
+DeepSeek and Qwen3.8-27B in at least two framings.
+
 ## Things to keep in mind when reading E2
 
 - Gemma-31B's OWN-arm kernel is close to "always LEAD", so its own-record populations should be driven mostly by

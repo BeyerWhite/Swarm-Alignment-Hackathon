@@ -331,3 +331,19 @@ hierarchy is its set of final relationships over the six dyads; modal share and 
 are identical, per arm; LOG versus OWN by Fisher exact on linear and on modal counts; bootstrap intervals over
 re-runs with the modal pattern held fixed and copies of the same re-run excluded from pairs. It refuses to run
 unless both arms hold all 40 re-runs. Chase's 2002 figures are quoted only as the pre-registration quotes them.
+
+**2026-11-15 02:00 — E4 and E1 batch C complete.** Queue exit 0: E4 14 Nov 16:10–19:25 (80 groups), batch C
+19:25–02:00 (19,008 rows in total for the three models, none invalid). Adaption spend 34.01 total, 15.95 credits
+since the baseline (cap 60).
+- E4, evaluated once with `code/chase_e4_eval.py` (hash unchanged, d7c05405…): linear OWN 0.50, LOG 0.60,
+  difference +0.10 [−0.12, +0.32], Fisher p = 0.50; two re-runs identical 0.03 (OWN) and 0.02 (LOG); modal
+  hierarchy 4/40 and 5/40. H6: low reproducibility supported, "not higher under LOG" consistent, "linearity higher
+  under LOG" not supported. Report: `refine-logs/CHASE_E4_REPORT.md`.
+- E1, frozen analysis (hash unchanged, 8057f824…) on `results/chase_e1_kernel_ABCHG.jsonl` (46,464 rows, all arms
+  except Sonnet), Holm over 22 cells: β_p Gemma-4-26B −0.069 (`comp`), −0.028 (`norm100`), −0.108 (`norm0`);
+  Qwen3.5-397B −0.082, −0.077, −0.046; Qwen3.8-27B −0.008, +0.008, +0.005 (unresponsive). 14 of 22 cells
+  responsive, all through β_p; no T survives adjustment in any cell. Earlier verdicts unchanged. Addendum in
+  `refine-logs/CHASE_E1_REPORT.md`.
+- Two models respond to the partner's record under `norm0`. The pre-registration makes a `norm0` population run
+  (H5, exploratory) conditional on this. None is planned in amendment C5 and none has been started.
+- Sonnet: 3,771 of 4,224 rows; last chunk due 03:11. Not analysed.
