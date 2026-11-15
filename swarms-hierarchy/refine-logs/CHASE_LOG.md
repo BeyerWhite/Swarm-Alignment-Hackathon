@@ -358,7 +358,7 @@ distinct jobs, none invalid. Frozen analysis (hash unchanged, 8057f824…) on th
 - Every stage of amendments C2 and C5 is now complete. Nothing is running. The conditional `norm0` population run
   (H5) has not been started and awaits the owner's decision.
 
-### Amendment C6 (E5: equal-turns population run; written 2026-11-15 16:49, before any E5 call)
+### Amendment C6 (E5: equal-turns population run; written 2026-11-15 16:48, before any E5 call)
 
 The owner approved this run on 15 Nov ("Yes, run it") after the batch C result. It is the conditional, exploratory
 population test of H5 (pre-registration section 2): under `norm0` the LOG − OWN difference reverses or vanishes.
