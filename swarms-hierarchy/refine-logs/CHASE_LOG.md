@@ -392,3 +392,23 @@ population test of H5 (pre-registration section 2): under `norm0` the LOG − OW
 9. **Files.** Calibration rows go to `results/chase_e5_statecal.jsonl`; the frozen E2 files are not touched.
    Populations are appended to `results/chase_e3_pop.jsonl`; the E3 hash 5967fb05… refers to its first 508 lines.
    Wrapper `code/chase_e5.py` 7f2cf7b0…; queue `scratch/chase_e5_queue.sh` db475bde….
+
+**2026-11-15 17:43 — E5 forecast frozen (written by the queue script, before any E5 population call).**
+`results/chase_e5_predictions.json`, stamp ce785e89e7672db4d19382af8c9b19c14b7af3f05a672b942f181f4d4fa51eec, file sha256 adbaef6fc3943810846ef02557a5b09919460d981e3f321e3ba6c24c71623484.
+
+**2026-11-15 23:30 — E5 complete.**
+Queue ran 16:48–23:02, exit 0, no failed calls: calibration 1,800 + 825 rows, forecast frozen 17:43 (entry above),
+132 population groups (N4: OWN 40, LOG 40, DYAD 20, REDACT 20; N8: OWN 6, LOG 6), 15,270 decisions, 0 invalid.
+`results/chase_e3_pop.jsonl` now 640 lines, sha256 6434d9a72a84f0d35a4357ed50f883c86b49adea4a0f3250fb4e6b3b795835d0
+(first 508 lines still 5967fb05…). Hashes of `chase_e3_eval.py` (3e16161b…), `chase_e5_eval.py` (73d07343…) and
+`chase_e5.py` (7f2cf7b0…) checked before evaluation. Spend 34.67 total (E5: 0.66 credits, 17,895 calls).
+Evaluation → `results/chase_e5_eval.json`; report `refine-logs/CHASE_E5_REPORT.md`.
+- N4 linear: OWN 0.50 (20/40), LOG 0.47 (19/40), LOG − OWN −0.03 [−0.25, +0.20], Fisher p = 1.0.
+  N8 t_tri: −0.04 and −0.04, +0.01 [−0.20, +0.21], Mann–Whitney p = 1.0.
+- H5 by the rule of amendment C6 item 6: not "reverses", not "contradicted", and not counted as "vanishes" (interval
+  does not exclude +0.17). Unresolved.
+- Forecast coverage 5 of 6 arms, 2 of 2 contrasts; the miss is OWN N4 (0.50 against 0.24 [0.12, 0.35], LOSO 0.32
+  [0.20, 0.45]) — the second calibration pass did not remove the OWN shortfall.
+- Post hoc, unadjusted: LOG lowers the LEAD rate in this cell (0.33 → 0.28) as in both Gemma-31B cells, but here it
+  lowers the share of contests decided by the answers (0.39 → 0.29, [−0.13, −0.07]) where there it raised it;
+  REDACT linear 4/20 against OWN 20/40 (Fisher p = 0.029).
