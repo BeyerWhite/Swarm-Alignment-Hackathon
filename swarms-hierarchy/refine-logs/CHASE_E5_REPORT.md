@@ -48,7 +48,7 @@ smallest p 0.10), and at N = 8 transitivity is at chance in both arms.
 | LOG, N = 8 (t_tri) | 6 | −0.04 | +0.02 [−0.13, +0.20] | yes | 0.49 |
 
 - Forecast coverage: 5 of 6 arms and both contrasts (frozen +0.13 [−0.05, +0.33] and +0.13 [−0.05, +0.34]).
-- The OWN forecast for groups of four is too low again, as in both Gemma-31B cells of E3, and so is the
+- The OWN forecast for groups of four is too low again, as in Gemma-31B `norm100` in E3, and so is the
   leave-one-seed-out upper bound (0.32 [0.20, 0.45]). The second calibration pass did not remove this.
 - Sequences: at N = 4, DD + DS is 0.44 under OWN and 0.54 under LOG (BDID 0.36 → 0.22); at N = 8 there is no
   difference. No test was planned on this.

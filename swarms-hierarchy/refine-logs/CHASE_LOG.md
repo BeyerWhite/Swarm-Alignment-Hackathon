@@ -412,3 +412,6 @@ Evaluation → `results/chase_e5_eval.json`; report `refine-logs/CHASE_E5_REPORT
 - Post hoc, unadjusted: LOG lowers the LEAD rate in this cell (0.33 → 0.28) as in both Gemma-31B cells, but here it
   lowers the share of contests decided by the answers (0.39 → 0.29, [−0.13, −0.07]) where there it raised it;
   REDACT linear 4/20 against OWN 20/40 (Fisher p = 0.029).
+
+**2026-11-16 01:05 — Final report written.** `refine-logs/CHASE_FINAL_REPORT.md` summarises E0–E5; its numbers were checked against the evaluation files. No new analysis and no model calls.
+Correction to `CHASE_E5_REPORT.md`: the own-record forecast for groups of four was too low in Gemma-31B `norm100` in E3, not in both Gemma-31B cells (under `comp` the observation was inside the interval).
