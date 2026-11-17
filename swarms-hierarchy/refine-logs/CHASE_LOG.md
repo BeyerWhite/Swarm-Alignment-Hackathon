@@ -587,3 +587,30 @@ Part A, run once (`results/chase_e6a.json`; rebuilt d and o match the stored val
   will be hashed here before any of their outcomes is read.
 
 **2026-11-16 23:12 — second queue started** (waits on the E9 queue process, then runs as described above). E9 at that moment: 0 groups written (first groups still in progress), no errors in its log.
+
+**2026-11-17 07:05 — E6 forecast frozen (written by the queue script).**
+`results/chase_e6_predictions.json`, stamp 48f8e4abcff4ed617a6194eb742d16bbc9462c2bbfd412f7649ab4d6a59eba90, file sha256 c328a82d09f270cd735a29d74fa91d76d354f2bc750a069196a95a8a17efc54b.
+
+**2026-11-17 07:45 — E9 complete and evaluated.** Queue 16 Nov 23:05 – 17 Nov 05:59, exit 0; 200 of 200 groups,
+19,862 calls, 0.77 credits, 10 invalid answers. `results/chase_e9_pop.jsonl` sha256 f451b652237f981ee74e636b1fe31dd52dc86d3c84f6ecda77479d6bcc4a309d.
+Script hashes checked against C8 before the evaluation was run (chase_e9_eval.py 848276f0…, chase_seq_posthoc.py
+76002a2d…, both match). `results/chase_e9_eval.json` sha256 9e3f3dad01fa74e67303d0995a995b2d6aa3830f0b06757c680fbf911a1e5a6f.
+- Primary: P1 `comp` DD + DS +0.22 (Holm 0.003), P2 `comp` DD +0.24 (Holm 0.003), P3 `norm100` DD +0.41
+  (Holm 2e-7), P4 `norm100` DS −0.32 (Holm 2e-5): all four supported.
+- P5: DYAD DD + DS `comp` 0.55 (met), `norm100` 0.39 [0.29, 0.48] (missed by 0.01).
+- S1 transitive after DD/DS vs BDID/ISDB: `comp` +0.07 [−0.00, +0.16], `norm100` +0.14 [+0.05, +0.21].
+- S3 linear LOG − OWN: `norm100` +0.25, Fisher p = 0.006; `comp` +0.10, p = 0.50.
+- S4: all six arms inside or on the edge of the frozen E2 intervals (`norm100` OWN 0.70 on the upper edge 0.70).
+Report: `refine-logs/CHASE_E9_REPORT.md`.
+
+**2026-11-17 07:45 — E6 part B result (retrospective check, outcomes known).** Calibration rounds: Gemma-31B
+`norm100` three rounds (stopped at a move of 0.007), Gemma-26B `norm0` two rounds (0.016); 3,000 rows. Frozen
+forecast (stamp 48f8e4ab…, entry above), headline form X:
+- Gemma-31B `norm100` OWN N4: 0.73 [0.60, 0.85] against observed 0.78 → covered (K: 0.75 [0.62, 0.85]).
+- Gemma-26B `norm0` OWN N4: 0.30 [0.17, 0.45] against observed 0.50 → not covered (K: 0.27 [0.15, 0.40]).
+- N8, reported: Gemma-31B `norm100` 0.34 [0.14, 0.54] against 0.32, covered; Gemma-26B `norm0` −0.08 [−0.20, 0.05]
+  against −0.04, covered.
+Pass rule (both N4 cells covered): **not met**. Calibration in rounds closes the Gemma-31B `norm100` gap (the
+frozen E2 forecast was 0.56 [0.42, 0.70]); the Gemma-26B `norm0` gap remains. E8a's 140 fresh OWN groups will show
+whether 0.50 was a high draw. Not registered, descriptive: the fresh E9 `norm100` OWN share, 0.70, lies inside
+the part B forecast, which was computed from calibration rows only.
