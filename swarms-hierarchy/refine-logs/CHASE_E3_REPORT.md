@@ -141,3 +141,13 @@ log's effect (−0.01 against 0.60 for the log alone). Both were forecast (0.10 
 
 E4 (rewind, mixed-model groups of four) and E1 batch C follow in the order of amendment C2. The Sonnet arm of E1
 is at 2,566 of 4,224 calls and is not analysed until complete.
+
+## Addendum, 16 Nov — section 4 after reading Chase (1982) (post hoc)
+
+Section 4 says that under `comp` linearity rises without any change in sequence shares. That holds for the
+registered rule, which starts a relationship at a pair's first contest, coin flips included. Chase's own criterion
+is one-sided aggression that is not answered. Re-counted from the first contest in which one agent yields
+(`code/chase_seq_posthoc.py`), DD + DS in Gemma-31B `comp` rises from 0.53 to 0.73 with partner records in groups
+of four and from 0.55 to 0.81 in groups of eight; under `norm100` it is 0.81 with own records and 0.91 with partner
+records in groups of four. Chase's hens gave 0.87 to 0.91. Details, all three counting rules and the cautions are
+in section 4 of `CHASE_FINAL_REPORT.md`.

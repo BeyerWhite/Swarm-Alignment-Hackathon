@@ -415,3 +415,37 @@ Evaluation → `results/chase_e5_eval.json`; report `refine-logs/CHASE_E5_REPORT
 
 **2026-11-16 01:05 — Final report written.** `refine-logs/CHASE_FINAL_REPORT.md` summarises E0–E5; its numbers were checked against the evaluation files. No new analysis and no model calls.
 Correction to `CHASE_E5_REPORT.md`: the own-record forecast for groups of four was too low in Gemma-31B `norm100` in E3, not in both Gemma-31B cells (under `comp` the observation was inside the interval).
+
+## 2026-11-16
+
+### Amendment C7 (source verification and a post hoc re-count; written after all data and the first final report)
+The owner supplied both 1982 papers as PDFs. Read in full on 16 Nov: Chase (1982), Science 216: 439–440, and Chase
+(1982), Behaviour 80: 218–240. The pre-registration is not edited; its section 1 listed the Behaviour figures as
+not verified.
+
+1. **Figures now verified.**
+   - Groups of three: 24 groups of white Leghorn hens, 4 hours each; 23 formed at least two relationships: DD 17
+     (74%), DS 4 (17%), BDID 1, ISDB 1; DD + DS 91% (χ² = 30.4, 3 d.f.).
+   - Groups of four: 14 groups, 6 hours on each of two days; day 1, 55 of 56 component triads: DD 33 (60%), DS 15
+     (27%), BDID 3, ISDB 4; DD + DS 87% (χ² = 42.4). Day 2 (56 triads): 48.2%, 37.5%, 3.6%, 10.7%; 86%.
+   - 13 of 14 groups of four linear and one guaranteed linear.
+   - Real triads 54 of 54 transitive; constructed triads (hens that met only as pairs in different groups) 54 of
+     63 (86%); chance 75%.
+   - Criterion for a relationship: three aggressive acts and no counter-attack for 30 minutes; 2 of 52 reversed.
+   - Random reference: 0.25 per sequence, as assumed here.
+   - The withdrawn planning figure of "about 90%" was correct.
+2. **Post hoc re-count.** `code/chase_seq_posthoc.py` (sha256 76002a2d…0d23c2f9) → `results/chase_seq_posthoc.json`.
+   No model calls. Sequence shares under the registered first-contest rule and two alternatives fixed in the script
+   before its first run: "decided" (first contest with one LEAD and one DEFER) and "three" (three consecutive wins).
+   The script was run once; all three rules are reported for every cell and arm.
+   - Gemma-31B `norm100`, groups of four, DD + DS (first / decided / three): OWN 0.53 / 0.81 / 0.65; LOG 0.70 /
+     0.91 / 0.81; DYAD 0.55 / 0.47 / 0.58. N = 8: OWN 0.51 / 0.81 / 0.68; LOG 0.70 / 0.81 / 0.77.
+   - Gemma-31B `comp`: OWN 0.52 / 0.53 / 0.50; LOG 0.54 / 0.73 / 0.66. N = 8: OWN 0.48 / 0.55 / 0.49; LOG 0.54 /
+     0.81 / 0.71.
+   - Under "decided", LOG is mostly DD (0.50–0.55) and OWN mostly DS (0.34–0.67).
+   - GLM-5.2 `comp` 0.62 / 0.65; mixed group 0.72 / 0.71; Gemma-26B `norm0` 0.50 / 0.54 (OWN / LOG, "decided").
+3. **Consequence.** The statement in the E3 report and in the first final report that under `comp` linearity rises
+   without a change in sequences holds only for the registered rule. Addendum added to `CHASE_E3_REPORT.md`;
+   `CHASE_FINAL_REPORT.md` revised (new section 4; summary and sections 3, 6, 7, 8 edited). The registered rule
+   remains the registered measure; the re-count is labelled post hoc everywhere.
+

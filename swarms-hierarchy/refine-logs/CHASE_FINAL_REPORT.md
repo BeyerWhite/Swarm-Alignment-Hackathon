@@ -4,6 +4,9 @@ Written 2026-11-16. The study ran from 12 to 15 November 2026 on branch `chase-b
 the stage reports (`CHASE_E1_REPORT.md` to `CHASE_E5_REPORT.md`); the pre-registration is
 `CHASE_PREREGISTRATION.md` and every change to it is in `CHASE_LOG.md` (amendments C1–C6).
 
+Updated later on 2026-11-16, after the owner supplied Chase's two 1982 papers: section 4 is new, and the
+statements about Chase's sequences in the summary and in sections 3, 6, 7 and 8 were revised. Nothing else changed.
+
 ## Summary
 
 Chase proposed that animal dominance hierarchies become linear because individuals react to contests they watch,
@@ -22,6 +25,10 @@ whether it makes their groups more hierarchical.
 - **Forecasts made before each population run mostly held.** 22 of 28 arm forecasts fell inside their 90% intervals.
   All six misses were in the same direction: more hierarchy than forecast.
 - **No transitive inference.** No model reasoned "A beat B, B beat me, so defer to A" beyond counting wins.
+- **Chase's sequence pattern appears when relationships are counted his way.** His hens formed 87–91% of triads
+  through the two sequences that guarantee transitivity. By the study's registered counting rule these agents
+  reach at most 70%. By a rule closer to his, in which a relationship forms when one agent yields, Gemma-31B groups
+  that see partner records reach 73–91%. This re-count was done after seeing the data.
 - **LLM hierarchies are far less repeatable than Chase's fish.** Re-running the same mixed group gave the same
   hierarchy 2–3% of the time, against 27% in his data.
 
@@ -128,9 +135,10 @@ predicts a negative value. ✓ marks a Holm-adjusted p below 0.05 over all 24 ce
 - **Why the bystander features get the credit (H4):** the same forecast with the partner-record features removed
   from the decision model leaves LOG near the OWN level (0.74 and 0.42 in groups of four, against 0.95 and 0.61
   observed). The placebo arm agrees: REDACT gave 0.75 and 0.30, level with OWN.
-- **Chase's sequences appear in one cell only.** Under `norm100`, DD + DS rises from 0.53 to 0.70 with partner
-  records. Under `comp` linearity rises with no change in sequences (0.52 to 0.54), so the hierarchy must be
-  sorted out after relationships first form. How was not established.
+- **By the registered rule, Chase's sequences appear in one cell only.** Under `norm100`, DD + DS rises from 0.53
+  to 0.70 with partner records; under `comp` it does not move (0.52 to 0.54). The registered rule takes a pair's
+  first contest as the start of their relationship, and in these cells that contest is usually a coin flip.
+  Section 4 re-counts with a rule closer to Chase's and finds the rise in both cells.
 - **A visible score changes the picture.** Under `norm100` a score board alone gives full transitivity and the log
   adds nothing. Under `comp` the score board gives almost none (0.12), and adding it to the log removes the log's
   effect (−0.01 against 0.60).
@@ -167,7 +175,103 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
 - E1 later showed that two of the four members do not use partner records at all, which may be why logs add little
   here.
 
-## 4. How well the forecasts did
+## 4. Comparison with Chase's 1982 chicken data (post hoc)
+
+The pre-registration could not verify the figures in Chase's 1982 papers and used none of them. Both papers
+(*Science* 216: 439–440; *Behaviour* 80: 218–240) were read on 16 November, after all data and after the first
+version of this report. Everything in this section is post hoc.
+
+### What Chase reports
+
+| White Leghorn hens | Triads counted | DD | DS | BDID | ISDB | DD + DS |
+|---|---|---|---|---|---|---|
+| Groups of three (24 groups, 4 hours each) | 23 | 74% | 17% | 4% | 4% | 91% |
+| Groups of four, day 1 (14 groups, 6 hours a day) | 55 | 60% | 27% | 6% | 7% | 87% |
+| Groups of four, day 2 | 56 | 48% | 38% | 4% | 11% | 86% |
+
+- **Reference value:** if each pair's direction is random, each sequence has probability 0.25, so DD + DS is
+  0.50. This is the reference the study used.
+- **Linearity:** all 14 groups of four ended linear (13 complete, one guaranteed whatever its missing relationship).
+- **Hens that met as a group against hens that met only in pairs:** all 54 complete triads within a group were
+  transitive. Of 63 triads put together from hens that had met only as pairs inside different groups, 54 (86%)
+  were transitive. Chance is 75%.
+- **When a relationship counts as formed:** one hen delivers three aggressive acts and the other does not attack
+  back for 30 minutes. Only 2 of 52 relationships formed this way were later reversed.
+- **His explanation in 1982:** winners tend to keep winning and losers to keep losing, and with a third hen present
+  both tendencies act at once. The papers do not claim that the third hen learns by watching; the 2002 paper names
+  that as a candidate.
+- The planning note that the pre-registration withdrew as unverified ("about 90%") was correct.
+
+### The study's sequences beside his
+
+The registered rule here takes a pair's first contest as the start of their relationship. That contest is a coin
+flip whenever both agents give the same answer, which is most of the time in several cells, so the rule is much
+noisier than Chase's. Two alternatives were written into `code/chase_seq_posthoc.py` before it was run, and all
+three are shown:
+- **Yielded:** the relationship starts at the first contest in which one agent leads and the other defers.
+- **Three in a row:** it starts when one agent has won three consecutive contests against the other, coin flips
+  included.
+
+DD + DS share in groups of four (chance 0.50; brackets are 95% group-bootstrap intervals):
+
+| Cell | Arm | Registered rule | Yielded | Three in a row | DD / DS under "yielded" |
+|---|---|---|---|---|---|
+| Gemma-31B `norm100` | DYAD | 0.55 | 0.47 [0.36, 0.58] | 0.58 | 0.29 / 0.18 |
+| | OWN | 0.53 | 0.81 [0.73, 0.89] | 0.65 | 0.14 / 0.67 |
+| | LOG | 0.70 | 0.91 [0.86, 0.96] | 0.81 | 0.55 / 0.36 |
+| Gemma-31B `comp` | OWN | 0.52 | 0.53 [0.47, 0.59] | 0.50 | 0.19 / 0.34 |
+| | LOG | 0.54 | 0.73 [0.67, 0.78] | 0.66 | 0.50 / 0.22 |
+| GLM-5.2 `comp` | OWN | 0.56 | 0.62 [0.55, 0.68] | 0.56 | 0.21 / 0.41 |
+| | LOG | 0.59 | 0.65 [0.59, 0.71] | 0.65 | 0.30 / 0.35 |
+| Mixed group (E4) | OWN | 0.49 | 0.72 [0.64, 0.80] | 0.70 | 0.17 / 0.55 |
+| | LOG | 0.52 | 0.71 [0.62, 0.79] | 0.63 | 0.18 / 0.53 |
+| Gemma-26B `norm0` | OWN | 0.44 | 0.50 [0.41, 0.60] | 0.47 | 0.24 / 0.26 |
+| | LOG | 0.54 | 0.54 [0.47, 0.61] | 0.44 | 0.27 / 0.27 |
+
+- **With partner records, Gemma-31B reaches Chase's range.** Under the yielded rule DD + DS is 0.91 in `norm100`
+  and 0.73 in `comp`; in groups of eight it is 0.81 in both. His hens gave 0.87 to 0.91.
+- **The earlier conclusion for `comp` does not survive the re-count.** The first version of this report said that
+  under `comp` linearity rose with no change in sequences. Under the yielded rule DD + DS rises from 0.53 to 0.73
+  in groups of four and from 0.55 to 0.81 in groups of eight. The three-in-a-row rule agrees (0.50 to 0.66, and
+  0.49 to 0.71).
+- **Partner records produce double dominance; own records produce double subordinance.** With partner records the
+  commonest sequence is DD, as in the hens: a bystander yields to an agent it has seen win. With own records only,
+  under `norm100`, DD + DS is also high (0.81) but two thirds of triads are DS: an agent that has lost yields to
+  the next one it meets. The placebo arm looks like OWN (0.83, mostly DS).
+- **Winning does not make these agents win more.** DD needs the bystander to give way, which it does only when it
+  can see the winner's record. Gemma-31B already leads at ceiling, so a win cannot make it lead more.
+- **With direct history only, Gemma-31B's sequences are at chance** (DYAD, 0.47 and 0.53), as they should be.
+- **Elsewhere partner records change nothing.** GLM-5.2 shows a modest excess in both arms (0.62 and 0.65) and
+  equal turns none. DeepSeek never yields, so the yielded rule forms no relationships at all there.
+- **The mixed group shows many DS sequences in both arms.** Fixed differences between members would do this: a
+  member that defers more than the others is dominated by each of them in turn.
+
+Transitive share of complete triads at the end of the run (chance 0.75):
+
+| | Met only in pairs | Own record | Partner record added |
+|---|---|---|---|
+| Chase's hens | 0.86 (constructed triads) | | 1.00 (real triads) |
+| Gemma-31B `norm100`, groups of four | 0.80 (DYAD) | 0.94 | 0.99 |
+| Gemma-31B `comp`, groups of four | 0.81 (DYAD) | 0.76 | 0.87 |
+| GLM-5.2 `comp`, groups of four | not run | 0.81 | 0.84 |
+| Gemma-26B `norm0`, groups of four | 0.80 (DYAD) | 0.79 | 0.79 |
+
+The correspondence between his conditions and these arms is loose: his hens in constructed triads may have carried
+their own experience from one pairing to the next, which would be closer to OWN than to DYAD.
+
+### Cautions
+
+- **Three rules were tried and the one closest to Chase's criterion gives the clearest pattern.** That is a choice
+  made after seeing data. The registered measure remains the first-contest rule.
+- **The yielded rule leaves triads out.** Under `comp` it forms two relationships in 220 of 320 triads with own
+  records and 250 of 320 with partner records (237 and 586 of 672 in groups of eight), so the arms are compared on
+  different subsets.
+- **Here these sequences do not guarantee transitivity.** In the hens a formed relationship almost never reversed.
+  In this protocol later coin flips can overturn it: Gemma-31B `comp` with a visible score has DD + DS of 0.81
+  under the yielded rule and almost no transitivity at the end (0.12).
+- **Intervals are unadjusted** and no test was planned.
+
+## 5. How well the forecasts did
 
 | | Inside the frozen 90% interval | Misses |
 |---|---|---|
@@ -186,7 +290,7 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
 - **Consequence:** the forecast bystander gain for `norm100` (+0.39) was more than twice the observed one (+0.17),
   because the baseline was underestimated and not because LOG fell short.
 
-## 5. What this says about Chase's account
+## 6. What this says about Chase's account
 
 - **The ingredient exists.** Most LLMs tested show a bystander effect on single decisions, with the predicted sign.
 - **It is sufficient for hierarchy in at least one model.** In Gemma-31B, with scores hidden, adding only the
@@ -197,11 +301,16 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
   post hoc diagnosis attributes this to a loser effect that only appears at long losing records.
 - **It does not always matter.** A small bystander slope (GLM-5.2) has no group consequence, and under equal turns
   the response exists in decisions without producing structure.
-- **Chase's route through particular sequences is not the general route here.** It shows under one framing only.
+- **Chase's sequences are there once relationships are counted his way.** By the registered rule they show under
+  one framing only. Counted from the first contest in which one agent yields, partner records raise DD + DS in
+  both Gemma-31B cells to between 0.73 and 0.91, against 0.87 to 0.91 in his hens (section 4, post hoc).
+- **The route to double dominance differs from the one he described.** He attributed the sequences to winners
+  continuing to win and losers continuing to lose. Here double subordinance does arise from losers giving way,
+  but double dominance comes from bystanders giving way to winners they can see, not from winners pressing on.
 - **These hierarchies are not stable properties of the group.** Chase's fish reproduced the same hierarchy in 27%
   of groups and were linear in over 90%; the mixed LLM group did so 2–3% of the time and was linear in 50–60%.
 
-## 6. Limits and deviations
+## 7. Limits and deviations
 
 - **One model carries the population result.** Population tests covered Gemma-31B (two framings), GLM-5.2 (one
   framing, groups of four) and Gemma-26B (equal turns only). Four other models with single-decision effects
@@ -218,12 +327,12 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
   GPT tool surrounds each prompt with about 14,600 tokens of agent instructions. These are constant across
   conditions, so contrasts are unaffected, but absolute LEAD levels are those of the wrapped call.
 - **Invalid replies became coin flips:** under 1% of decisions everywhere except GLM-5.2 with the full log (5.3%).
-- **Chase's 1982 sequence percentages were not verified** and no number from that paper is used. The 2002 figures
-  are quoted as verified in the pre-registration.
-- **Post hoc material:** the loser-threshold diagnosis, the decided-contests mechanism in section 3, and the low
-  placebo arm in E5 (4 of 20 linear) were found after seeing data and are unadjusted.
+- **Chase's 1982 figures were verified only after the study,** from papers the owner supplied on 16 November. No
+  decision before that date used them. The 2002 figures are quoted as verified in the pre-registration.
+- **Post hoc material:** the loser-threshold diagnosis, the decided-contests mechanism in section 3, the low
+  placebo arm in E5 (4 of 20 linear) and the whole of section 4 were done after seeing data and are unadjusted.
 
-## 7. What would settle the open questions
+## 8. What would settle the open questions
 
 - **Population runs for a second responsive model,** ideally one off the ceiling (Qwen3.5-397B or GPT-6-Luna), to
   see whether the Gemma-31B result generalises.
@@ -231,9 +340,10 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
   until the visited records stop changing, to fix the own-record forecasts.
 - **A larger equal-turns test,** or one in a cell where fewer contests fall to the coin; 40 groups per arm could
   not separate "no effect" from the effect seen elsewhere.
-- **The text of Chase (1982, *Behaviour*),** so that the sequence shares can be compared with his.
+- **A registered sequence test.** The re-count in section 4 was chosen after seeing the data. New groups scored
+  by the yielded rule, fixed in advance, would test it properly.
 
-## 8. Files
+## 9. Files
 
 | | |
 |---|---|
@@ -243,4 +353,5 @@ One group (Gemma-31B, GLM-5.2, Qwen3.8-27B, DeepSeek; `comp`) was re-run 40 time
 | Frozen forecasts | `results/chase_e2_predictions.json`, `results/chase_e5_predictions.json` |
 | Populations | `results/chase_e3_pop.jsonl` (E3 and E5), `results/chase_e4_rewind.jsonl` |
 | Evaluations | `results/chase_e3_eval.json`, `chase_e4_eval.json`, `chase_e5_eval.json` |
+| Sequence re-count (post hoc) | `code/chase_seq_posthoc.py` → `results/chase_seq_posthoc.json` |
 | Code | `code/chase_*.py`; hashes of every frozen script and forecast are in the log |
