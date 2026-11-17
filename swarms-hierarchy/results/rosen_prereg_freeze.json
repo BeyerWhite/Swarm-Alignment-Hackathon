@@ -1,0 +1,15 @@
+{
+ "written": "2026-11-17 17:19:47",
+ "note": "Written before any API call of the Rosen study.",
+ "files": {
+  "refine-logs/ROSEN_PREREGISTRATION.md": "8013e80e51807506e0d98765aa3d5851e473284eeaa232fe9edae7532ff2fb11",
+  "code/rosen.py": "b47422573d466d28be0435a100c412d8ab93bd413b3e3a5c89e56ba26a61094e",
+  "code/rosen_kernel.py": "2a1e7d3fe78b5b8d996c86e31f6eeed845c125783e29819e63c45ce4bd419749",
+  "code/rosen_forecast.py": "fb2de85f69e44922392e16e34cefbaa5d3f1b2b2a0a273e2f61e729531a86aa6",
+  "code/rosen_eval.py": "9903f389a77231ba3ab4c8aa267b305fd89bbd75add685b489fa965c98635f8d",
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b",
+  "code/chase_paced.py": "e729d7eb262b03f3ad6ccabfe1c84a9b9e5cb3978f96a95d0e60669d45d08a01",
+  "code/rosen_r0_queue.sh": "cf10074b4cf3fb6ce1b15cc38b711d76c35d44a5d919eca35096067383737ff4",
+  "code/rosen_r12_queue.sh": "35912cc9f2acb3eba054dbedaf7b6e4f58e649ab173e4971b1ccb5b4dc6a9175"
+ }
+}

@@ -17,8 +17,9 @@ GPT_BUDGET = int(os.environ.get("GPT_CALL_BUDGET", "1500"))   # protect the revi
 _lock = threading.Lock()
 _gpt_used = 0
 ADAPTION_CAP = float(os.environ.get("ADAPTION_CREDIT_CAP", "100"))      # hard project cap set by Sara: 100 of 1,500 credits
-SPEND = ROOT / "results" / "adaption_spend.jsonl"            # per-call ledger (append-only)
-SPEND_TOTAL = ROOT / "results" / "adaption_spend_total.json" # locked running total shared by all processes
+_LEDGER = Path(os.environ.get("ADAPTION_LEDGER_DIR", ROOT / "results"))   # shared ledger: a worktree points this at the main checkout
+SPEND = _LEDGER / "adaption_spend.jsonl"            # per-call ledger (append-only)
+SPEND_TOTAL = _LEDGER / "adaption_spend_total.json" # locked running total shared by all processes
 RESERVE = 0.002            # credits reserved per in-flight call (conservative; real calls cost ~1e-5..5e-4)
 MISSING_COST = 0.001       # charged when the API returns no cost (fail closed)
 _adaption = None
@@ -46,7 +47,7 @@ def _ledger(delta, check_cap):
     return total
 
 
-def _adaption_call(name, system, prompt, timeout, max_tries=None, max_tokens=16):
+def _adaption_call(name, system, prompt, timeout, max_tries=None, max_tokens=16, reasoning="none"):
     """One Adaption inference with 429 back-off (~60 s + jitter), transient-error retries and cap reservation."""
     global _adaption
     import random as _r
@@ -60,7 +61,7 @@ def _adaption_call(name, system, prompt, timeout, max_tries=None, max_tokens=16)
         try:
             r = _adaption.responses.create(model=name, instructions=system, input=prompt, temperature=1.0,
                                            max_output_tokens=max_tokens, store=False,
-                                           extra_body={"reasoning": {"effort": "none"}}, timeout=timeout)
+                                           extra_body={"reasoning": {"effort": reasoning}}, timeout=timeout)
         except Exception as e:
             _ledger(-RESERVE, check_cap=False)        # nothing was charged for a failed request
             status = getattr(e, "status_code", None)
@@ -76,7 +77,8 @@ def _adaption_call(name, system, prompt, timeout, max_tries=None, max_tokens=16)
         _ledger(cost - RESERVE, check_cap=False)
         with _lock, open(SPEND, "a") as f:
             f.write(json.dumps({"t": time.time(), "model": name, "cost": cost,
-                                "cost_missing": u.get("cost") is None}) + "\n")
+                                "cost_missing": u.get("cost") is None,
+                                **({"reasoning": reasoning} if reasoning != "none" else {})}) + "\n")
         return (r.output_text or "").strip()
     return ""                                          # exhausted retries -> logged as empty, counted invalid
 
@@ -97,12 +99,12 @@ def _log(rec):
         f.write(json.dumps(rec) + "\n")
 
 
-def call(model, system, prompt, tag="", timeout=180, retries=2, max_tokens=16):
+def call(model, system, prompt, tag="", timeout=180, retries=2, max_tokens=16, reasoning="none"):
     with _conc:
-        return _call(model, system, prompt, tag, timeout, retries, max_tokens)
+        return _call(model, system, prompt, tag, timeout, retries, max_tokens, reasoning)
 
 
-def _call(model, system, prompt, tag, timeout, retries, max_tokens=16):
+def _call(model, system, prompt, tag, timeout, retries, max_tokens=16, reasoning="none"):
     global _gpt_used
     fam, name = model.split(":", 1)
     for attempt in range(retries + 1):
@@ -131,7 +133,7 @@ def _call(model, system, prompt, tag, timeout, retries, max_tokens=16):
                 out = Path(path).read_text().strip() if Path(path).exists() else ""
                 Path(path).unlink(missing_ok=True)
             elif fam == "adaption":
-                out = _adaption_call(name, system, prompt, timeout, max_tokens=max_tokens)
+                out = _adaption_call(name, system, prompt, timeout, max_tokens=max_tokens, reasoning=reasoning)
             elif fam == "ollama":
                 import urllib.request
                 body = json.dumps({"model": name, "stream": False, "think": False,
@@ -153,6 +155,7 @@ def _call(model, system, prompt, tag, timeout, retries, max_tokens=16):
     _log({"t": time.time(), "model": model, "tag": tag, "latency": round(dt, 2),
           "phash": hashlib.sha1((system + prompt).encode()).hexdigest()[:12],
           "system": system, "prompt": prompt, "response": "" if _is_quota_msg(out) else out,
+          **({"reasoning": reasoning} if reasoning != "none" else {}),
           **({"quota_error": out[:120]} if _is_quota_msg(out) else {})})
     return "" if _is_quota_msg(out) else out
 
