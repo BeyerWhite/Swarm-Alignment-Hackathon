@@ -585,3 +585,5 @@ Part A, run once (`results/chase_e6a.json`; rebuilt d and o match the stored val
   calibration → E7 forecast → E8a populations → E8b calibration, forecast and populations. It stamps each forecast
   into this log and does not start the E7 populations. Evaluation scripts for E7 and E8 are still to be written and
   will be hashed here before any of their outcomes is read.
+
+**2026-11-16 23:12 — second queue started** (waits on the E9 queue process, then runs as described above). E9 at that moment:  groups written, no errors in its log.
