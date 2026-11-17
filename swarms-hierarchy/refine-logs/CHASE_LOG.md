@@ -449,3 +449,98 @@ not verified.
    `CHASE_FINAL_REPORT.md` revised (new section 4; summary and sections 3, 6, 7, 8 edited). The registered rule
    remains the registered measure; the re-count is labelled post hoc everywhere.
 
+
+### Amendment C8 (follow-up experiments E6–E9; written 2026-11-16 23:04, before any call of any of them)
+The owner asked for experiments on the four open questions of section 8 of the final report and approved all four
+("All four"). Sizes below were derived from existing data only: cost per call from the spend ledger, rough
+forecasts from kernels fitted on E1 rows, and power by resampling existing groups. No model call was made for the
+design. The pre-registration is not edited. Spend at this point: 34.67 of the cap of 78.06.
+
+**Common to all four.** Engine unchanged (`chase_pop.run`, `LLMDecider`); new runner `code/chase_f_run.py`
+(sha256 6449002015f958e9ddbceb6a76eaee5cad3e3d6aa3456fb458988b5c1708208a) only chooses cells, arms, seeds and the output file. One paced process at a time, 48 requests per
+minute. Groups of four run 24 rounds, groups of eight 40. Seeds are the same in every arm of a cell. No outcome of a
+cell is analysed until all of its groups are present; only call counts, invalid counts and errors are looked at
+while a stage runs. Scripts not yet written are hashed in this log before their first call or, for evaluations,
+before any outcome is read. Estimated total: about 126,000 calls, 44 hours, 27 credits.
+
+**Order.** E9 → E6 part B → E7 calibration and forecast freeze → E8a → E8b → E7 populations. E6 part A needs no
+calls and is done while E9 runs. The E7 populations wait for the owner to see the frozen forecast.
+
+**E9 — registered sequence test (question 4).**
+1. Cells: Gemma-4-31B × `comp`, `norm100`. Groups of four: OWN 40, LOG 40, DYAD 20. Fresh seeds 14000–14039 (DYAD
+   14000–14019). File `results/chase_e9_pop.jsonl`. 200 groups, about 19,600 calls.
+2. Formation rule: a relationship forms at the pair's first contest in which one agent leads and the other defers
+   (rule "decided" of `code/chase_seq_posthoc.py`, sha256 76002a2d6fdfcbdbda65d1db6acbbad7e0380d79d38798e9f6ad1b9e0d23c2f9, imported unchanged).
+3. Evaluation `code/chase_e9_eval.py` (sha256 848276f016248ddff65882c35b5d36ff1871f93ceb308f2a80b1af464799db79), tested only on E3 groups relabelled to the new seed range.
+   Unit: the group; a group's share is over its triads with two formed relationships.
+4. Primary predictions, two-sided Mann–Whitney on per-group shares, Holm over the four, supported if adjusted
+   p < 0.05 with the predicted direction: P1 `comp` DD + DS, LOG > OWN; P2 `comp` DD, LOG > OWN; P3 `norm100` DD,
+   LOG > OWN; P4 `norm100` DS, OWN > LOG. Power at 40 groups per arm, from resampling the E3 groups: 0.90 (P1),
+   about 1 (P2–P4).
+5. P5, criterion without a test: pooled DD + DS in the DYAD arm lies in [0.40, 0.60] in each framing.
+6. Estimate only: `norm100` DD + DS, LOG − OWN (power 0.33).
+7. Secondary: S1 triads formed by DD or DS end transitive more often than triads formed by BDID or ISDB; S2 DD + DS
+   as a share of all triads; S3 linear share, LOG against OWN, Fisher exact, unadjusted (a fresh replication of H3;
+   pooled with E3 only descriptively); S4 the OWN, LOG and DYAD linear shares against the frozen E2 intervals
+   printed in section 2 of `CHASE_E3_REPORT.md`.
+8. Queue `scratch/chase_e9_queue.sh` (sha256 e812b9d42013184d0654cf07fbf5cdd96437db75e707ecf78fa8a10eb70b547b).
+
+**E6 — why the own-record forecasts are too low (question 2).**
+Part A (no calls). Decisions of the OWN-arm groups already in `results/chase_e3_pop.jsonl` (first 640 lines), with
+extra features rebuilt from the stored histories. Candidate decision models, all logistic on signed-log features
+with the ridge of `chase_fit.py`:
+- A0: direct net d, own net o (the frozen form K2);
+- A1: A0 + a second slope for own net below −3;
+- A2: A0 + number of own lines shown;
+- A3: A0 + the most recent own outcome and the length of the current winning or losing run;
+- A4: A0 + whether the agent's ID is lower than the partner's, and the agent's ID;
+- A5: all of these; and FLEX, the form-free smoother of `chase_fit.py` on d and o.
+Criterion: leave-one-seed-out log-loss per decision, groups of four and eight together, in the two cells whose
+forecasts missed (Gemma-31B `norm100`, Gemma-26B `norm0`). Rule: take the forms whose log-loss averaged over the
+two cells is within 0.002 of the lowest; among them the one with the fewest added features is selected, provided it
+improves on A0 by at least 0.005 in both cells; otherwise A0 is kept. Reported as well: the same table for
+Gemma-31B `comp` and GLM-5.2 `comp`, and whether groups simulated from the selected form, fitted leaving one seed
+out, reach the observed linear share and t_tri.
+Part B (about 4,800 calls). Calibration in rounds for the OWN arm of the same two cells, at both sizes, with the
+form selected in part A. Each round: fit on all usable rows so far, simulate groups, and query 300 records per size,
+half drawn uniformly from the decisions the simulated groups visit and half in equal numbers from bins of own net
+(≤ −9, −8 to −6, −5 to −3, −2 to −1, 0, 1 to 2, 3 to 5, ≥ 6). Stop when the point forecasts (linear share in groups
+of four, t_tri in groups of eight) both move by less than 0.03 between rounds, or after four rounds. Then one
+write-once forecast with 200 bootstrap refits at the planned group counts (40 and 6). Rows that lack a feature the
+selected form needs are not used in its fits. Pass rule: the 90% interval covers the observed linear share in groups
+of four in both cells (0.78 and 0.50). This is a retrospective check, since the outcomes are known. The exact
+implementation is hashed here before the first part B call.
+
+**E7 — a second model (question 1).**
+1. Model: Qwen3.5-397B × `norm100`, `comp`. Rough expectation from E1 rows alone: LOG − OWN linear share +0.30
+   and +0.15 (the same method gave +0.36 and +0.14 for Gemma-31B `norm100` and `comp`, against +0.17 and +0.25
+   observed).
+2. Calibration: round 1 as E2 (groups of four: DYAD 150, OWN 300, LOG 450, REDACT 150; groups of eight: OWN 300,
+   LOG 450). Rounds 2 to 4 as in E6 part B for OWN, LOG and REDACT (150, 225, 75 at four; 150, 225 at eight), LOG
+   stratified on own net and partner net in three levels each (≤ −3, −2 to 2, ≥ 3). Same stopping rule, applied to
+   OWN and LOG. The forecasting form is the E6 selection; its added features enter every arm that shows the own
+   record. Forecast written once to `results/chase_e7_predictions.json`.
+3. Arms: groups of four OWN, LOG, DYAD 20, REDACT 20; groups of eight OWN 8, LOG 8.
+4. Sizing rule: OWN and LOG groups of four per arm are the smallest of 40, 80, 120 at which the frozen forecast
+   gives the Fisher test 80% power. A cell with less than 50% power at 120 is run at 40 per arm as an estimate and
+   is not a test.
+5. Tests: Fisher exact on linear counts, LOG against OWN, Holm over the cells run as tests; Mann–Whitney on t_tri at
+   N = 8, secondary; every arm against its frozen interval; the LOG forecast without bystander features, as in E3.
+   Secondary, by the E9 rule: DD share, LOG > OWN.
+6. Seeds 24000+ (four), 28000+ (eight). Files `results/chase_e7_statecal.jsonl`, `results/chase_e7_pop.jsonl`.
+7. Gate: no E7 population call before the owner has seen the frozen forecast and the sizes it implies.
+
+**E8 — equal turns (question 3).**
+- E8a: Gemma-4-26B × `norm0`, groups of four, OWN 140 and LOG 140, fresh seeds 34000–34139, file
+  `results/chase_e8_pop.jsonl`. Primary: the reading of H5 fixed in amendment C6 item 6, on the fresh groups only
+  (at 140 per arm a true difference of zero excludes +0.17 with probability about 0.8). Co-primary, registered here:
+  the per-group share of contests decided by the answers is lower under LOG than OWN (Mann–Whitney; first run
+  −0.10 [−0.13, −0.07]). Secondary: fresh and E5 groups pooled (180 per arm); the first 40 fresh groups per arm
+  against the frozen E5 forecast.
+- E8b: Qwen3.5-397B × `norm0`, groups of four, OWN 80 and LOG 80, seeds 34000–34079. Calibration as E7 for OWN and
+  LOG at four only; forecast `results/chase_e8_predictions.json` frozen and stamped into this log by the queue
+  script before the first population call, without a gate (as in amendment C6 item 4). Same reading of H5. The share
+  of decided contests is reported as an estimate only, since this model's baseline LEAD rate is near one half and
+  the direction is not predicted.
+- Checked on existing groups and not registered as outcomes: directional consistency, Landau h′ and the Gini
+  coefficient of wins show no LOG − OWN difference in the E5 groups.
