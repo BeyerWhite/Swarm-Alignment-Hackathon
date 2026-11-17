@@ -544,3 +544,44 @@ implementation is hashed here before the first part B call.
   the direction is not predicted.
 - Checked on existing groups and not registered as outcomes: directional consistency, Landau h′ and the Gini
   coefficient of wins show no LOG − OWN difference in the E5 groups.
+
+**2026-11-16 23:05 — E9 launched (queue `scratch/chase_e9_queue.sh`). E6 part A script fixed before its first run:** `code/chase_e6a.py`, sha256 da0375ad4384463824ec6e88fdbb7a2f59e3d8f449d91f314fe54b90b34ca44f. No calls.
+
+**2026-11-16 23:12 — E6 part A result, and the implementation of calibration in rounds (before any E6B, E7 or E8 call).**
+Part A, run once (`results/chase_e6a.json`; rebuilt d and o match the stored values in every decision):
+
+| Leave-one-seed-out log-loss | A0 | A1 hinge | A2 lines | A3 recency | A4 IDs | A5 all | FLEX |
+|---|---|---|---|---|---|---|---|
+| Gemma-31B `norm100` (5,750 decisions) | 0.1638 | 0.1604 | 0.1631 | 0.1622 | 0.1643 | 0.1581 | 0.1644 |
+| Gemma-26B `norm0` (5,692) | 0.6102 | 0.6098 | 0.5788 | 0.5993 | 0.6107 | 0.5639 | 0.5909 |
+| Gemma-31B `comp` (11,424; not used for selection) | 0.2604 | 0.2602 | 0.2601 | 0.2508 | 0.2580 | 0.2468 | 0.2409 |
+| GLM-5.2 `comp` (3,842; not used for selection) | 0.3920 | 0.3920 | 0.3919 | 0.3869 | 0.3921 | 0.3861 | 0.3897 |
+
+- By the rule, **A5 is selected**: it alone is within 0.002 of the lowest average, and it improves on A0 by 0.0057 and
+  0.0463 in the two selection cells. Most of the gain under `norm0` comes from the number of own lines shown.
+- Adequacy, groups simulated from fits that leave one seed out (90% intervals): Gemma-31B `norm100` linear share
+  0.70 [0.60, 0.82] with A0 and 0.71 [0.57, 0.82] with A5, observed 0.78; t_tri at N = 8 0.27 and 0.30, observed
+  0.32. Gemma-26B `norm0` linear share 0.31 [0.20, 0.41] with A0 and 0.34 [0.22, 0.47] with A5, observed 0.50,
+  outside both; t_tri −0.07 and −0.06, observed −0.04.
+- Reading: in Gemma-31B `norm100` the frozen form was adequate once fitted on the records groups actually reach,
+  so the earlier miss was a calibration-coverage problem, which part B addresses. In Gemma-26B `norm0` no form
+  reaches the observed 0.50, including the richest one fitted on those groups' own decisions. Either something
+  outside all these features matters, or 20 linear groups of 40 was a high draw. E8a gives 140 fresh OWN groups in
+  this cell; the leave-one-seed-out value to compare with is 0.34 [0.22, 0.47] at 40 groups.
+- Implementation for part B, E7 and E8b: `code/chase_cal.py`, sha256 ca828a3bbed0488afdf1e5e6e16052d41409fcd5a0443dd0f8f7add6948743ff, tested end to end only with a stand-in
+  rule in place of the model (`CHASE_CAL_FAKE=1`, outputs in a scratch directory, deleted). Fixed in it:
+  - "X" = frozen form + the six A5 features for OWN, REDACT and LOG (headline); DYAD keeps the frozen form;
+    "K" = frozen form fitted on the same rows (comparison); LOG without bystander features = X without p and tc.
+  - Fits use only this stage's state-matched rows at the population's own group size, since earlier rows lack the
+    new features. E6 round 1 draws its records from groups driven by the frozen form fitted on all existing rows;
+    E7 and E8b round 1 from kernels fitted on E1 rows, uniform sampling, as in E2.
+  - Later rounds: groups driven by X and K fitted on the rows so far; 60 simulated groups of four and 12 of eight
+    per kernel; half the records uniform, half stratified as registered.
+  - Stopping per cell: point forecasts from 2,000 simulated groups of four and 150 of eight with the same
+    simulation seeds every round; stop below a largest move of 0.03, or after round 4.
+  - Forecast files hold 200 row-bootstrap refits; for E7 they hold OWN and LOG at 40, 80 and 120 groups and apply
+    the sizing rule.
+- Queue `scratch/chase_f_queue.sh` (sha256 81abbda36e9a8beb60fd4df7e8add5a963ff144c171f67ea34d3558ad5c51b61) starts when E9 exits cleanly: E6 part B → E6 forecast → E7
+  calibration → E7 forecast → E8a populations → E8b calibration, forecast and populations. It stamps each forecast
+  into this log and does not start the E7 populations. Evaluation scripts for E7 and E8 are still to be written and
+  will be hashed here before any of their outcomes is read.
