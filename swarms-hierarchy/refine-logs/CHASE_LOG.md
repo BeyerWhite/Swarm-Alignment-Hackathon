@@ -630,3 +630,19 @@ Evaluation `code/chase_e8_eval.py`, sha256 31b61cf27904832b4fb95ccc86eb9afe3fe17
 through the unchanged functions of `chase_e3_eval.py`; tested only on E5 groups relabelled to the E8 models and seeds.
 Unregistered descriptive additions: LEAD rate and DD + DS (E9 rule) per arm; the first 40 fresh OWN groups against
 the E6 part B forecast and the E6 part A interval.
+
+**2026-11-18 00:55 — E8 evaluated** (`results/chase_e8_eval.json`, sha256 91327a2728ca8ae882c467d667dddcd2af61191f11f7c83f91b40bb44e4d8703; report `refine-logs/CHASE_E8_REPORT.md`).
+- E8a Gemma-26B `norm0`, 140 fresh groups per arm: linear OWN 0.39, LOG 0.41, +0.03 [−0.09, +0.14], Fisher
+  p = 0.71 → H5 **vanishes** (C6 item 6). Co-primary decided share 0.39 → 0.29, p = 2e-21, **supported**. Pooled
+  with E5 (180 per arm): +0.02 [−0.08, +0.12], vanishes. First 40 fresh groups against the E5 forecast: OWN 0.48
+  outside [0.13, 0.35]; LOG 0.43 inside; contrast −0.05 on the edge of [−0.05, +0.33].
+- E8b Qwen3.5-397B `norm0`, 80 per arm: OWN 0.31, LOG 0.30, −0.01 [−0.15, +0.14], p = 1.0 → H5 **vanishes**. All
+  frozen E8 intervals cover the observations. Decided share 0.27 → 0.21 (estimate). LEAD rate 0.20, not near one
+  half as C8 expected.
+- Limit, recorded with the result: neither model has a population run showing a LOG − OWN effect under another
+  framing; the frozen E7 forecast for Qwen3.5-397B is near zero under `norm100` and `comp` too.
+
+**2026-11-18 00:55 — E7 gate.** Frozen forecast (stamp d5614939…, 17 Nov 09:13): LOG − OWN linear share −0.01
+[−0.20, +0.20] (`norm100`) and +0.02 [−0.18, +0.23] (`comp`) at 40 per arm; Fisher power at 120 per arm 0.14 and
+0.13. By the C8 sizing rule neither cell is a test; both would run at 40 per arm as estimates. Shown to the owner
+now; no E7 population call before their answer.

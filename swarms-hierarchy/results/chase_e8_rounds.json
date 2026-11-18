@@ -1,0 +1,24 @@
+{
+ "adaption:qwen3.5-397b|norm0": {
+  "rounds_done": 2,
+  "stopped": true,
+  "forecasts": [
+   {
+    "round": 1,
+    "point": {
+     "OWN|N4": 0.3281563126252505,
+     "LOG|N4": 0.3676838419209605
+    },
+    "largest_move": null
+   },
+   {
+    "round": 2,
+    "point": {
+     "OWN|N4": 0.34067033516758377,
+     "LOG|N4": 0.34067033516758377
+    },
+    "largest_move": 0.027013506753376715
+   }
+  ]
+ }
+}
