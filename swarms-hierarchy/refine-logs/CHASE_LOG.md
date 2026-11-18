@@ -614,3 +614,19 @@ Pass rule (both N4 cells covered): **not met**. Calibration in rounds closes the
 frozen E2 forecast was 0.56 [0.42, 0.70]); the Gemma-26B `norm0` gap remains. E8a's 140 fresh OWN groups will show
 whether 0.50 was a high draw. Not registered, descriptive: the fresh E9 `norm100` OWN share, 0.70, lies inside
 the part B forecast, which was computed from calibration rows only.
+
+**2026-11-17 09:14 — E7 forecast frozen (written by the queue script).**
+`results/chase_e7_predictions.json`, stamp d5614939f26938b768b274e20295f2f810eb005165e3087e55e25c2a58d9c923, file sha256 019836c2188c4f63e574a8e389be74d869964f572cf64663d721159f39aa7474.
+
+**2026-11-17 19:03 — E8 forecast frozen (written by the queue script).**
+`results/chase_e8_predictions.json`, stamp b7ca86f4da62c1752ec93afe282b04217c1e3c64e780a41ada647bd6c127438b, file sha256 38dd67fa464cba11fa617d76a4c2fc7c69e50b5edef6919b4c2ef255e5835c89.
+
+**2026-11-18 00:40 — second queue complete; E8 evaluation fixed before any E8 outcome is read.** Queue exit 0 at
+00:20: E6B, E7 calibration (three rounds, forecast frozen 09:13 on 17 Nov), E8a populations (280 groups,
+09:14–18:39), E8 calibration (two rounds, forecast frozen 19:03), E8b populations (160 groups, 19:03–00:20).
+`results/chase_e8_pop.jsonl`: 440 lines, sha256 2b9821f6e5d294aee23749b6388e73e2f9ef7d980d119aeed974e56836416a19. Only the queue log's
+group counts, invalid counts and the calibration lines were looked at. Spend 43.22 of 78.06.
+Evaluation `code/chase_e8_eval.py`, sha256 31b61cf27904832b4fb95ccc86eb9afe3fe179d076ed910364c7615730096625, implements the E8 entries of C8 and the H5 reading of C6 item 6
+through the unchanged functions of `chase_e3_eval.py`; tested only on E5 groups relabelled to the E8 models and seeds.
+Unregistered descriptive additions: LEAD rate and DD + DS (E9 rule) per arm; the first 40 fresh OWN groups against
+the E6 part B forecast and the E6 part A interval.
