@@ -646,3 +646,12 @@ the E6 part B forecast and the E6 part A interval.
 [−0.20, +0.20] (`norm100`) and +0.02 [−0.18, +0.23] (`comp`) at 40 per arm; Fisher power at 120 per arm 0.14 and
 0.13. By the C8 sizing rule neither cell is a test; both would run at 40 per arm as estimates. Shown to the owner
 now; no E7 population call before their answer.
+
+**2026-11-18 12:50 — E7 approved and queued.** The owner saw the frozen forecast and the sizes (entry of 00:55) and
+answered "Yes, run E7". Run as registered: Qwen3.5-397B × `norm100`, `comp`; groups of four OWN 40, LOG 40, DYAD 20,
+REDACT 20 (seeds 24000+); groups of eight OWN 8, LOG 8 (seeds 28000+); both cells are estimates, not tests, by the
+sizing rule. 272 groups, about 33,000 calls, 10 credits, 11.5 hours. Queue `scratch/chase_e7_queue.sh` (sha256
+52192e241e7b70ffb8e09efdb3ecedd6cb3aadaa20a52c90125c244a82a9c17f) waits for the Rosen study's queue on the same
+account (PID 94307) so that only one paced process runs. The E7 evaluation script will be written and hashed here
+before any E7 outcome is read. Note: since 18 Nov 00:21 the Rosen study's calls are also written to
+`results/adaption_spend.jsonl` in this checkout, so the ledger total includes them (44.22 after its R0 stage).
