@@ -655,3 +655,9 @@ sizing rule. 272 groups, about 33,000 calls, 10 credits, 11.5 hours. Queue `scra
 account (PID 94307) so that only one paced process runs. The E7 evaluation script will be written and hashed here
 before any E7 outcome is read. Note: since 18 Nov 00:21 the Rosen study's calls are also written to
 `results/adaption_spend.jsonl` in this checkout, so the ledger total includes them (44.22 after its R0 stage).
+
+**2026-11-18 13:00 — E7 evaluation fixed before any E7 population outcome exists** (the queue is still waiting; no
+E7 population file yet). `code/chase_e7_eval.py`, sha256 86a294c95582f967f2c4f31ac350b00fc65e7c6b34fc9d2c8f525f0621b04c51, implements item 5 of the E7 entry in C8
+through the unchanged functions of `chase_e3_eval.py` (contrasts, intervals) and `chase_e9_eval.py` (DD share by
+the E9 rule). Both cells are estimates under the sizing rule, so all p values are reported unadjusted and the Holm
+family is empty. Tested only on Gemma-31B E3 groups relabelled to the E7 model and seeds.
