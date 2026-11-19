@@ -661,3 +661,9 @@ E7 population file yet). `code/chase_e7_eval.py`, sha256 86a294c95582f967f2c4f31
 through the unchanged functions of `chase_e3_eval.py` (contrasts, intervals) and `chase_e9_eval.py` (DD share by
 the E9 rule). Both cells are estimates under the sizing rule, so all p values are reported unadjusted and the Holm
 family is empty. Tested only on Gemma-31B E3 groups relabelled to the E7 model and seeds.
+
+**2026-11-19 01:45 — E7 restarted.** The queue launched on 18 Nov 12:42 was still waiting for the Rosen queue when
+the session that started it ended, and it ended with it; no E7 call had been made. The Rosen queue finished 18 Nov
+19:19 (ledger 58.55, Rosen calls included). The owner asked for a restart ("Yes, restart E7"). Same queue script
+(sha256 52192e24…, unchanged), started without a PID to wait for; `chase_e7_eval.py` hash checked unchanged
+(86a294c9…). Expected: about 33,000 calls, 10 credits, finishing around 13:30 on 19 Nov.
