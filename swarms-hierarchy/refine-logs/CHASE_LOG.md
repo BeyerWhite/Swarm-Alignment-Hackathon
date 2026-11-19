@@ -682,3 +682,40 @@ ee92b7c4f7a4e914931662663a10c8ac5ac53431cee6163e5f48a4624b6088bb. Both cells are
 - DD share by the E9 rule, LOG − OWN: `comp` +0.10 (p = 0.11), `norm100` −0.05 (p = 0.48).
 - Descriptive, not registered: LEAD rate `comp` 0.62 → 0.48 with decided contests 0.49 → 0.54; `norm100`
   0.43 → 0.37 with 0.48 → 0.42. Report `refine-logs/CHASE_E7_REPORT.md`.
+
+**2026-11-19 15:55 — Amendment C9: E10, registered replication of the E7 `comp` result.** The owner asked for it
+after reading the E7 report ("Yes, register the Qwen comp replication"). Registered now, before any E10 call. The
+owner has not yet approved the run itself.
+1. Question: is the E7 `comp` estimate real (Qwen3.5-397B, groups of four, LOG 0.80 against OWN 0.53, +0.28), and
+   is it carried by the partners' outcomes or by the extra lines of text?
+2. Cells: Qwen3.5-397B × `comp`, groups of four, 24 rounds, as E7. Arms OWN 80, LOG 80, REDACT 80 (plan A) or
+   REDACT 40 (plan B). Fresh seeds 44000+. File `results/chase_e10_pop.jsonl`. No groups of eight, no DYAD.
+3. Plan by credit headroom, fixed by the queue before the first call and stamped here: headroom = min(ledger cap
+   set by the owner for this run, 99) − ledger. Plan A needs 7.1 credits (240 groups × 0.0268, the E7 cost per
+   group, + 10%); plan B 5.9; below that, no run. Sara's 100-credit project cap is not raised.
+4. P1 (primary, the only confirmatory test): LOG linear share > OWN, one-sided Fisher exact, α = 0.05. Power by
+   simulation at 80 per arm: 0.98 at the E7 shares, 0.82 if the effect is +0.20, 0.68 at +0.17.
+5. Secondary:
+   - S1, attribution: LOG − REDACT and REDACT − OWN with group-bootstrap 95% intervals and two-sided Fisher. Reading
+     fixed now: "outcomes" if LOG − REDACT > 0 with an interval excluding zero; "extra text" if REDACT − OWN > 0
+     with an interval excluding zero and the LOG − REDACT interval including zero; otherwise "unresolved". At the
+     E7 shares (0.80 against 0.70) LOG − REDACT has about 25% power (21% under plan B), so "unresolved" is the
+     likely reading unless the difference is larger than in E7.
+   - S2, LEAD-rate account (final report, section 6): per group, LEAD rate LOG < OWN and share of decided contests
+     LOG > OWN, two-sided Mann–Whitney each; holds if both have that direction with p < 0.05.
+   - S3: DD share by the E9 rule, LOG > OWN, two-sided Mann–Whitney (E7: +0.10, p = 0.11).
+   - Descriptive: E10 + E7 pooled (120 per arm; REDACT 100 or 60); OWN and LOG against the frozen E7 forecast
+     (form X, 80 groups); invalid answers.
+6. No new calibration or forecast: the prediction under test is the E7 estimate. P1 is the only test, so there is
+   no Holm family.
+7. Evaluation `code/chase_e10_eval.py`, sha256 cb7d65d19d3bcd0623d7c2df5e4ee76c8d52ebd51e797190cd0c6a37b4c25fe1, built on the unchanged functions of
+   `chase_e3_eval.py`, `chase_e8_eval.py` and `chase_e9_eval.py`. Tested only on E7 `comp` groups relabelled to
+   seeds 44000+, and checked to refuse an incomplete file. Queue `scratch/chase_e10_queue.sh`, sha256
+   00a0af19b1d614193ac67a7b3bbd6a7781d1d007bbc7aaf903f98ec07a36d042. It takes the ledger cap as an argument and
+   optionally a PID to wait for, and sets `ADAPTION_CREDIT_CAP` for its own run only. Its plan logic was dry-tested
+   in a scratch copy (plans A, B and no run).
+8. Order: after the Rosen phase 2 queue, which is running now. Only one paced job uses the account at a time.
+9. Budget note: `.secrets/adaption.env` sets `ADAPTION_CREDIT_CAP=78.06`, and `llm.py` checks it against the
+   shared ledger, which also holds the Rosen calls (69.9 now). Under that cap E10 has 8.2 credits of headroom
+   today, but none once Rosen phase 2 spends its estimated 23. This study's own spend is 52.9, so E10 would bring it
+   to about 59. The owner decides the cap for the run.
