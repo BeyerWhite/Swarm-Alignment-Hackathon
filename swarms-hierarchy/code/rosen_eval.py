@@ -184,10 +184,10 @@ def main():
                                      for k in (arm_key("autarky", 3.0, 1), arm_key("autarky", 3.0, 3))}
         # H5
         row["H5_cov"] = perm_greater(g(arm_key("team", 2.0, 3), "coverage"), g(arm_key("hidden", 2.0, 3), "coverage"), a.B, rng)
-        row["H5_dup"] = perm_greater([-x for x in g(arm_key("hidden", 2.0, 3), "dup")],
-                                     [-x for x in g(arm_key("team", 2.0, 3), "dup")], a.B, rng)
+        # R-A2: v1 passed the arms in the wrong order and tested dup(team) > dup(hidden).
+        row["H5_dup"] = perm_greater(g(arm_key("hidden", 2.0, 3), "dup"), g(arm_key("team", 2.0, 3), "dup"), a.B, rng)
         if row["H5_dup"]:
-            row["H5_dup"]["note"] = "diff = mean dup(team) - mean dup(hidden), sign flipped: positive means team duplicates less"
+            row["H5_dup"]["note"] = "diff = mean dup(hidden) - mean dup(team): positive means team duplicates less"
         ps = dict(H3=None, H4a=(row["H4a"] or {}).get("p"), H4b=row["H4b"]["p"], H5_cov=(row["H5_cov"] or {}).get("p"),
                   H5_dup=(row["H5_dup"] or {}).get("p"))
         row["holm"] = holm(ps)

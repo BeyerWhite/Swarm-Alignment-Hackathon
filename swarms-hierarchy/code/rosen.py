@@ -98,7 +98,7 @@ def parse(text):
     if not lines:
         return ("invalid",)
     l = lines[0]
-    m = re.match(r"^DO\s+T?(\d+)\s*[:\-]\s*(.+)$", l, re.I)
+    m = re.match(r"^DO\s+T?(\d+)\s*(?:\(\s*(?:type\s+)?[ABC]\s*\))?\s*[:\-]\s*(.+)$", l, re.I)
     if m:
         return ("do", int(m.group(1)), m.group(2))
     m = re.match(r"^BUILD\s*:?\s*(?:type\s+)?([ABC])\b", l, re.I)

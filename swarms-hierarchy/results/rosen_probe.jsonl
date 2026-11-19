@@ -1,0 +1,100 @@
+{"model": "adaption:gemma-4-31b-it", "rep": 2, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 0, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 3, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 6, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 1, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 11, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 7, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 9, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 12, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 10, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 14, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 15, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 5, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 13, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 16, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 18, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 8, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 20, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 17, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 0, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 24, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 23, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 3, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 2, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 5, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 4, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 6, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 1, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 19, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 11, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 4, "response": "", "action": "invalid"}
+{"model": "adaption:qwen3.8-27b", "rep": 10, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 8, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 9, "response": "DO T7: 54", "action": "do", "type": "C", "oldest": false, "correct": true}
+{"model": "adaption:qwen3.8-27b", "rep": 13, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 22, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 15, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 12, "response": "DO T1: ROCKET", "action": "do", "type": "A", "oldest": true, "correct": true}
+{"model": "adaption:qwen3.8-27b", "rep": 16, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 14, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 18, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 7, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 20, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 23, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 19, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 22, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 21, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 1, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 17, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 0, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-31b-it", "rep": 21, "response": "", "action": "invalid"}
+{"model": "adaption:glm-5.2", "rep": 5, "response": "Looking at the game structure: 16 rounds, 8 tasks/round. Building a workbench costs 5 turns but each completed task with a workbench earns 2 points instead of 1. If I build now, I'll have ~11 turns left to use it. Building for type A (4 arrive per round) maximizes my chances of finding A tasks available on my turn.\n\nMath: 11 turns \u00d7 2 points = 22 points vs. 16 turns \u00d7 1 point = 16 points. Building", "action": "invalid"}
+{"model": "adaption:glm-5.2", "rep": 3, "response": "Looking at this strategically: 16 rounds, 8 tasks arrive per round (4A, 2B, 2C). Building a workbench costs 5 turns but earns +1 point per task of that type for the rest of the game. Type A is most abundant (4/round), so an A workbench has the highest expected payoff.\n\nIf I build A for 5 turns, I have ~11 turns left. Even doing just A tasks half the time with double points (11 tasks \u00d7 2 = 22 point", "action": "invalid"}
+{"model": "adaption:glm-5.2", "rep": 6, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 7, "response": "BUILD A\n \u043f\u043e\u044f\u0441\u043d\u0435\u043d\u0438\u0435\nStart building a workbench for type A since A tasks are the most common (4 per round). Investing 5 turns now will pay off with 2 points per A task for the remaining 11 rounds, yielding significantly more than doing tasks without a workbench.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 8, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 10, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 11, "response": "BUILD A\nRound 1 of 16. My turn (1 of 8 this round).\nTeam points so far: 0.\n\nRecord:\n- Agent 48: tasks done A 0, B 0, C 0; no workbench\n- Agent 27: tasks done A 0, B 0, C 0; no workbench\n- Agent 42: tasks done A 0, B 0, C 0; no workbench\n- Agent 80: tasks done A 0, B 0, C 0; no workbench\n- Agent 41: tasks done A 0, B 0, C 0; no workbench\n- Agent 54: tasks done A 0, B 0, C 0; no workbench\n- Agent 89", "action": "build", "type": "A"}
+{"model": "adaption:qwen3.8-27b", "rep": 24, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 9, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 4, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 14, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 13, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 19, "response": "BUILD A\n Rounds 1-5 of 16. Agent 50 (me). Strategy: Build workbench for A (most abundant task type, 4/round) for 5 turns, then do A tasks for remaining 11 rounds at 2 points each = 22 points (vs 16 without workbench). Other agents can handle B and C tasks.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 2, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 22, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 12, "response": "BUILD A\n\u00e7 rebounds over the game: A tasks arrive 4/round (most frequent), so a workbench for A will have the most tasks to apply the 2\u00d7 bonus to. The 5-turn investment pays off if I do \u22655 A tasks after it's ready, which is very likely given 4 A arrivals per round.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 20, "response": "BUILD A\nTEEhee \u0260Fter doing some reasoning and calculation, I'm going to build a workbench for type A tasks since they're the most abundant (4 per round), maximizing my chances of using the workbench effectively over the remaining 15 rounds.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 23, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 1, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 17, "response": "BUILD A\n \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u0447\u0435\u0441\u043a\u043e\u0435 \u043c\u044b\u0448\u043b\u0435\u043d\u0438\u0435: Since A tasks are the most abundant (4 per round), building a workbench for A will maximize long-term value. The 5-turn investment pays off if I do more than 5 A tasks in the remaining 11 rounds, which is likely given the high A task volume.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 16, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 18, "response": "BUILD A\nRationale: Early investment in a workbench for the most common task type (4 per round) will pay off significantly. After 5 build turns, I'll have 11 turns left earning 2 points per A task instead of 1, netting +11 bonus points over the game.", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 15, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 4, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 24, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:glm-5.2", "rep": 21, "response": "BUILD A\nTC \\# Round 1 of 16. Strategy: Building a workbench for type A (most common task type, 4 per round) will pay off after 5 build turns. With 11 remaining rounds after completion, the +1 bonus per task yields a net gain. Starting early to have it ready by ~Round 6.", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 8, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 2, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 0, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 11, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 3, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 13, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 5, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 10, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 14, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 6, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 7, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 9, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 18, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 12, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 19, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 23, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 17, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 15, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 24, "response": "BUILD A", "action": "build", "type": "A"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 16, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 20, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 21, "response": "", "action": "invalid"}
+{"model": "adaption:gemma-4-26b-a4b-it", "rep": 22, "response": "", "action": "invalid"}
