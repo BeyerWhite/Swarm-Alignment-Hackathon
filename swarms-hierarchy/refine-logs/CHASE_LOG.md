@@ -719,3 +719,10 @@ owner has not yet approved the run itself.
    shared ledger, which also holds the Rosen calls (69.9 now). Under that cap E10 has 8.2 credits of headroom
    today, but none once Rosen phase 2 spends its estimated 23. This study's own spend is 52.9, so E10 would bring it
    to about 59. The owner decides the cap for the run.
+
+**2026-11-19 16:00 — E10 approved and queued.** The owner answered "Queue it, cap 99". Queue
+`scratch/chase_e10_queue.sh` (sha256 00a0af19…, unchanged) started 15:58 with ledger cap 99, waiting for the Rosen
+phase 2 queue (PID 27487); detached from the session so that it survives the session ending. Ledger 70.03 at
+launch. `chase_e10_eval.py` hash checked unchanged (cb7d65d1…). The plan (A or B) is fixed from the headroom when the
+Rosen queue exits. Note: the Rosen queue runs under the 78.06 cap from `.secrets/adaption.env` and is likely to stop
+early on it. E10 would then start at once, and a restarted Rosen queue must wait for E10 to finish.
