@@ -667,3 +667,18 @@ the session that started it ended, and it ended with it; no E7 call had been mad
 19:19 (ledger 58.55, Rosen calls included). The owner asked for a restart ("Yes, restart E7"). Same queue script
 (sha256 52192e24…, unchanged), started without a PID to wait for; `chase_e7_eval.py` hash checked unchanged
 (86a294c9…). Expected: about 33,000 calls, 10 credits, finishing around 13:30 on 19 Nov.
+
+**2026-11-19 13:40 — E7 complete and evaluated.** Queue exit 0 (N4 01:38–09:39, N8 09:39–13:15). 272 groups as
+planned, no invalid answers. 33,436 calls and 9.69 credits by the ledger lines between start and exit, all
+Qwen3.5-397B (no other job called the account in that window; the Rosen phase 2 queue started after it). Ledger
+68.24, Rosen calls included. `results/chase_e7_pop.jsonl` sha256 7202ca610e31332f1c59fb2fc707eadf46cee35fbe3ca70837da51ce533d67ff.
+`code/chase_e7_eval.py` hash checked unchanged (86a294c9…) and run once; `results/chase_e7_eval.json` sha256
+ee92b7c4f7a4e914931662663a10c8ac5ac53431cee6163e5f48a4624b6088bb. Both cells are estimates under the sizing rule.
+- `norm100`: OWN 0.42, LOG 0.42, +0.00 [−0.22, +0.22]; N8 +0.03 [−0.16, +0.23]. All six arms and both contrasts
+  inside the frozen intervals.
+- `comp`: OWN 0.53, LOG 0.80, +0.28 [+0.07, +0.47], Fisher p = 0.017 unadjusted; N8 t_tri 0.11 → 0.33, +0.22
+  [+0.05, +0.38], p = 0.015. LOG (N4) outside its frozen interval 0.62 [0.47, 0.78]; N4 contrast outside +0.02
+  [−0.17, +0.23]. REDACT 0.70 (forecast 0.62 [0.40, 0.80]).
+- DD share by the E9 rule, LOG − OWN: `comp` +0.10 (p = 0.11), `norm100` −0.05 (p = 0.48).
+- Descriptive, not registered: LEAD rate `comp` 0.62 → 0.48 with decided contests 0.49 → 0.54; `norm100`
+  0.43 → 0.37 with 0.48 → 0.42. Report `refine-logs/CHASE_E7_REPORT.md`.

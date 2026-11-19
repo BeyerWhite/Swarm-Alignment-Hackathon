@@ -7,6 +7,10 @@ the stage reports (`CHASE_E1_REPORT.md` to `CHASE_E5_REPORT.md`); the pre-regist
 Updated later on 2026-11-16, after the owner supplied Chase's two 1982 papers: section 4 is new, and the
 statements about Chase's sequences in the summary and in sections 3, 6, 7 and 8 were revised. Nothing else changed.
 
+Updated 2026-11-19 with the four follow-up experiments registered as amendment C8 (E6 to E9, run 16–19 November;
+stage reports `CHASE_E7_REPORT.md` to `CHASE_E9_REPORT.md`, E6 in the log). Section 8 now reports them. The summary
+and sections 2, 3, 5, 6, 7 and 9 were revised to match; sections 1 and 4 are unchanged.
+
 ## Summary
 
 Chase proposed that animal dominance hierarchies become linear because individuals react to contests they watch,
@@ -16,19 +20,25 @@ whether it makes their groups more hierarchical.
 - **Single decisions: yes, in most models.** Seven of nine models are less willing to take the lead against a
   partner whom they can see winning against others. The effect is one-sided and often a threshold: agents defer to
   visible winners and do not press visible losers.
-- **Groups: yes in one model, no elsewhere.** In Gemma-4-31B, letting agents see their partner's record raised the
-  share of strictly ordered groups of four from 36% to 61%, and from 78% to 95% under a second framing (the second difference does not
-  survive correction for multiple tests). No such
-  effect was found in GLM-5.2, in a mixed-model group, or in Gemma-4-26B under an equal-turns framing.
+- **Groups: yes in Gemma-4-31B, probably in one framing of a second model, no elsewhere.** In Gemma-4-31B, letting
+  agents see their partner's record raised the share of strictly ordered groups of four from 36% to 61%, and from
+  78% to 95% under a second framing. The second difference did not survive correction at first, and replicated on
+  fresh groups (70% to 95%, E9). Qwen3.5-397B showed a similar rise under the competence framing (53% to 80%), but
+  not under the second framing. Its run was sized as an estimate, not a test, and its frozen forecast did not
+  predict the rise. No effect was found in GLM-5.2, in a mixed-model group, or under an equal-turns framing in either
+  model tried there.
 - **A real single-decision effect does not imply a group effect.** GLM-5.2 has a statistically clear bystander
   response and no group consequence, and this was forecast before the groups were run.
-- **Forecasts made before each population run mostly held.** 22 of 28 arm forecasts fell inside their 90% intervals.
-  All six misses were in the same direction: more hierarchy than forecast.
+- **Forecasts made before each population run mostly held.** 22 of 28 arm forecasts in the main study fell inside
+  their 90% intervals, and 13 of 14 in the follow-ups. Every miss was in the same direction: more hierarchy than
+  forecast.
 - **No transitive inference.** No model reasoned "A beat B, B beat me, so defer to A" beyond counting wins.
 - **Chase's sequence pattern appears when relationships are counted his way.** His hens formed 87–91% of triads
   through the two sequences that guarantee transitivity. By the study's registered counting rule these agents
   reach at most 70%. By a rule closer to his, in which a relationship forms when one agent yields, Gemma-31B groups
-  that see partner records reach 73–91%. This re-count was done after seeing the data.
+  that see partner records reach 73–91%. This re-count was done after seeing the data. A registered test on fresh
+  Gemma-31B groups confirmed it (E9): partner records shift formation toward double dominance in both framings,
+  all four predictions supported. In Qwen3.5-397B the sequences stay near chance.
 - **LLM hierarchies are far less repeatable than Chase's fish.** Re-running the same mixed group gave the same
   hierarchy 2–3% of the time, against 27% in his data.
 
@@ -75,15 +85,27 @@ In total about 149,000 model decisions and 720 groups. Six open-weight models ra
 of the 60-credit cap). Claude Haiku 5.5, Claude Sonnet 5.5 and GPT-6-Luna ran through their command-line tools and
 took part in E1 only.
 
+Follow-ups (amendment C8, cap raised to 78.06 credits):
+
+| Stage | Purpose | Size |
+|---|---|---|
+| E6 | Why own-record forecasts were too low: model selection on existing decisions (A), calibration in rounds (B) | 3,000 calls |
+| E7 | Second model in groups: Qwen3.5-397B, `norm100` and `comp`, with its own calibration and frozen forecast | 6,075 calibration calls; 272 groups, 33,436 calls |
+| E8 | Equal turns, larger: Gemma-26B 140 groups per arm, Qwen3.5-397B 80 per arm | 440 groups, 43,252 calls |
+| E9 | Registered sequence test: fresh Gemma-31B groups, `comp` and `norm100` | 200 groups, 19,862 calls |
+
+About 106,000 further calls and 912 groups, 18.2 credits. This study's spend after E7 is 52.9 of
+78.06; since 18 November the shared ledger file also records the Rosen study's calls on the same account.
+
 ## 3. Results by hypothesis
 
 | | Hypothesis | Verdict |
 |---|---|---|
 | H1 | Agents lead less against a partner with a better record against others | Supported: 15 of 24 cells, 7 of 9 models |
 | H2 | Transitive inference through a shared third party | Not supported in any cell |
-| H3 | Groups that see partner records are more linear | Supported in Gemma-31B `comp`; same direction in `norm100`; absent in GLM-5.2 |
-| H4 | The difference is forecast by the bystander features of the decision model | Supported for Gemma-31B (no formal test was planned) |
-| H5 | Under equal turns the effect reverses or vanishes | Unresolved by the pre-set rule |
+| H3 | Groups that see partner records are more linear | Supported in Gemma-31B `comp`; `norm100` replicated in E9; Qwen3.5-397B `comp` +0.28 (estimate), `norm100` none; absent in GLM-5.2 |
+| H4 | The difference is forecast by the bystander features of the decision model | Supported for Gemma-31B (no formal test was planned); missed for Qwen3.5-397B `comp` |
+| H5 | Under equal turns the effect reverses or vanishes | Unresolved in E5; "vanishes" by the same rule in E8, for Gemma-26B and Qwen3.5-397B |
 | H6 | Re-runs rarely reproduce a hierarchy; not more often with logs; logs raise linearity | First part supported, second consistent, third not supported |
 
 ### H1 and H2 — single decisions (E1)
@@ -142,6 +164,9 @@ predicts a negative value. ✓ marks a Holm-adjusted p below 0.05 over all 24 ce
 - **A visible score changes the picture.** Under `norm100` a score board alone gives full transitivity and the log
   adds nothing. Under `comp` the score board gives almost none (0.12), and adding it to the log removes the log's
   effect (−0.01 against 0.60).
+- **Follow-ups (section 8):** on 40 fresh groups per arm (E9) Gemma-31B gave 0.70 → 0.95 under `norm100` (p = 0.006)
+  and 0.42 → 0.53 under `comp` (p = 0.50). Qwen3.5-397B (E7, 40 per arm, an estimate) gave 0.53 → 0.80 under `comp`
+  (p = 0.017 unadjusted) and 0.42 → 0.42 under `norm100`.
 
 ### H5 — equal-turns framing (E5, exploratory)
 
@@ -159,6 +184,10 @@ Where agents lead most of the time, that produces more contests with one LEAD an
 the records decide (0.40 → 0.68 under `norm100`, 0.21 → 0.27 under `comp`). Where they already defer most of the
 time it produces more double-DEFER coin flips (0.39 → 0.29 under `norm0`). So the same response to the partner's
 record can build structure or dissolve it depending on the baseline. This was not planned and is unadjusted.
+
+**E8 follow-up (section 8):** with 140 fresh groups per arm, Gemma-26B gave 0.39 and 0.41 (+0.03 [−0.09, +0.14]);
+Qwen3.5-397B with 80 per arm gave 0.31 and 0.30. By the same rule H5 now reads "vanishes" in both. The
+decided-contest mechanism above replicated as a registered co-primary (0.39 → 0.29, p = 2 × 10⁻²¹).
 
 ### H6 — re-running the same group (E4)
 
@@ -278,6 +307,9 @@ their own experience from one pairing to the next, which would be closer to OWN 
 | Arm forecasts, E3 | 17 of 22 | 5, all toward more hierarchy |
 | Arm forecasts, E5 | 5 of 6 | 1, toward more hierarchy |
 | LOG − OWN contrasts, E3 and E5 | 7 of 9 | 2 |
+| Arm forecasts frozen for the follow-ups, E7 and E8b | 13 of 14 | 1 (Qwen `comp` LOG, toward more hierarchy) |
+| LOG − OWN contrasts, E7 and E8b | 4 of 5 | 1 (Qwen `comp`, groups of four) |
+| Fresh E9 arms against the E2 forecasts | 6 of 6 (one on the edge) | 0 |
 
 - **What the forecasts got right:** the size of the bystander effect in Gemma-31B `comp` in groups of four (+0.23
   forecast, +0.25 observed), the level of LOG under `norm100` (0.95 and 0.95), the null in GLM-5.2, and the
@@ -289,6 +321,12 @@ their own experience from one pairing to the next, which would be closer to OWN 
   deepen the record. A second calibration pass in E5, aimed at this, did not close the gap.
 - **Consequence:** the forecast bystander gain for `norm100` (+0.39) was more than twice the observed one (+0.17),
   because the baseline was underestimated and not because LOG fell short.
+- **After the follow-ups (E6, E8):** fitting the decision model on the records groups actually reach (calibration
+  in rounds) closes the Gemma-31B `norm100` gap: 0.73 [0.60, 0.85] against 0.78 observed. It does not close the
+  Gemma-26B `norm0` gap (0.30 [0.17, 0.45] against 0.50). On 140 fresh groups that arm gave 0.39, so E5's 0.50 was
+  partly a high draw, but the forecasts are still low there.
+- **The new miss is the other way round.** For Qwen3.5-397B `comp` the forecast put both arms near 0.60. Own-record
+  groups came in at 0.53 and partner-record groups at 0.80: this time the bystander arm was underestimated.
 
 ## 6. What this says about Chase's account
 
@@ -296,14 +334,24 @@ their own experience from one pairing to the next, which would be closer to OWN 
 - **It is sufficient for hierarchy in at least one model.** In Gemma-31B, with scores hidden, adding only the
   partner's third-party record moves groups from chance toward linearity. Chase's 2002 fish went from 56% linear
   when meeting in isolated pairs to 92% when assembled as a group; here the analogous arms gave 36% and 61%
-  (`comp`), and 78% and 95% (`norm100`).
+  (`comp`), and 78% and 95% (`norm100`). Qwen3.5-397B may be a second case, under `comp` only (53% and 80%, an
+  estimate not yet replicated, with an ambiguous placebo).
 - **It is not necessary.** Own-record groups under `norm100` reach 78% linear with no bystander information. The
   post hoc diagnosis attributes this to a loser effect that only appears at long losing records.
 - **It does not always matter.** A small bystander slope (GLM-5.2) has no group consequence, and under equal turns
-  the response exists in decisions without producing structure.
+  the response exists in decisions without producing structure. Qwen3.5-397B has nearly the same slope in `comp`
+  and `norm100`, and a group effect in only one of them. The single-decision slope does not predict the group
+  outcome on its own.
+- **Whether it helps depends on how often agents lead.** Partner records lower the LEAD rate in every cell measured.
+  Where agents lead more than half the time this leaves more contests that the records decide, and hierarchy
+  rises (Gemma-31B, Qwen `comp`). Where they lead less than half the time it leaves more coin flips, and nothing
+  is gained (Gemma-26B and Qwen under equal turns, Qwen `norm100`). This was registered only for Gemma-26B
+  under equal turns (E8a, supported); the rest is descriptive.
 - **Chase's sequences are there once relationships are counted his way.** By the registered rule they show under
   one framing only. Counted from the first contest in which one agent yields, partner records raise DD + DS in
-  both Gemma-31B cells to between 0.73 and 0.91, against 0.87 to 0.91 in his hens (section 4, post hoc).
+  both Gemma-31B cells to between 0.73 and 0.91, against 0.87 to 0.91 in his hens (section 4, post hoc). The
+  registered test on fresh groups (E9) confirmed the shift toward double dominance. In Qwen3.5-397B the sequences
+  stay near chance even where its hierarchy rises, so in that model linearity grows without Chase's pattern.
 - **The route to double dominance differs from the one he described.** He attributed the sequences to winners
   continuing to win and losers continuing to lose. Here double subordinance does arise from losers giving way,
   but double dominance comes from bystanders giving way to winners they can see, not from winners pressing on.
@@ -312,9 +360,11 @@ their own experience from one pairing to the next, which would be closer to OWN 
 
 ## 7. Limits and deviations
 
-- **One model carries the population result.** Population tests covered Gemma-31B (two framings), GLM-5.2 (one
-  framing, groups of four) and Gemma-26B (equal turns only). Four other models with single-decision effects
-  (Qwen3.5-397B, Haiku, Sonnet, GPT-6-Luna) were never run as groups.
+- **One model carries the tested population result.** Population tests covered Gemma-31B (two framings, twice),
+  GLM-5.2 (one framing, groups of four) and Gemma-26B (equal turns only). Qwen3.5-397B was run in three framings,
+  but under `comp` and `norm100` only as estimates. Haiku, Sonnet and GPT-6-Luna were never run as groups.
+- **The follow-up formation rule was chosen after seeing E3.** E9 fixed it before its own data, so E9 is a fair test,
+  but the rule was picked from three tried on earlier data.
 - **Small counts at N = 8.** Six seeds per arm in most cells, 12 in Gemma-31B `comp`, 4 in the control; the
   pre-registration planned 8.
 - **Cells not run:** GLM-5.2 `norm100`, GLM-5.2 at N = 8. Their forecasts are untested.
@@ -329,17 +379,38 @@ their own experience from one pairing to the next, which would be closer to OWN 
 - **Invalid replies became coin flips:** under 1% of decisions everywhere except GLM-5.2 with the full log (5.3%).
 - **Chase's 1982 figures were verified only after the study,** from papers the owner supplied on 16 November. No
   decision before that date used them. The 2002 figures are quoted as verified in the pre-registration.
-- **Post hoc material:** the loser-threshold diagnosis, the decided-contests mechanism in section 3, the low
-  placebo arm in E5 (4 of 20 linear) and the whole of section 4 were done after seeing data and are unadjusted.
+## 8. The open questions, followed up (E6–E9)
 
-## 8. What would settle the open questions
+The first version of this report listed four open questions. Amendment C8 registered one experiment for each;
+all four have now run.
 
-- **Population runs for a second responsive model,** ideally one off the ceiling (Qwen3.5-397B or GPT-6-Luna), to
-  see whether the Gemma-31B result generalises.
-- **Calibration that reaches deep records,** for example by iterating between simulated groups and measurements
-  until the visited records stop changing, to fix the own-record forecasts.
-- **A larger equal-turns test,** or one in a cell where fewer contests fall to the coin; 40 groups per arm could
-  not separate "no effect" from the effect seen elsewhere.
+- **A second responsive model (E7, Qwen3.5-397B).** Under `norm100` partner records change nothing (0.42 and 0.42),
+  as the frozen forecast said. Under `comp` groups of four go from 0.53 to 0.80 linear (+0.28 [+0.07, +0.47]) and
+  groups of eight from 0.11 to 0.33 t_tri. The forecast had expected no difference, so the run was sized as an
+  estimate, and the p values (0.017 and 0.015) are unadjusted. The placebo arm (0.70) lies between the two, so part
+  of the rise may come from seeing that the partner has a history at all. `CHASE_E7_REPORT.md`.
+- **Calibration that reaches deep records (E6).** Part A compared decision models on the existing own-record
+  decisions; the form with every added feature (A5: a second slope for deep losing records, number of own lines
+  shown, recency and run length, agent IDs) fitted best. Part B
+  re-calibrated in rounds on the records simulated groups visit. That closes the Gemma-31B `norm100` miss (0.73
+  [0.60, 0.85] against 0.78) but not the Gemma-26B `norm0` one (0.30 [0.17, 0.45] against 0.50). The registered
+  pass rule (both covered) was not met. Log entries of 16–17 November.
+- **A larger equal-turns test (E8).** 140 fresh groups per arm for Gemma-26B and 80 for Qwen3.5-397B: LOG − OWN
+  +0.03 [−0.09, +0.14] and −0.01 [−0.15, +0.14]. H5 reads "vanishes" in both. With Qwen's `comp` result this now
+  has a contrast within one model: an effect under `comp`, none under equal turns. Gemma-26B still has no
+  framing in which the effect was shown. `CHASE_E8_REPORT.md`.
+- **A registered sequence test (E9).** Fresh Gemma-31B groups, scored by the yielded rule fixed in advance. All four
+  primary predictions hold (Holm p 0.003 or below): partner records raise DD + DS under `comp` (0.49 → 0.72) and
+  move triads from DS to DD under `norm100` (DD 0.18 → 0.59). `CHASE_E9_REPORT.md`.
+
+Still open:
+- A registered replication of Qwen3.5-397B `comp`, with more placebo groups. At the observed shares about 52
+  groups per arm give 80% power; a smaller effect on replication would need more.
+- Why the Gemma-26B equal-turns own-record arm stays above every forecast.
+- Whether the LEAD-rate account (section 6) predicts which cells gain from partner records. It could be registered
+  as a rule on calibration data before the next population run.
+
+"no effect" from the effect seen elsewhere.
 - **A registered sequence test.** The re-count in section 4 was chosen after seeing the data. New groups scored
   by the yielded rule, fixed in advance, would test it properly.
 
@@ -348,10 +419,11 @@ their own experience from one pairing to the next, which would be closer to OWN 
 | | |
 |---|---|
 | Plan and changes | `refine-logs/CHASE_PREREGISTRATION.md`, `refine-logs/CHASE_LOG.md` |
-| Stage reports | `refine-logs/CHASE_E1_REPORT.md` … `CHASE_E5_REPORT.md` |
+| Stage reports | `refine-logs/CHASE_E1_REPORT.md` … `CHASE_E5_REPORT.md`, `CHASE_E7_REPORT.md` … `CHASE_E9_REPORT.md` |
 | Single decisions | `results/chase_e1_kernel.jsonl`, `chase_e1_cells.csv`, `chase_e1_summary.json` |
 | Frozen forecasts | `results/chase_e2_predictions.json`, `results/chase_e5_predictions.json` |
 | Populations | `results/chase_e3_pop.jsonl` (E3 and E5), `results/chase_e4_rewind.jsonl` |
 | Evaluations | `results/chase_e3_eval.json`, `chase_e4_eval.json`, `chase_e5_eval.json` |
 | Sequence re-count (post hoc) | `code/chase_seq_posthoc.py` → `results/chase_seq_posthoc.json` |
+| Follow-ups (C8) | reports `CHASE_E7_REPORT.md` … `CHASE_E9_REPORT.md`; forecasts `results/chase_e6_predictions.json` … `chase_e8_predictions.json`; populations `chase_e7_pop.jsonl`, `chase_e8_pop.jsonl`, `chase_e9_pop.jsonl`; evaluations `code/chase_e7_eval.py` … `chase_e9_eval.py` → `results/chase_e7_eval.json` … `chase_e9_eval.json`; E6 part A `results/chase_e6a.json` |
 | Code | `code/chase_*.py`; hashes of every frozen script and forecast are in the log |
