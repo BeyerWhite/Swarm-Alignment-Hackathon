@@ -726,3 +726,13 @@ phase 2 queue (PID 27487); detached from the session so that it survives the ses
 launch. `chase_e10_eval.py` hash checked unchanged (cb7d65d1…). The plan (A or B) is fixed from the headroom when the
 Rosen queue exits. Note: the Rosen queue runs under the 78.06 cap from `.secrets/adaption.env` and is likely to stop
 early on it. E10 would then start at once, and a restarted Rosen queue must wait for E10 to finish.
+
+**2026-11-19 16:19 — E10 plan fixed (written by the queue script, before the first E10 call).** Plan A {'OWN': 80, 'LOG': 80, 'REDACT': 80}; ledger 70.23, cap 99.0, headroom 28.77.
+
+**2026-11-19 16:25 — E10 restarted after the Mac rebooted.** The Mac restarted at about 16:17, which ended every
+queue: the E10 queue (still waiting, no E10 call made), the Rosen R2x stage and the Rosen handover queue
+(`rosen_p2_queue2.sh`, which was to run after E10). In the meantime the owner had raised the caps to 150 (Rosen
+log, 16:13); E10 keeps its own cap of 99. Nothing was running, so the E10 queue (sha256 00a0af19…, unchanged) was
+restarted at 16:19 without a PID to wait for, as queue PID 1554. It fixed plan A from a headroom of 28.77 (entry
+above), before the first call. Rosen's unfinished R2x is the first stage of its handover queue, so the order of
+Rosen's own stages is unchanged. A restarted Rosen queue must wait for PID 1554.
