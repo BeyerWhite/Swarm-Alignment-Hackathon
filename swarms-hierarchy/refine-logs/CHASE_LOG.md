@@ -736,3 +736,17 @@ log, 16:13); E10 keeps its own cap of 99. Nothing was running, so the E10 queue 
 restarted at 16:19 without a PID to wait for, as queue PID 1554. It fixed plan A from a headroom of 28.77 (entry
 above), before the first call. Rosen's unfinished R2x is the first stage of its handover queue, so the order of
 Rosen's own stages is unchanged. A restarted Rosen queue must wait for PID 1554.
+
+**2026-11-20 00:30 — E10 complete and evaluated.** Queue exit 0 at 00:13. 240 groups as planned (plan A), no
+invalid answers. 22,688 calls and 6.56 credits, all Qwen3.5-397B, between start and exit; the Rosen continuation
+queue started after it. Ledger 76.79. `results/chase_e10_pop.jsonl` sha256 5274bde308b020cdd7f8b1ff367cb6aab20d1314cea83471162965ea3107df47.
+`code/chase_e10_eval.py` hash checked unchanged (cb7d65d1…) and run once; `results/chase_e10_eval.json` sha256
+fbae4621aeee98095235cfe127f114e3e509993f3040f0a81874f5dc4b20ecb7.
+- P1: OWN 0.51 (41/80), LOG 0.81 (65/80), +0.30 [+0.16, +0.44], one-sided Fisher p = 5.0 × 10⁻⁵. **Supported.**
+- S1: REDACT 0.51 (41/80). LOG − REDACT +0.30 [+0.16, +0.44], REDACT − OWN +0.00 [−0.15, +0.15]. Reading
+  "outcomes".
+- S2: LEAD rate 0.62 → 0.50 (p = 4 × 10⁻²³), decided contests 0.49 → 0.52 (p = 0.033). Holds.
+- S3: DD share 0.28 → 0.31, p = 0.30.
+- Descriptive: pooled with E7, +0.29 [+0.18, +0.40]; LOG outside the frozen E7 forecast at 80 groups. REDACT
+  raises decided contests to the LOG level (0.53) without raising linearity. Report `refine-logs/CHASE_E10_REPORT.md`.
+This study's spend after E10: 59.5.
