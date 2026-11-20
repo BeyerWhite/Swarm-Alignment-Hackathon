@@ -15,3 +15,7 @@ is), so the kernel uses κ (own turns on j), ω (own turns on the other type) an
 τ = κ + ω. The queue's call path (`chase_paced.py` → module) was dry-run with the scripted agents and a zero credit cap.
 
 **Pre-registration frozen.** `results/rt_prereg_freeze.json`, stamp 724e0787bf4a5d227d1b00a0a4f94e04be3fbbd5d0e1bae391ee5764ebafcc8c.
+
+**2026-11-20 13:57 — queue launched.** `nohup caffeinate -i bash code/rt_queue.sh 150 1644` (pid 28478, log
+`scratch/rt_queue.log`), waiting for the Rosen phase 2 queue (pid 1644, at R6 then R5, R4, R3). Chase E14 starts only
+after this queue exits (owner's order). A reboot kills the queue; it is restart-safe (`bash code/rt_queue.sh 150`).
