@@ -13,3 +13,10 @@ Amendments are numbered H-A1, H-A2, …
 - The dry run showed that 8 G1c seeds rank managers unreliably when gains are close (bootstrap P(best stays best)
   0.47 with the fake agents); the registered top-up rule was added before the stamp.
 - Pre-registration and code stamped in `results/hier_prereg_freeze.json` before the first API call.
+- 14:23 `hier_q0.sh 150 1644` launched; stopped at 14:30 before any call. Two queues from other studies wait for the
+  same Rosen pid (tournament queue 1, pid 28072; the response-threshold wrapper, pid 28523), and the stamped
+  other-queue check did not recognise their script names, so G0 would have started together with tournament queue 1.
+- **Amendment H-A1** (before any API call): `hier_common.sh` `other_queue` now refuses to start while any
+  `*queue[N].sh` script runs. Stamp rewritten (`hier_prereg_freeze.json`; the first one kept as
+  `hier_prereg_freeze_v0_superseded.json`). G0 relaunched under a wrapper that waits until no other study's queue
+  script is running, so this study runs after the Rosen, tournament and response-threshold queues already launched.

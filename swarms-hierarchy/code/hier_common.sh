@@ -29,8 +29,9 @@ wait_for() {
   fi
 }
 other_queue() {  # refuse to start while another study's paced queue is running (one paced job at a time)
-  if pgrep -f "rosen_p2_queue|chase_e1[0-9]_queue|chase_.*queue" >/dev/null; then
-    echo "=== $(date '+%F %T') another paced queue is running: $(pgrep -fl 'queue' | head -3)"; exit 8
+  # amendment H-A1: any study's queue script (rosen_p2_queue2.sh, tour_queue1.sh, rt_queue.sh, chase_e14_queue.sh, ...)
+  if pgrep -f "queue[0-9]*\.sh" >/dev/null; then
+    echo "=== $(date '+%F %T') another paced queue is running: $(pgrep -fl 'queue[0-9]*\.sh' | head -3)"; exit 8
   fi
 }
 env_setup() {

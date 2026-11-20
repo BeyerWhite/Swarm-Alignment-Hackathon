@@ -1,0 +1,17 @@
+{
+ "written": "2026-11-20 14:22:47 EST",
+ "files": {
+  "refine-logs/HIERARCHY_PREREGISTRATION.md": "93f2babe4d8337cbe52ef03e35d0151c77f191c2c5b6c31bb20eb896bcee55dc",
+  "code/hier_tasks.py": "86fc1ba328a8cb35c590cedb1b3acb02e39e191de6101b5fc8497d282526140f",
+  "code/office.py": "2192e7f3029f7ba7d9be72f034d98bdae07c3c03ccf84e916b060b0b050d6a35",
+  "code/hier_measure.py": "35de2137f80183b7b75b17d97297974260ef1692a425b833c1f452117ac7f1bd",
+  "code/hier_sim.py": "9458d5432d072b7274b3683b087467f82e33872ab797ebfb7cab80f96cb2c037",
+  "code/hier_eval.py": "6fb776879ed6c0df6cc36f1047d21dfd715b68ea5d60732f7200ca0beb8f8fac",
+  "code/hier_dryrun.py": "6a5557373fdfa0434e0f131731d9348872b1976713e216edf60ea8115ce1603a",
+  "code/hier_common.sh": "460de909338d13dee502cd73c6cbc27a4949579a17109eeb29086b13ab8db25e",
+  "code/hier_q0.sh": "082cf22fffce10201a31f6c2028c3ce7785093706f31f463d75caab4754ef62c",
+  "code/hier_q1.sh": "d2bed6badadb84bcabf6a84843d4a57446fc17ab854bd0e9a66c38bec3acf12e",
+  "code/chase_paced.py": "e729d7eb262b03f3ad6ccabfe1c84a9b9e5cb3978f96a95d0e60669d45d08a01",
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b"
+ }
+}
