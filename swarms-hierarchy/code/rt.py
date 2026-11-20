@@ -23,7 +23,7 @@ Usage
   rt.py mock --policy rational|always|hill [--K 0 8] [--D ...] [--c ...]     offline engine check, no API calls
   rt.py show --K 8 --D 0.5 --c 0.5                                           print example prompts, no API calls
 """
-import argparse, hashlib, json, os, random, re, sys
+import argparse, hashlib, json, os, random, re, sys, zlib
 from pathlib import Path
 import numpy as np
 
@@ -145,10 +145,22 @@ def render(view):
 
 # ----------------------------------------------------------------------------------------------- engine
 
+def snapshot(view):
+    """Everything render() needs, copied (for replay cells of the kernel battery)."""
+    me = view["me"]
+    return dict(me=me, K=view["K"], others=view["others"], t=view["t"], T=view["T"], n=view["n"], pos=view["pos"],
+                points=view["points"], nA=view["nA"], nB=view["nB"], c=view["c"], D=view["D"],
+                stats={a: dict(done=dict(st["done"])) for a, st in view["stats"].items()},
+                hist={me: list(view["hist"][me])}, order_rows=list(view["order_rows"]), earlier=list(view["earlier"]),
+                open=[dict(x) for x in view["open"]], type_order=list(view["type_order"]))
+
+
 def run_pop(model, K, D, c, seed, others="shown", decide=None, rounds=T, n_agents=N, remove_at=None, n_remove=2,
-            reasoning="none", tag="rt"):
+            reasoning="none", tag="rt", log_views=False):
     """One population. `decide(view) -> reply text` replaces the LLM if given (it must use only what render() shows).
-    remove_at: after that round the n_remove agents with the highest share of A among their work turns leave."""
+    remove_at: after that round the n_remove agents with the highest share of A among their work turns leave.
+    log_views: keep a snapshot of every decision's view (pilots; used for the replay cells)."""
+    views = []
     rng = random.Random(f"rt|{seed}|{K}|{D}|{c}|{others}|{remove_at}")
     task_rng = random.Random(seed)                      # identical task stream across arms with the same seed
     kmap = kind_map(seed)
@@ -177,12 +189,13 @@ def run_pop(model, K, D, c, seed, others="shown", decide=None, rounds=T, n_agent
             view = dict(me=a, K=K, others=others, t=t, T=rounds, n=len(active), pos=pos, points=points,
                         nA=len(queues["A"]), nB=len(queues["B"]), stats=stats, hist=hist, order_rows=rows,
                         earlier=earlier, open=open_tasks, type_order=type_order, c=c, D=D)
+            if log_views:
+                views.append(snapshot(view))
             if decide:
                 text = decide(view)
             else:
-                from llm import call
-                text = call(model, system_prompt(a, c, D, len(active), rounds, K, others), render(view), tag=tag,
-                            max_tokens=MAX_TOKENS if reasoning == "none" else 2000, reasoning=reasoning)
+                text = reply(model, system_prompt(a, c, D, len(active), rounds, K, others), render(view), view, tag,
+                             reasoning)
             act = parse(text)
             st = stats[a]
             listed = [x["id"] for j in type_order for x in open_tasks if x["type"] == j]
@@ -224,7 +237,8 @@ def run_pop(model, K, D, c, seed, others="shown", decide=None, rounds=T, n_agent
             active = [a for a in active if a not in gone]
     return dict(model=model, K=K, D=D, c=c, others=others, seed=seed, N=n_agents, T=rounds, ids=ids, kinds=kmap,
                 remove_at=remove_at, removed=removed, stats={str(k): v for k, v in stats.items()}, points=points,
-                lost=lost, history=rec_rounds, **({"reasoning": reasoning} if reasoning != "none" else {}))
+                lost=lost, history=rec_rounds, **({"reasoning": reasoning} if reasoning != "none" else {}),
+                **({"views": views} if log_views else {}))
 
 
 # ----------------------------------------------------------------------------------------------- metrics
@@ -309,6 +323,31 @@ def metrics(rec, warm=WARM, n_perm=200, t1=None):
                 points=rec["points"])
 
 
+def removal_metrics(rec, pre=(9, 16), post=(25, 32), spec_min=4, spec_share=0.75):
+    """Removal arm: the remaining agents before (rounds 9-16) and after (25-32) the A specialists left at round 16.
+    spec_*: remaining agents with >= spec_min work turns in the window, >= spec_share of them on A."""
+    gone = {str(a) for a in rec["removed"]}
+    rem = [str(a) for a in rec["ids"] if str(a) not in gone]
+
+    def window(t0, t1):
+        cnt = {a: {"A": 0, "B": 0} for a in rem}
+        for r in rec["history"]:
+            if t0 <= r["t"] <= t1:
+                for a, x in r["acts"].items():
+                    if x[0] == "do" and a in cnt:
+                        cnt[a][x[1]] += 1
+        tot = sum(c["A"] + c["B"] for c in cnt.values())
+        share = sum(c["A"] for c in cnt.values()) / tot if tot else float("nan")
+        spec = sum(1 for c in cnt.values() if c["A"] + c["B"] >= spec_min and c["A"] >= spec_share * (c["A"] + c["B"]))
+        return share, spec
+    sp, kp = window(*pre); so, ko = window(*post)
+    wA = {r["t"]: r["waiting"]["A"] for r in rec["history"]}
+    return dict(a_share_pre=sp, a_share_post=so, spec_pre=kp, spec_post=ko, spec_gain=ko - kp,
+                waitA_pre=float(np.mean([wA[t] for t in range(13, 17)])),
+                waitA_peak=float(max(wA[t] for t in range(17, 25))),
+                waitA_post=float(np.mean([wA[t] for t in range(29, 33)])))
+
+
 # ----------------------------------------------------------------------------------------------- scripted agents
 
 def _remaining(view):
@@ -333,20 +372,26 @@ def policy_always(view, rng=None):
     return f"DO T{x['id']}: {x['answer']}"
 
 
-def make_hill(n=2.0, theta=4.0, xi=0.25, phi=0.05, beta_pos=0.0, seed=0):
+def make_hill(n=2.0, theta=4.0, xi=0.25, phi=0.05, beta_pos=0.0, g_rem=0.0, k0_shift=0.0, acc=1.0, seed=0):
     """Scripted response-threshold agent (multinomial Hill-logit). Uses only what the prompt shows: own history only
-    if K > 0. ln theta_j = ln theta - xi * (#j in last 8 turns) + phi * (#other-type work in last 8 turns)."""
+    if K > 0. ln theta_j = ln theta - xi * (#j in last 8 turns) + phi * (#turns in last 8 not spent on j).
+    beta_pos: bonus for the first listed type; g_rem: utility of work per ln(agents still to move); k0_shift: utility
+    shift of work when no own history is shown; acc: probability a DO answer is correct.
+    In the fitted parametrization (rt_forecast.py) this is kappa = n*(xi + phi), omega = 0, rho = -n*phi,
+    a = -n ln theta, a0 = k0_shift, b1 = beta_pos, g = g_rem."""
     rng = random.Random(seed)
 
     def decide(view):
         h = view["hist"][view["me"]][-HWIN:] if view["K"] > 0 else []
+        L = len(h)
         u = {}
         for j in TYPES:
             s = view["n" + j]
             if s == 0:
                 continue
-            lt = np.log(theta) - xi * h.count(j) + phi * sum(1 for x in h if x in TYPES and x != j)
-            u[j] = n * (np.log(s) - lt) + beta_pos * (view["type_order"][0] == j)
+            lt = np.log(theta) - xi * h.count(j) + phi * (L - h.count(j))
+            u[j] = (n * (np.log(s) - lt) + beta_pos * (view["type_order"][0] == j)
+                    + g_rem * np.log(view["n"] - view["pos"] + 1) + (k0_shift if view["K"] == 0 else 0.0))
         if not u:
             return "REST"
         w = {j: np.exp(v) for j, v in u.items()}
@@ -355,10 +400,105 @@ def make_hill(n=2.0, theta=4.0, xi=0.25, phi=0.05, beta_pos=0.0, seed=0):
         for j, v in w.items():
             if r < v:
                 x = next(x for x in view["open"] if x["type"] == j)
-                return f"DO T{x['id']}: {x['answer']}"
+                return f"DO T{x['id']}: {x['answer'] if rng.random() < acc else 'x'}"
             r -= v
         return "REST"
     return decide
+
+
+# ----------------------------------------------------------------------------------------------- LLM or test double
+
+# RT_FAKE=1 replaces every call by a scripted agent with known parameters (offline pipeline test; no API calls).
+FAKE = os.environ.get("RT_FAKE") == "1"
+FAKE_PARAMS = {"gemma": dict(n=1.5, theta=3.0, xi=0.0, phi=0.0, beta_pos=1.5, g_rem=-0.3, acc=0.97),
+               "qwen": dict(n=2.0, theta=4.0, xi=0.3, phi=0.05, beta_pos=0.3, g_rem=-0.2, k0_shift=0.5, acc=0.97)}
+_fake_n = [0]
+
+
+def fake_params(model):
+    return next(v for k, v in FAKE_PARAMS.items() if k in model)
+
+
+def reply(model, sysp, prompt, view, tag, reasoning="none"):
+    if FAKE:
+        _fake_n[0] += 1
+        return make_hill(**fake_params(model), seed=zlib.crc32(f"{prompt}|{_fake_n[0]}".encode()))(view)
+    from llm import call
+    return call(model, sysp, prompt, tag=tag, max_tokens=MAX_TOKENS if reasoning == "none" else 2000,
+                reasoning=reasoning)
+
+
+# ----------------------------------------------------------------------------------------------- stages (calls)
+
+MODELS = ("adaption:gemma-4-31b-it", "adaption:qwen3.8-27b")
+PILOT_SEEDS = (7, 8)
+POP_SEEDS = tuple(range(51001, 51009))
+PREREG = R / "rt_prereg_freeze.json"
+CCHOICE = R / "rt_c_choice.json"
+FORECAST = R / "rt_predictions.json"
+
+
+def arms(stage):
+    """Registered population arms: dicts of run_pop keyword arguments (without model, seed, c)."""
+    if stage == "pilot":
+        return [dict(K=8, D=0.5)]
+    if stage == "RT3":
+        out = [dict(K=K, D=D) for K in (0, 8) for D in (0.25, 0.5, 0.75, 1.0)]
+        out.append(dict(K=8, D=0.5, others="hidden"))
+        out.append(dict(K=8, D=0.5, rounds=32, remove_at=16))
+        return out
+    if stage == "RT4":
+        return [dict(K=8, D=0.5, n_agents=4), dict(K=8, D=0.5, n_agents=16)]
+    raise ValueError(stage)
+
+
+def arm_key(arm):
+    a = dict(K=8, D=0.5, others="shown", rounds=T, n_agents=N, remove_at=None); a.update(arm)
+    return f"K={a['K']}|D={a['D']}|others={a['others']}|T={a['rounds']}|N={a['n_agents']}|rm={a['remove_at']}"
+
+
+def _sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def stamp(path):
+    if not Path(path).exists():
+        sys.exit(f"missing {path}; refusing to start")
+    return json.load(open(path))["sha256"]
+
+
+def chosen_c():
+    if not CCHOICE.exists():
+        sys.exit("effort cost not chosen yet (results/rt_c_choice.json missing)")
+    return float(json.load(open(CCHOICE))["c"])
+
+
+def cmd_run(a):
+    from concurrent.futures import ThreadPoolExecutor
+    import threading
+    pre = stamp(PREREG)
+    fc = stamp(FORECAST) if a.stage != "pilot" else None
+    c = chosen_c()
+    out = R / f"rt_{a.stage.lower()}_pop.jsonl"
+    seeds = a.seeds or (PILOT_SEEDS if a.stage == "pilot" else POP_SEEDS)
+    done = set()
+    if out.exists():
+        for l in open(out):
+            r = json.loads(l); done.add((r["model"], r["arm"], r["seed"]))
+    jobs = [(m, arm, s) for m in a.models for arm in arms(a.stage) for s in seeds
+            if (m, arm_key(arm), s) not in done]
+    print(f"{a.stage}: {len(jobs)} populations to run, c = {c}", flush=True)
+    lock = threading.Lock()
+
+    def go(job):
+        m, arm, s = job
+        rec = run_pop(m, c=c, seed=s, tag=f"rt:{a.stage}", log_views=(a.stage == "pilot"), **arm)
+        rec.update(arm=arm_key(arm), stage=a.stage, prereg_sha=pre, **({"forecast_sha": fc} if fc else {}))
+        with lock, open(out, "a") as f:
+            f.write(json.dumps(rec) + "\n")
+        print(f"  done {m} {arm_key(arm)} seed {s}: points {rec['points']:.1f}", flush=True)
+    with ThreadPoolExecutor(a.parallel) as ex:
+        list(ex.map(go, jobs))
 
 
 # ----------------------------------------------------------------------------------------------- commands
@@ -404,8 +544,13 @@ def main():
     s.add_argument("--K", type=int, default=8); s.add_argument("--D", type=float, default=0.5)
     s.add_argument("--c", type=float, default=0.5); s.add_argument("--others", default="shown")
     s.add_argument("--round", type=int, default=6); s.add_argument("--pos", type=int, default=3)
+    r = sp.add_parser("run")
+    r.add_argument("--stage", required=True, choices=["pilot", "RT3", "RT4"])
+    r.add_argument("--models", nargs="+", required=True)
+    r.add_argument("--seeds", type=int, nargs="+", default=None)
+    r.add_argument("--parallel", type=int, default=10)
     a = p.parse_args()
-    {"mock": cmd_mock, "show": cmd_show}[a.cmd](a)
+    {"mock": cmd_mock, "show": cmd_show, "run": cmd_run}[a.cmd](a)
 
 
 if __name__ == "__main__":
