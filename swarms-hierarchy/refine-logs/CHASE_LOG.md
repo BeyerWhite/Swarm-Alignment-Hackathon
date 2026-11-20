@@ -750,3 +750,105 @@ fbae4621aeee98095235cfe127f114e3e509993f3040f0a81874f5dc4b20ecb7.
 - Descriptive: pooled with E7, +0.29 [+0.18, +0.40]; LOG outside the frozen E7 forecast at 80 groups. REDACT
   raises decided contests to the LOG level (0.53) without raising linearity. Report `refine-logs/CHASE_E10_REPORT.md`.
 This study's spend after E10: 59.5.
+
+## 2026-11-20
+
+### Amendment C10 (E11–E14: the four questions left open after E10; written 2026-11-20 12:50, before any of them is run)
+The owner asked for the open questions of section 8 of the final report to be registered as experiments
+("Register the open questions as experiments"). One experiment per question. E11, E12 and E13 use existing groups
+only and make no calls; E14 needs calls and waits for the owner's go-ahead and cap, and for the Rosen queue (one
+paced job at a time). The pre-registration is not edited. Ledger (shared with Rosen) at this point: 86.72.
+
+**What was looked at while designing, so that it is on record.** Group counts of every data set named below (no
+outcomes). The calibration LEAD rates at N = 4 of the eight cells already run as groups, and of GLM-5.2 `norm100`
+(E2 rows); these are inputs to the E14 rule, and the rule was written after seeing them and the known group outcomes.
+The new measures of E11–E13 have not been computed on their target data. Every script was run only on stand-in
+data: E11 and E12 on Qwen3.5-397B `norm100` (E7), E13 on Qwen3.5-397B `norm0` (E8b), E14 with the test double of
+`chase_cal` (`CHASE_CAL_FAKE=1`) and E10 groups relabelled as E14 cells, outputs in the session scratch directory.
+A check of the mixed model on synthetic data recovered agent spreads of 0, 0.5 and 1 as 0.08, 0.44 and 0.93.
+
+**Shared code.** `code/chase_c10.py` (sha256 f92cca00f822dcef706569de7ea241d4ccce30ea1b7afd37d47bcfc7f56d7df0):
+loading with count checks, per-decision features rebuilt from stored histories (d, o, p, tc checked against the stored
+values), the E6 extras, partner recency (plast, pstreak), phinge = min(p + 3, 0), cmp = sign(p − o), the round number
+tr; ridge logistic fits by `chase_fit.fit_logistic` (unchanged); a logistic with a normal random intercept per agent
+(Gauss–Hermite, 20 nodes); simulation with optional per-agent intercepts; group-bootstrap adequacy (resample groups,
+refit, simulate as many groups, 90% interval). Reused unchanged: `chase_e3_eval.py` 3e16161b…, `chase_e6a.py`
+da0375ad…, `chase_e8_eval.py` 31b61cf2…, `chase_cal.py` ca828a3b…, `chase_f_run.py` 64490020….
+
+**E11 — how Qwen groups become linear without Chase's sequences (question 2). No calls.**
+`code/chase_e11_eval.py` (sha256 14a5a848bdc0c0a9263113c33564726db27d2a7fcbb65e1d1cc9fe1c40921c67) →
+`results/chase_e11_eval.json`.
+1. Data, `comp`, groups of four: Qwen3.5-397B E7 + E10 (OWN 120, LOG 120, REDACT 100); Gemma-4-31B E3 + E9
+   (OWN 120, LOG 120).
+2. Initial relationship of a dyad: the E9 rule (first contest with one LEAD and one DEFER), else its first contest.
+   Initially linear: all six dyads formed and no cyclic triad. Finally linear: the frozen rule. Reversal: a decided
+   contest in a formed dyad won by the agent currently below.
+3. Exact decomposition of LOG − OWN in linear share: formation = Δa (s̄ − r̄); later = ā Δs + (1 − ā) Δr, where
+   a is the share initially linear, s and r the shares finally linear among groups that started linear and the rest.
+4. P1: in Qwen3.5-397B, later − formation > 0 with its 95% group-bootstrap interval excluding zero. P2: in
+   Gemma-4-31B, formation − later > 0, likewise. Reading per model: "later", "formation" or "mixed".
+5. S1: share of reversals in which the new upper agent had the better net record against third parties at that
+   contest; predicted LOG > OWN in Qwen3.5-397B. Descriptive: reversals per formed dyad, keep and repair terms,
+   initial transitivity of triads formed entirely by the E9 rule, the Qwen REDACT arm.
+6. Caution, fixed now: these groups were already analysed, and P1 and P2 were formed from the E9 and E10 sequence
+   results. This is a registered analysis of existing data, not a fresh test.
+
+**E12 — why the forecast misses the Qwen `comp` partner-record arm (question 1). No calls.**
+`code/chase_e12.py` (sha256 1689d2ec322f73cc247002d4d5a90c847e8e406c2f6868973ba6b7e68989d1e0) → `results/chase_e12.json`.
+1. Data: LOG decisions of the 120 Qwen3.5-397B `comp` LOG groups (E7 + E10); Gemma-4-31B `comp` LOG (E3 + E9)
+   alongside, without a test.
+2. Forms: B0 = the E7 forecast form X; B1 = B0 + n_par, plast, pstreak; B2 = B0 + phinge; B3 = B0 + cmp; B4 = all.
+   Leave-one-seed-out log-loss; selection rule as E6 part A (within 0.002 of the best, fewest added features, at
+   least 0.005 better than B0, otherwise B0).
+3. Adequacy: group bootstrap with 100 refits of 120 groups, B0 and the selected form, 90% interval against the
+   observed LOG share; the OWN arm with X alongside.
+4. Reading: "calibration coverage" if B0 fitted on the groups' own decisions covers the observed share; "missing
+   feature" if B0 does not and the selected form does; "neither" otherwise.
+5. Descriptive: K fitted on the E7 calibration rows and on the groups' decisions, predicted against observed LEAD
+   rates by level of p and o; share of the groups' decisions in (o, p, sign d) cells with fewer than five
+   calibration rows.
+
+**E13 — why the Gemma-26B equal-turns own-record arm stays above its forecasts (question 3). No calls.**
+`code/chase_e13.py` (sha256 986c45c49af3dd33825ff4174aaf388de15b0956187dc2980e2bcdbd416c1b07) → `results/chase_e13.json`.
+1. Data: OWN decisions of the 180 Gemma-4-26B `norm0` groups of four (E5 40, E8a 140). Gemma-4-31B `norm100` OWN
+   and Qwen3.5-397B `comp` OWN alongside, without a test.
+2. Models: C0 = the E6 form X (d, o + six extras); C1 = C0 + round number; C2 = C0 with a random intercept per
+   agent, tested against C0 by the likelihood ratio (50:50 mixture of χ²₀ and χ²₁).
+3. Adequacy: group bootstrap, 100 refits of 180 groups for C0, C1 and C2 (C2's simulated agents draw their own
+   intercept), 90% interval against the observed linear share.
+4. Reading: "no gap" if C0 covers; else "agent differences" (C2 LR p < 0.05 and C2 covers), "round number" (C1
+   at least 0.005 better in leave-one-seed-out log-loss and covers), "both", or "neither".
+5. Descriptive: spread of per-agent LEAD rates against its spread under C0 at the same decisions; C2 sigma in the
+   comparison cells.
+
+**E14 — does the LEAD-rate account predict which cells gain, from calibration rows alone (question 4). Calls.**
+`code/chase_e14.py` (sha256 ebab43a951402b2c779cd4fe05b6890db67ccd524b0e40b6bda7f6000535febf); queue
+`scratch/chase_e14_queue.sh` (sha256 39a3d2d7ac012e641f5b77188b28c1257fe98adb6156c44ae7e8c489805e999c).
+1. Rule: from round-1 calibration rows at N = 4 (as round 1 of E7: records from groups driven by E1 kernels,
+   uniform sampling), LEAD rates l_OWN and l_LOG and q(l) = 2 l (1 − l). Predict a gain if q(l_LOG) − q(l_OWN) > 0,
+   that is if partner records move the LEAD rate toward one half. The point value decides; a 2,000-draw row
+   bootstrap is reported with it.
+2. Known cells, a consistency check only (outcomes known when the rule was written): Gemma-31B `comp` +0.019 and
+   `norm100` +0.269 (both gained); GLM-5.2 `comp` −0.110, DeepSeek `comp` 0.000, Gemma-26B `norm0` −0.019,
+   Qwen3.5-397B `norm100` −0.025 and `norm0` −0.034 (none gained); Qwen3.5-397B `comp` +0.036 (gained). 8 of 8.
+3. Fresh cells, never run as groups: Gemma-4-26B `comp` and `norm100`, Gemma-4-31B `norm0`, Qwen3.8-27B `comp`.
+   Optional, the owner decides before the first call: GLM-5.2 `norm100`, whose rule input already exists (E2 rows:
+   −0.064, predicted no gain). Calibration round 1: OWN 300 and LOG 450 per fresh cell. The rule file
+   `results/chase_e14_rule.json` is written once and stamped into this log by the queue before any population call.
+   No gate after it: every cell is run whatever its prediction.
+4. Populations: groups of four, 24 rounds, OWN 80 and LOG 80 per cell, seeds 54000–54079, file
+   `results/chase_e14_pop.jsonl`, runner `chase_f_run.py` unchanged.
+5. Outcome per cell: "gain" if LOG > OWN with one-sided Fisher p < 0.05, else "no gain". P1: over the cells
+   predicted to gain, the mean LOG − OWN difference has a 95% group-bootstrap interval above zero. P2: over the cells
+   predicted not to gain, that interval lies below +0.17 (the H5 margin of C6). The rule passes if both hold where
+   they have cells. Reported: cells classified correctly; LEAD rate and decided share per arm.
+6. Sensitivity, from the binomial variance alone: with four cells predicted to gain, P1 has 80% power for a mean
+   gain of about +0.11; with one cell, about +0.22. P2 with one cell passes only if that cell's difference is
+   below about +0.015, so with a true difference of zero it passes about half the time. If every fresh cell is
+   predicted to gain and GLM-5.2 is not run, P2 is not tested.
+7. Budget estimate: about 3,000 calibration and 61,000 population calls, 2.3 credits, about 22 hours at 48
+   requests per minute. With GLM-5.2 `norm100`: about 15,000 more calls, 9 more credits, 5 more hours.
+
+**Order.** E11, E12 and E13 can run at any time (CPU only; E12 and E13 take minutes). E14 starts only after the
+owner's go-ahead, with a ledger cap that the owner sets (never above 150), and after the Rosen queue has exited.
+Nothing is analysed until its data are complete; evaluation hashes are checked before each run.

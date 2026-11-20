@@ -421,7 +421,7 @@ all four have now run, and one registered replication (E10, amendment C9) follow
   primary predictions hold (Holm p 0.003 or below): partner records raise DD + DS under `comp` (0.49 → 0.72) and
   move triads from DS to DD under `norm100` (DD 0.18 → 0.59). `CHASE_E9_REPORT.md`.
 
-Still open:
+Still open (registered as E11–E14 in amendment C10, 20 November; not yet run):
 - Why the forecasting model misses the size of the Qwen `comp` effect twice (0.81 observed against about 0.62),
   while it got Gemma-31B `comp` right.
 - How Qwen hierarchies become linear without Chase's sequences. Following which contests reverse early
