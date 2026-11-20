@@ -852,3 +852,20 @@ da0375ad…, `chase_e8_eval.py` 31b61cf2…, `chase_cal.py` ca828a3b…, `chase_
 **Order.** E11, E12 and E13 can run at any time (CPU only; E12 and E13 take minutes). E14 starts only after the
 owner's go-ahead, with a ledger cap that the owner sets (never above 150), and after the Rosen queue has exited.
 Nothing is analysed until its data are complete; evaluation hashes are checked before each run.
+
+**2026-11-20 13:40 — E11, E12 and E13 run and evaluated (no calls).** The owner said "Yes, run E11–E13". Script
+hashes checked against C10 before the runs; all match (`chase_fit.py`, imported unchanged, was never hashed here and
+is unchanged since 454d89a). Rebuilt d, o, p, tc matched the stored values in every decision. Outputs:
+`results/chase_e11_eval.json` sha256 903e39f20221b8b432f763bcfd03588792b9512548d3eaa15f241bc216dbc7c6,
+`results/chase_e12.json` c1b5de59e3bfbb561cc36469dcb7b2d69d626245ff3cec4cb067cdbc5d862ddb,
+`results/chase_e13.json` d2dacf0508825ee7825c1ae1fbb2a9af74d2bdf2b787436efa14f9811b930ddb.
+- E11: Qwen later − formation +0.31 [+0.19, +0.42] → "later", P1 supported; Gemma-31B +0.23 [+0.08, +0.38] →
+  "later", P2 (formation) not supported. S1 Qwen +0.08 [+0.02, +0.13], as predicted. In both models LOG raises
+  the share starting linear, but the start does not predict the end (s ≈ r).
+- E12: B1 selected (log-loss 0.5944 against 0.6080); Qwen LOG B0 0.67 [0.62, 0.74] and B1 0.66 [0.59, 0.73] against
+  0.81 → "neither". Gemma-31B LOG B0 covers (0.59 against 0.58).
+- E13: 180 groups, observed 0.41; C0 0.33 [0.27, 0.38], C1 0.34, C2 0.33, none covers; C2 σ 0.39, LR p 6e-26 →
+  "neither".
+- Post hoc, after these results: the two answers in a contest are not more complementary than the fitted models
+  imply (Gemma-26B `norm0` OWN decided 0.388 against 0.417 implied).
+Report `refine-logs/CHASE_C10_REPORT.md`. E14 not started.

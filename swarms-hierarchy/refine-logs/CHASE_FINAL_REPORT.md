@@ -14,6 +14,9 @@ and sections 2, 3, 5, 6, 7 and 9 were revised to match; sections 1 and 4 are unc
 Updated 2026-11-20 with E10 (amendment C9), the registered replication of the Qwen3.5-397B `comp` result
 (`CHASE_E10_REPORT.md`). The summary and sections 2, 3, 5, 6, 7, 8 and 9 were revised to match.
 
+Updated again on 2026-11-20 with the three no-call analyses of amendment C10 (E11–E13, `CHASE_C10_REPORT.md`):
+sections 5, 6, 8 and 9 gained one entry each. E14 is registered and has not run.
+
 ## Summary
 
 Chase proposed that animal dominance hierarchies become linear because individuals react to contests they watch,
@@ -334,6 +337,9 @@ their own experience from one pairing to the next, which would be closer to OWN 
   partly a high draw, but the forecasts are still low there.
 - **The new miss is the other way round.** For Qwen3.5-397B `comp` the forecast put both arms near 0.60. Own-record
   groups came in at 0.53 and partner-record groups at 0.80: this time the bystander arm was underestimated.
+- **After C10 (E12, E13):** the two remaining misses persist when the decision model is fitted on the groups' own
+  decisions (Qwen `comp` LOG 0.67 against 0.81; Gemma-26B `norm0` OWN 0.33 against 0.41 on 180 groups). They are
+  not calibration problems; independent single-decision models miss some group-level source of order.
 
 ## 6. What this says about Chase's account
 
@@ -362,6 +368,10 @@ their own experience from one pairing to the next, which would be closer to OWN 
   registered test on fresh groups (E9) confirmed the shift toward double dominance. In Qwen3.5-397B the sequences
   stay near chance even where its hierarchy rises (E7, E10), so in that model linearity grows without Chase's
   pattern.
+- **But the start is not what decides the final order (E11).** In Gemma-31B, partner records give Chase's start:
+  more DD and DS, and nearly all early triads transitive. Yet in both models a linear start predicts a linear end no
+  better than a non-linear one. The gain from partner records comes from keeping and repairing the order in later
+  contests.
 - **The route to double dominance differs from the one he described.** He attributed the sequences to winners
   continuing to win and losers continuing to lose. Here double subordinance does arise from losers giving way,
   but double dominance comes from bystanders giving way to winners they can see, not from winners pressing on.
@@ -394,7 +404,7 @@ their own experience from one pairing to the next, which would be closer to OWN 
   the follow-ups, the LEAD-rate tables of E7 and E10 and the comparisons marked descriptive in their reports are
   also post hoc.
 
-## 8. The open questions, followed up (E6–E10)
+## 8. The open questions, followed up (E6–E13)
 
 The first version of this report listed four open questions. Amendment C8 registered one experiment for each;
 all four have now run, and one registered replication (E10, amendment C9) followed from the first.
@@ -421,14 +431,25 @@ all four have now run, and one registered replication (E10, amendment C9) follow
   primary predictions hold (Holm p 0.003 or below): partner records raise DD + DS under `comp` (0.49 → 0.72) and
   move triads from DS to DD under `norm100` (DD 0.18 → 0.59). `CHASE_E9_REPORT.md`.
 
-Still open (registered as E11–E14 in amendment C10, 20 November; not yet run):
-- Why the forecasting model misses the size of the Qwen `comp` effect twice (0.81 observed against about 0.62),
-  while it got Gemma-31B `comp` right.
-- How Qwen hierarchies become linear without Chase's sequences. Following which contests reverse early
-  relationships would show it.
-- Why the Gemma-26B equal-turns own-record arm stays above every forecast.
-- Whether the LEAD-rate account (section 6) predicts which cells gain from partner records. It could be registered
-  as a rule on calibration data before the next population run.
+Amendment C10 (20 November) registered one more experiment for each question that remained. Three need no calls
+and have run (`CHASE_C10_REPORT.md`):
+- **How the order is built (E11).** In both responsive models the gain from partner records arises after
+  relationships form: Qwen3.5-397B later − formation +0.31 [+0.19, +0.42] (predicted), Gemma-4-31B +0.23
+  [+0.08, +0.38] (predicted the other way, so P2 failed). Partner records do make the first relationships more often
+  a linear order, but within an arm a linear start does not predict a linear end. In Qwen, reversals under partner
+  records more often put the agent with the better record on top (0.59 against 0.51).
+- **The Qwen `comp` forecast miss (E12).** Not a calibration-coverage problem: fitted on the 120 groups' own
+  decisions, the forecast's decision model still gives 0.67 [0.62, 0.74] against 0.81, and the best richer form
+  does no better. In Gemma-31B `comp` the same model covers. Agents respond more steeply to a partner with a strong
+  record than the fitted form allows (post hoc reading).
+- **The Gemma-26B equal-turns gap (E13).** At 180 groups it remains (0.33 [0.27, 0.38] simulated against 0.41).
+  Agents differ beyond their records (σ 0.39, p = 6 × 10⁻²⁶), but those differences do not explain it, and neither
+  does the round number.
+- **The LEAD-rate rule (E14).** Registered on four fresh cells with calls; not yet run.
+
+Still open: in two cells a model of independent single decisions, fitted on the very decisions groups made, yields
+less hierarchy than the groups showed. A post hoc check rules out complementary answers within a contest;
+persistence in specific pairs beyond the visible record is untested.
 
 ## 9. Files
 
@@ -442,4 +463,5 @@ Still open (registered as E11–E14 in amendment C10, 20 November; not yet run):
 | Evaluations | `results/chase_e3_eval.json`, `chase_e4_eval.json`, `chase_e5_eval.json` |
 | Sequence re-count (post hoc) | `code/chase_seq_posthoc.py` → `results/chase_seq_posthoc.json` |
 | Follow-ups (C8, C9) | reports `CHASE_E7_REPORT.md` … `CHASE_E10_REPORT.md`; forecasts `results/chase_e6_predictions.json` … `chase_e8_predictions.json`; populations `chase_e7_pop.jsonl` … `chase_e10_pop.jsonl` (E10 plan `chase_e10_plan.json`); evaluations `code/chase_e7_eval.py` … `chase_e10_eval.py` → `results/chase_e7_eval.json` … `chase_e10_eval.json`; E6 part A `results/chase_e6a.json` |
+| Follow-ups (C10) | report `CHASE_C10_REPORT.md`; `code/chase_c10.py`, `chase_e11_eval.py`, `chase_e12.py`, `chase_e13.py` → `results/chase_e11_eval.json`, `chase_e12.json`, `chase_e13.json`; E14 `code/chase_e14.py` (not yet run) |
 | Code | `code/chase_*.py`; hashes of every frozen script and forecast are in the log |
