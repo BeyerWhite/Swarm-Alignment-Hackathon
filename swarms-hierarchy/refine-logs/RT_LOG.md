@@ -19,3 +19,10 @@ is), so the kernel uses κ (own turns on j), ω (own turns on the other type) an
 **2026-11-20 13:57 — queue launched.** `nohup caffeinate -i bash code/rt_queue.sh 150 1644` (pid 28478, log
 `scratch/rt_queue.log`), waiting for the Rosen phase 2 queue (pid 1644, at R6 then R5, R4, R3). Chase E14 starts only
 after this queue exits (owner's order). A reboot kills the queue; it is restart-safe (`bash code/rt_queue.sh 150`).
+
+**2026-11-20 13:58 — queue relaunched behind the tournament study's queue 1 (no call had been made).** The tournament
+study's `tour_queue1.sh` (pid 28072, ~1,600 calls) was already waiting for the same Rosen pid, so both would have
+started together and shared the 50-per-minute limit. The RT queue (pid 28478) was stopped while still waiting and
+relaunched under a wrapper (pid 28523, log `scratch/rt_queue.log`) that waits until both pid 1644 and pid 28072 have
+exited and then runs the frozen `code/rt_queue.sh 150` unchanged. Order: Rosen phase 2 → tournament queue 1 → RT →
+Chase E14; the tournament study's larger queue 2 must also wait for RT.
