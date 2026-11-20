@@ -869,3 +869,10 @@ is unchanged since 454d89a). Rebuilt d, o, p, tc matched the stored values in ev
 - Post hoc, after these results: the two answers in a contest are not more complementary than the fitted models
   imply (Gemma-26B `norm0` OWN decided 0.388 against 0.417 implied).
 Report `refine-logs/CHASE_C10_REPORT.md`. E14 not started.
+
+**2026-11-20 14:54 — E14 approved and queued, with GLM-5.2 `norm100`.** The owner chose "Queue E14 with GLM"; the ledger
+cap is 150 (shared Chase + Rosen ledger at 87.35 when queued). `scratch/chase_e14_queue.sh 150 28523 glm` (script sha256
+39a3d2d7…, `chase_e14.py` ebab43a9…, both as in C10). It waits for PID 28523, the response-threshold queue, which itself
+waits for the Rosen queue (1644) and the tournament queue (28072), so no two paced jobs share the account. Nothing of
+E14 has been called yet; the rule file is written and frozen by the script before the first population call.
+Estimated cost: about 2.3 credits for the four fresh cells plus about 9 for GLM.
