@@ -56,3 +56,19 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
     - Claude: runs through the `claude` CLI, uses no Adaption credits, and is slow.
     - GPT: runs through `codex`. `llm.py` limits it to 1,500 calls (`GPT_CALL_BUDGET`). A population arm set of
       about 18,000 calls needs the owner to raise that budget or accept smaller arms.
+
+## M-A1 (2026-11-21): Claude follow-up with a stop-on-quota rule
+
+- **Owner request:** "add the stop-on-quota rule, and then run the Claude experiments." The design is
+  `COUZIN_CLAUDE_FOLLOWUP.md`: the M4b arms on Claude Haiku, then Sonnet, through `claude -p`, with their own gate,
+  kernel, calibration and frozen forecast per model. It is stamped in `results/couzin_followup_freeze.json`.
+- **The main study is unchanged.** Its stamped files and its queue 1 (still waiting for the Adaption account) are
+  untouched.
+- **Offline checks:**
+  - a `DRY=1` run of `code/couzin_claude_run.sh` passed;
+  - a forced quota stop left only complete groups, and the rerun resumed without duplicates.
+- **Added before the stamp:** if the forecast change from n_u 0 to 24 is below 0.05, F1 has no sign test. Coverage
+  is the test instead, because the sign of a near-zero forecast slope means nothing.
+- **Smoke test:** one real decision each from Haiku and Sonnet, each a one-word valid reply in about 4 s
+  (`scratch/couzin_followup_smoke`; not data).
+- **Launch:** `nohup caffeinate -i bash code/couzin_claude_run.sh`, log `scratch/couzin_claude_run.log`.
