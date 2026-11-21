@@ -60,7 +60,9 @@ not build. Coverage was not significantly different.
 
 **Reasoning (descriptive, 12 cells).** With reasoning effort "low", choices move toward the rational benchmark:
 mean distance from it falls from 0.19 to 0.10 for Gemma-31B and from 0.32 to 0.07 for GLM, at the cost of 10%
-invalid replies (cut off at 60 tokens). The most striking case: at F = 11, m = 3, 16 rounds left (just above
+invalid replies (44 of the 60 are empty replies; the rest are GLM explanations written before the action line). The
+reasoning calls had a 2,000-token limit; an earlier version of this report wrongly said the replies were cut off
+at 60 tokens. The most striking case: at F = 11, m = 3, 16 rounds left (just above
 F\* = 10.7), Gemma builds 88% of the time without reasoning and 0% with it.
 
 ## The forecast failed for two of three models

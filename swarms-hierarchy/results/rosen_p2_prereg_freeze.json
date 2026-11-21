@@ -1,0 +1,17 @@
+{
+ "written": "2026-11-19 02:00:59",
+ "note": "Rosen follow-ups and phase 2, before any API call of these stages",
+ "files": {
+  "refine-logs/ROSEN_PHASE2_PREREGISTRATION.md": "c6fd2ea9e78105f8090918231f0bd5d17b8a3bd5b112cca6d4b48ae914e37d02",
+  "code/rosen.py": "500693d758599929d16a3cac312ec33d85eea8bcec4bbafe8d652eef963b27d5",
+  "code/rosen_kernel.py": "f667f26cb1b8b156bf9d393d4982f6746da4343a1b26e87a09845aba1a651d06",
+  "code/rosen_forecast.py": "fb2de85f69e44922392e16e34cefbaa5d3f1b2b2a0a273e2f61e729531a86aa6",
+  "code/rosen_forecast2.py": "49d8933520d103b5a78e9be162c5ef47f9551e7781d5ba80f7fbff423a0b5d43",
+  "code/rosen_p2.py": "0343e146932abea476a94d66ae207ffd06a763fe2acd566e63ed6d31de0b6978",
+  "code/rosen_eval.py": "06a869c70d2ab5aec534f291521e1379c9ce88fe43680abf016b7720b95a5081",
+  "code/rosen_eval2.py": "dc986e0d9dc15b14a5955daf6dc6abd4bd6027ad325da8417206a67dbbd0b0b5",
+  "code/rosen_p2_queue.sh": "e3beecd040185b7fe4cb201d2af0a4d6c184afa9769a1b36fd59f2e2a6f634f0",
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b"
+ },
+ "sha256": "289cd99c56ee62ac3bc73859d6dab0346130c83d9fe37872c448a1e4a1edcd05"
+}

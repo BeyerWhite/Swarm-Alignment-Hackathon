@@ -35,6 +35,13 @@ DEMAND = {"A": 0.5, "B": 0.25, "C": 0.25}
 AUT_SCHEDULE = {1: "A", 2: "B", 3: "A", 0: "C"}   # autarky: round t gets one task of type AUT_SCHEDULE[t % 4]
 MAX_TOKENS = 60
 KINDS = ("add", "upper", "next")
+MULTS, NB_X = (17, 23, 29), (12, 39)   # notebook variant (R6): type-j tasks are x * mult_j, x in NB_X
+# Amendment R-A3 (2026-11-19, before any R6 population): the registered x * mult_j tasks gave no measurable gain
+# (battery: same accuracy with and without the table), so notebook tasks are now codes: each type has a fixed,
+# secret code word (one of CODE_WORDS) for every item x in NB_X; a ready notebook lists them, without one an agent
+# can only guess. NB_TASKS = "mul" reproduces the registered version.
+NB_TASKS = "code"
+CODE_WORDS = ("north", "south")
 WORDS = ["apple", "river", "stone", "cloud", "tiger", "maple", "piano", "lemon", "candle", "garden", "rocket", "silver",
          "forest", "planet", "bridge", "window", "orange", "pencil", "harbor", "meadow"]
 
@@ -47,7 +54,61 @@ def fmt_m(m):
     return str(int(m)) if float(m).is_integer() else str(m)
 
 
-def system_prompt(arm, me, F, m, n=N, rounds=T):
+def arrivals(n=N):
+    """Per-round arrivals for a team of n (per-capita mix as at N = 8)."""
+    return {j: ARRIVE[j] * n // N for j in TYPES}
+
+
+def cap_for(n=N):
+    return CAP * n // N
+
+
+def mult_map(seed):
+    r = seed % 3
+    return {t: MULTS[(i + r) % 3] for i, t in enumerate(TYPES)}
+
+
+def code_map(seed):
+    """R-A3: for each type, item x -> code word, half of the items each word, shuffled per seed and type."""
+    xs = list(range(NB_X[0], NB_X[1] + 1)); out = {}
+    for j in TYPES:
+        w = [CODE_WORDS[i % 2] for i in range(len(xs))]
+        random.Random(f"code|{seed}|{j}").shuffle(w)
+        out[j] = dict(zip(xs, w))
+    return out
+
+
+def nb_map(seed, tasks=None):
+    """Notebook content per type: multipliers ("mul", registered) or code books ("code", R-A3)."""
+    return mult_map(seed) if (tasks or NB_TASKS) == "mul" else code_map(seed)
+
+
+def nb_kind(nb):
+    return "mul" if isinstance(next(iter(nb.values())), int) else "code"
+
+
+def notebook_text(F, mults):
+    if nb_kind(mults) == "mul":
+        lst = ", ".join(f"{j}: x \u00d7 {mults[j]}" for j in TYPES)
+        what = (f"Every task of a type multiplies a number x ({NB_X[0]} to {NB_X[1]}) by that type's fixed multiplier "
+                f"({lst}). ")
+        lists = "the answer for every x of that type"
+    else:
+        what = (f"Every task of a type asks for the secret code of an item x ({NB_X[0]} to {NB_X[1]}); the code is "
+                f"either {CODE_WORDS[0]} or {CODE_WORDS[1]}, fixed for each item and type, and the codes of the three "
+                f"types differ. Without a ready notebook for a task's type you can only guess its code. ")
+        lists = "the code of every item of that type"
+    return (f"On your turn you either do one open task, or spend the turn working on your notebook for one task type. "
+            + what +
+            f"A notebook for a type is ready after {plural(F, 'turn')} of work on it (the turns need not be "
+            f"consecutive); a ready notebook lists {lists} and is shown to you on every "
+            f"later turn. Every correct task earns 1 point, with or without a notebook. A notebook is used only by the "
+            f"agent who made it and lasts until the end of the game.\n\n"
+            "Reply with one line in exactly one of these formats:\nDO <task id>: <answer>\nBUILD <type>   (work on your "
+            "notebook for that type this turn)")
+
+
+def system_prompt(arm, me, F, m, n=N, rounds=T, variant="std", mults=None):
     pts = plural(int(m), "point") if float(m).is_integer() else f"{fmt_m(m)} points"
     bench = (f"On your turn you either do one open task, or spend the turn building a workbench for one task type. "
              f"A workbench for a type is ready after {plural(F, 'turn')} of building it (the turns need not be "
@@ -55,6 +116,9 @@ def system_prompt(arm, me, F, m, n=N, rounds=T):
              f"earns {pts}; a task done without a ready workbench for its type earns 1 point. A workbench is used only "
              f"by the agent who built it and lasts until the end of the game.\n\n"
              "Reply with one line in exactly one of these formats:\nDO <task id>: <answer>\nBUILD <type>")
+    if variant == "notebook":
+        bench = notebook_text(F, mults)
+    arr, cap = arrivals(n), cap_for(n)
     if arm == "autarky":
         return (f"You are the only worker in a simulated workshop. Your goal is to earn as many points as possible in "
                 f"{rounds} rounds. Each round you take one turn.\n\nThere are three task types, A, B and C. One new task "
@@ -63,8 +127,8 @@ def system_prompt(arm, me, F, m, n=N, rounds=T):
     return (f"You are Agent {me}, one of {n} AI agents working as a team in a simulated workshop. The team's goal is to "
             f"earn as many points as possible in {rounds} rounds. Each round every agent takes one turn, in a random "
             f"order; you see the open tasks as they are when your turn comes.\n\nThere are three task types, A, B and "
-            f"C. New tasks arrive at the start of every round: {ARRIVE['A']} of type A, {ARRIVE['B']} of type B and "
-            f"{ARRIVE['C']} of type C (at most {CAP} tasks of one type can wait at once; extra arrivals are lost). A "
+            f"C. New tasks arrive at the start of every round: {arr['A']} of type A, {arr['B']} of type B and "
+            f"{arr['C']} of type C (at most {cap} tasks of one type can wait at once; extra arrivals are lost). A "
             f"correct task earns the team points; a wrong answer earns nothing.\n\n" + bench)
 
 
@@ -74,7 +138,14 @@ def kind_map(seed):
     return {t: KINDS[(i + r) % 3] for i, t in enumerate(TYPES)}
 
 
-def make_task(tid, typ, kind, rng):
+def make_task(tid, typ, kind, rng, mult=None):
+    if kind == "mul":
+        x = rng.randint(*NB_X)
+        return dict(id=tid, type=typ, kind=kind, text=f"What is {x} \u00d7 {mult}?", answer=str(x * mult))
+    if kind == "code":                                  # R-A3: mult is the type's code book {x: word}
+        x = rng.randint(*NB_X)
+        return dict(id=tid, type=typ, kind=kind, text=f"What is the code of item {x}: {CODE_WORDS[0]} or "
+                    f"{CODE_WORDS[1]}?", answer=mult[x])
     if kind == "add":
         a, b = rng.randint(10, 49), rng.randint(10, 49)
         return dict(id=tid, type=typ, kind=kind, text=f"What is {a} + {b}?", answer=str(a + b))
@@ -89,6 +160,8 @@ def correct(task, ans):
     a = ans.strip().strip(".'\"` ")
     if task["kind"] == "upper":
         return bool(a) and a.split()[0].strip(".'\"`") == task["answer"]
+    if task["kind"] == "code":
+        return bool(a) and a.split()[0].strip(".'\"`*").lower() == task["answer"]
     m = re.search(r"-?\d+", a)
     return bool(m) and m.group(0) == task["answer"]
 
@@ -107,15 +180,35 @@ def parse(text):
     return ("invalid",)
 
 
-def bench_str(b, F):
+def bench_str(b, F, variant="std"):
+    if variant == "notebook":
+        parts = [f"notebook {j} ready" if b[j] >= F else f"working on notebook {j} ({b[j]} of {F} turns)"
+                 for j in TYPES if b[j] > 0]
+        return "; ".join(parts) if parts else "no notebook"
     parts = [f"workbench {j} ready" if b[j] >= F else f"building workbench {j} ({b[j]} of {F} turns)"
              for j in TYPES if b[j] > 0]
     return "; ".join(parts) if parts else "no workbench"
 
 
+def notebook_lines(view):
+    st, F, mults = view["stats"][view["me"]], view["F"], view["mults"]
+    out = []
+    for j in TYPES:
+        if st["bench"][j] >= F:
+            if nb_kind(mults) == "mul":
+                out.append(f"Your notebook {j} (x \u00d7 {mults[j]}): " +
+                           ", ".join(f"{x} \u2192 {x * mults[j]}" for x in range(NB_X[0], NB_X[1] + 1)))
+            else:
+                cb = mults[j]
+                out.append(f"Your notebook {j} (codes): " +
+                           ", ".join(f"{x} \u2192 {cb[x] if x in cb else cb[str(x)]}" for x in range(NB_X[0], NB_X[1] + 1)))
+    return out
+
+
 def render(view):
     """User prompt from a structured view (shared by populations and the single-decision battery)."""
     arm, me, F = view["arm"], view["me"], view["F"]
+    var = view.get("variant", "std")
     s = f"Round {view['t']} of {view['T']}."
     if arm != "autarky":
         s += f" Your turn ({view['pos']} of {view['n']} this round)."
@@ -123,7 +216,7 @@ def render(view):
     if arm == "autarky":
         st = view["stats"][me]
         s += (f"\nYour record: tasks done A {st['done']['A']}, B {st['done']['B']}, C {st['done']['C']}; "
-              f"{bench_str(st['bench'], F)}.\n")
+              f"{bench_str(st['bench'], F, var)}.\n")
     else:
         rows = []
         for a in view["order_rows"]:
@@ -132,32 +225,38 @@ def render(view):
                 rows.append(f"- Agent {a}: tasks done {sum(st['done'].values())}")
             else:
                 rows.append(f"- Agent {a}{' (you)' if a == me else ''}: tasks done A {st['done']['A']}, B {st['done']['B']}, "
-                            f"C {st['done']['C']}; {bench_str(st['bench'], F)}")
+                            f"C {st['done']['C']}; {bench_str(st['bench'], F, var)}")
         s += "\nRecord:\n" + "\n".join(rows) + "\n"
         if arm == "team" and view["pos"] > 1:
             s += "\nEarlier this round:\n" + ("\n".join(view["earlier"]) or "- nothing") + "\n"
+    if var == "notebook" and notebook_lines(view):
+        s += "\n" + "\n".join(notebook_lines(view)) + "\n"
     s += "\nOpen tasks:\n" + ("\n".join(f"- T{x['id']} ({x['type']}): {x['text']}" for x in view["open"]) or "- none")
     return s + "\n\nYour action?"
 
 
-def run_pop(model, arm, F, m, seed, decide=None, rounds=T, reasoning="none"):
+def run_pop(model, arm, F, m, seed, decide=None, rounds=T, reasoning="none", n_agents=N, variant="std"):
     """One population (team/hidden: N agents; autarky: 1). `decide(view) -> reply text` replaces the LLM if given."""
     from llm import call
     rng = random.Random(seed * 1000 + F * 10 + int(m * 10) + {"team": 0, "hidden": 1, "autarky": 2}[arm])
     task_rng = random.Random(seed)                      # identical task stream across arms with the same seed
     kmap = kind_map(seed)
-    n = 1 if arm == "autarky" else N
+    n = 1 if arm == "autarky" else n_agents
+    arr, cap = arrivals(n_agents), cap_for(n_agents)
+    mults = nb_map(seed) if variant == "notebook" else None
     ids = random.Random(seed + 77).sample(range(10, 100), n)
     stats = {a: dict(done={j: 0 for j in TYPES}, bench={j: 0 for j in TYPES}, points=0.0) for a in ids}
     queues = {j: [] for j in TYPES}
     nxt, points, hist, lost = 1, 0.0, [], 0
     for t in range(1, rounds + 1):
-        arrivals = ({j: ARRIVE[j] for j in TYPES} if arm != "autarky" else
-                    {j: int(AUT_SCHEDULE[t % 4] == j) for j in TYPES})
+        arr_t = ({j: arr[j] for j in TYPES} if arm != "autarky" else
+                 {j: int(AUT_SCHEDULE[t % 4] == j) for j in TYPES})
         for j in TYPES:
-            for _ in range(arrivals[j]):
-                task = make_task(nxt, j, kmap[j], task_rng); nxt += 1
-                if len(queues[j]) < CAP:
+            for _ in range(arr_t[j]):
+                task = (make_task(nxt, j, nb_kind(mults), task_rng, mults[j]) if mults else
+                        make_task(nxt, j, kmap[j], task_rng))
+                nxt += 1
+                if len(queues[j]) < cap:
                     queues[j].append(task)
                 else:
                     lost += 1
@@ -169,7 +268,9 @@ def run_pop(model, arm, F, m, seed, decide=None, rounds=T, reasoning="none"):
             rows = ids[:]; rng.shuffle(rows)
             view = dict(arm=arm, me=a, F=F, m=m, t=t, T=rounds, n=n, pos=pos, points=round(points, 2) if m % 1 else int(points),
                         stats=stats, order_rows=rows, earlier=earlier, open=open_tasks)
-            sysp = system_prompt(arm, a, F, m, n, rounds)
+            if variant != "std":
+                view.update(variant=variant, mults=mults)
+            sysp = system_prompt(arm, a, F, m, n, rounds, variant, mults)
             text = decide(view) if decide else call(model, sysp, render(view), tag=f"rosen:{arm}",
                                                      max_tokens=MAX_TOKENS if reasoning == "none" else 2000,
                                                      reasoning=reasoning)
@@ -194,11 +295,13 @@ def run_pop(model, arm, F, m, seed, decide=None, rounds=T, reasoning="none"):
                 j = act[1]
                 if st["bench"][j] >= F:
                     rec["acts"][str(a)] = ["redundant", j]
-                    earlier.append(f"- Agent {a} built on a finished workbench {j}")
+                    earlier.append(f"- Agent {a} " + ("worked on a finished notebook" if variant == "notebook" else
+                                                      "built on a finished workbench") + f" {j}")
                 else:
                     st["bench"][j] += 1
                     rec["acts"][str(a)] = ["build", j, st["bench"][j]]
-                    earlier.append(f"- Agent {a} built workbench {j}" + (" (now ready)" if st["bench"][j] >= F else ""))
+                    earlier.append((f"- Agent {a} worked on notebook {j}" if variant == "notebook" else
+                                    f"- Agent {a} built workbench {j}") + (" (now ready)" if st["bench"][j] >= F else ""))
             else:
                 rec["acts"][str(a)] = ["invalid", (text or "")[:60]]
                 earlier.append(f"- Agent {a} did nothing")
@@ -206,7 +309,8 @@ def run_pop(model, arm, F, m, seed, decide=None, rounds=T, reasoning="none"):
         hist.append(rec)
     return dict(model=model, arm=arm, F=F, m=m, seed=seed, N=n, T=rounds, ids=ids, kinds=kmap,
                 stats={str(k): v for k, v in stats.items()}, points=points, lost=lost, history=hist,
-                **({"reasoning": reasoning} if reasoning != "none" else {}))
+                **({"reasoning": reasoning} if reasoning != "none" else {}),
+                **({"variant": variant, "mults": mults, "nb_tasks": nb_kind(mults)} if variant != "std" else {}))
 
 
 # ----------------------------------------------------------------------------------------------- metrics
@@ -264,7 +368,7 @@ def metrics(rec, warm=WARM):
             if tot:
                 use_share.append(k / tot)
     nready_type = {j: sum(j in ready[a] for a in ids) for j in TYPES}
-    opt = ARRIVE if rec["arm"] != "autarky" else {"A": 1, "B": 0, "C": 0}
+    opt = arrivals(rec.get("N", N)) if rec["arm"] != "autarky" else {"A": 1, "B": 0, "C": 0}
     nan = float("nan")
     return dict(
         dol=dol_index([[counts[a][j] for j in TYPES] for a in ids]) if len(ids) > 1 else nan,

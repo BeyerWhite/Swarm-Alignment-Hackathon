@@ -14,11 +14,19 @@ Cells (R1; 24 calls each unless topped up)
   use       own workbench B ready, F=3, round 5, m in {2,3}, B tasks open in {1,3} (plus 4 A, 2 C)
   reason    core cells F in {3,7,11} x m in {2,3} x H in {6,16} with reasoning effort 'low' (2 models only)
 
+Extension (R1x, follow-up 1, written 2026-11-19 after R2; the contexts the R2 forecast missed)
+  aut       lone agent (autarky prompt), m=2: F in {1,3,5,7,9,13} x H in {16,11}; m=3: F in {1,3,5}, H=16
+  hist      round 5, F=13, m in {1,2}: own record all X (X in A,B,C: 4 tasks of X) or demand-mixed ('mix')
+  done      round F+2, m=2, F in {3,7}: k in {1,3} other agents hold a READY workbench X in {A,B}, plus k=0
+  pos       round 1, m=2, F in {3,7}: own turn position p=1, or p in {4,8} after p-1 earlier movers who all
+            built (types A,A,A,A,B,B,C in move order: 'build') or all did a task ('do')
+
 Usage
   rosen_kernel.py comp    --models ...            R0 comprehension, 12 items x 20 calls  -> results/rosen_comp.jsonl
   rosen_kernel.py probe   --models ...            R0 reasoning probe, 25 calls/model     -> results/rosen_probe.jsonl
   rosen_kernel.py kernel  --models ... [--sets core crowd second cont use]               -> results/rosen_kernel.jsonl
   rosen_kernel.py reason  --models ...                                                   -> results/rosen_kernel.jsonl
+  rosen_kernel.py extend  --models ...            R1x cells above, 24 calls each (base seed 4)
   rosen_kernel.py topup   --models ...            one round: core cells with 0.15 <= p <= 0.85 get 16 more calls
   rosen_kernel.py summary                         cell table
 """
@@ -59,11 +67,26 @@ def cells(sets):
         out += [dict(set="use", F=3, m=m, H=T - 4, nb=nb) for m in (2.0, 3.0) for nb in (1, 3)]
     if "reason" in sets:
         out += [dict(set="reason", F=F, m=m, H=H) for F in (3, 7, 11) for m in (2.0, 3.0) for H in (6, 16)]
+    if "aut" in sets:
+        out += [dict(set="aut", F=F, m=2.0, H=H) for F in (1, 3, 5, 7, 9, 13) for H in (16, 11)]
+        out += [dict(set="aut", F=F, m=3.0, H=16) for F in (1, 3, 5)]
+    if "hist" in sets:
+        out += [dict(set="hist", F=13, m=m, H=12, X=X) for m in (1.0, 2.0) for X in ("A", "B", "C", "mix")]
+    if "done" in sets:
+        out += [dict(set="done", F=F, m=2.0, H=T - F - 1, k=0, ctype="A") for F in (3, 7)]
+        out += [dict(set="done", F=F, m=2.0, H=T - F - 1, k=k, ctype=X) for F in (3, 7) for X in ("A", "B") for k in (1, 3)]
+    if "pos" in sets:
+        out += [dict(set="pos", F=F, m=2.0, H=T, p=1, cond="none") for F in (3, 7)]
+        out += [dict(set="pos", F=F, m=2.0, H=T, p=p, cond=cd) for F in (3, 7) for p in (4, 8) for cd in ("build", "do")]
     return out
 
 
+EXT_SETS = ("aut", "hist", "done", "pos")
+POS_TYPES = ("A", "A", "A", "A", "B", "B", "C")
+
+
 def cell_key(c):
-    return "|".join(f"{k}={c[k]}" for k in ("set", "F", "m", "H", "k", "ctype", "r0", "nb") if k in c)
+    return "|".join(f"{k}={c[k]}" for k in ("set", "F", "m", "H", "k", "ctype", "r0", "nb", "X", "p", "cond") if k in c)
 
 
 def _record(rng, t, n_turns_free):
@@ -74,8 +97,28 @@ def _record(rng, t, n_turns_free):
     return d
 
 
+def synth_aut(c, rng):
+    """A lone agent at the start of round t = T - H + 1 that did every earlier task (no workbench)."""
+    F, m, H = c["F"], c["m"], c["H"]
+    t = T - H + 1
+    seed = rng.randrange(10 ** 6)
+    kmap = kind_map(seed)
+    me = rng.randrange(10, 100)
+    done = {j: 0 for j in TYPES}
+    for r in range(1, t):
+        done[rosen.AUT_SCHEDULE[r % 4]] += 1
+    stats = {me: dict(done=done, bench={j: 0 for j in TYPES}, points=0.0)}
+    j = rosen.AUT_SCHEDULE[t % 4]
+    opened = [make_task(t, j, kmap[j], random.Random(seed))]
+    view = dict(arm="autarky", me=me, F=F, m=m, t=t, T=T, n=1, pos=1, points=t - 1, stats=stats, order_rows=[me],
+                earlier=[], open=opened)
+    return system_prompt("autarky", me, F, m, 1), render(view), view
+
+
 def synth(c, rng):
-    """A consistent team state in which agent `me` moves first in round t = T - H + 1."""
+    """A consistent team state in which agent `me` moves first in round t = T - H + 1 (set 'pos': at position p)."""
+    if c["set"] == "aut":
+        return synth_aut(c, rng)
     F, m, H = c["F"], c["m"], c["H"]
     t = T - H + 1
     seed = rng.randrange(10 ** 6)
@@ -92,6 +135,11 @@ def synth(c, rng):
         d = {j: 0 for j in TYPES}; d["B"] = t - 1 - F; stats[me]["done"] = d
     if c["set"] == "cont":
         stats[me]["bench"]["A"] = c["k"]; stats[me]["done"] = _record(rng, t, c["r0"] - 1)
+    if c["set"] == "hist":
+        stats[me]["done"] = ({j: (t - 1) * (j == c["X"]) for j in TYPES} if c["X"] != "mix" else _record(rng, t, t - 1))
+    if c["set"] == "done":
+        for a in others[:c["k"]]:
+            stats[a]["bench"][c["ctype"]] = F; stats[a]["done"] = {j: (t - 1 - F) * (j == c["ctype"]) for j in TYPES}
     # open tasks at the start of round t: this round's arrivals plus a little backlog of the big type
     trng = random.Random(seed)
     nxt = 1 + 8 * (t - 1)
@@ -103,12 +151,25 @@ def synth(c, rng):
         for _ in range(want[j]):
             opened.append(make_task(nxt, j, kmap[j], trng)); nxt += 1
     opened.sort(key=lambda x: x["id"])
+    pos, earlier = 1, []
+    if c["set"] == "pos" and c["p"] > 1:
+        # me moves at position p; ids[1:p] moved earlier this round
+        pos = c["p"]
+        for i, a in enumerate(others[:pos - 1]):
+            if c["cond"] == "build":
+                j = POS_TYPES[i]; stats[a]["bench"][j] = 1
+                earlier.append(f"- Agent {a} built workbench {j}" + (" (now ready)" if F == 1 else ""))
+            else:
+                x = opened.pop(0); stats[a]["done"][x["type"]] += 1
+                earlier.append(f"- Agent {a} did T{x['id']} ({x['type']})")
     pts = sum(sum(s["done"].values()) for a, s in stats.items())
     if c["set"] in ("second", "use"):
         pts += (m - 1) * stats[me]["done"]["B"]
     rows = ids[:]; rng.shuffle(rows)
-    view = dict(arm="team", me=me, F=F, m=m, t=t, T=T, n=N, pos=1, points=int(pts) if float(pts).is_integer() else pts,
-                stats=stats, order_rows=rows, earlier=[], open=opened)
+    if c["set"] == "done":
+        pts += (m - 1) * sum(stats[a]["done"][c["ctype"]] for a in others[:c["k"]])
+    view = dict(arm="team", me=me, F=F, m=m, t=t, T=T, n=N, pos=pos, points=int(pts) if float(pts).is_integer() else pts,
+                stats=stats, order_rows=rows, earlier=earlier, open=opened)
     return system_prompt("team", me, F, m), render(view), view
 
 
@@ -160,6 +221,10 @@ def load_kernel():
 
 def cmd_kernel(a):
     run_cells(a.models, cells(a.sets), REPS, base_seed=1)
+
+
+def cmd_extend(a):
+    run_cells(a.models, cells(EXT_SETS), REPS, base_seed=4)
 
 
 def cmd_reason(a):
@@ -262,11 +327,11 @@ def cmd_summary(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["comp", "probe", "kernel", "reason", "topup", "summary", "comp_summary"])
+    ap.add_argument("cmd", choices=["comp", "probe", "kernel", "extend", "reason", "topup", "summary", "comp_summary"])
     ap.add_argument("--models", nargs="+")
     ap.add_argument("--sets", nargs="+", default=["core", "crowd", "second", "cont", "use"])
     a = ap.parse_args()
-    dict(comp=cmd_comp, probe=cmd_probe, kernel=cmd_kernel, reason=cmd_reason, topup=cmd_topup, summary=cmd_summary,
+    dict(comp=cmd_comp, probe=cmd_probe, kernel=cmd_kernel, extend=cmd_extend, reason=cmd_reason, topup=cmd_topup, summary=cmd_summary,
          comp_summary=cmd_comp_summary)[a.cmd](a)
 
 
