@@ -39,3 +39,20 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
   therefore started through `code/couzin_launch.sh`, and the busy check only counts running stage scripts.
 - **Power at the dry-run scale.** The power rule gave 0.43 at 40 groups for the scripted kernel, so H1 would be
   reported as an estimate. The real value comes from the frozen forecast.
+
+## Owner decisions, 2026-11-21 (no amendment needed: the stamped files are unchanged)
+
+- **Cap raised to 200.** The shared Adaption cap goes from 150 to 200. `.secrets/adaption.env` in the main checkout
+  now says 200. Couzin queue 1 was still waiting, so it was relaunched with cap 200
+  (`couzin_launch.sh 1 200 29071 29645 29491 28523`, log `scratch/couzin_queue1.log`). Queue 2 is launched with 200.
+  The study's own 20-credit guard is unchanged.
+- **Conditional follow-up (not part of this pre-registration).** If M4b shows interesting results, the M4b design is
+  to be run with Claude, GPT and Qwen as well.
+  - The trigger and the design are fixed in a new amendment once the M4b results are in, before anything runs.
+  - Each new model first needs its M1 kernel (about 1,400 calls), so the forecast can predict its sign before its
+    populations run.
+  - **Cost and limits:**
+    - Qwen3.5-397B: about 5–6 credits for kernel plus populations.
+    - Claude: runs through the `claude` CLI, uses no Adaption credits, and is slow.
+    - GPT: runs through `codex`. `llm.py` limits it to 1,500 calls (`GPT_CALL_BUDGET`). A population arm set of
+      about 18,000 calls needs the owner to raise that budget or accept smaller arms.
