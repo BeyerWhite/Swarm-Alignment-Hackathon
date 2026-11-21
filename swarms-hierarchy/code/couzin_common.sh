@@ -1,4 +1,4 @@
-# Sourced by couzin_queue1.sh / couzin_queue2.sh. $1 = ledger cap.
+# Sourced by couzin_launch.sh, couzin_queue1.sh and couzin_queue2.sh. $1 = ledger cap.
 MAIN=/Users/beyer_white/Desktop/LocalCodeRepository/Swarm-Alignment-Hackathon/swarms-hierarchy
 PY=$MAIN/../.venv/bin/python
 [ -n "$1" ] || { echo "=== no ledger cap given; not starting"; return 2; }
@@ -11,7 +11,7 @@ fail() { echo "=== STAGE FAILED rc=$1 $(date '+%F %T')"; exit "$1"; }
 if [ "$DRY" = 1 ]; then
   RES=$PWD/scratch/couzin_dry; mkdir -p "$RES"
   export COUZIN_FAKE=1 COUZIN_RESULTS=$RES
-  P="$PY -u code/couzin.py"
+  P="$PY -u code/couzin_run.py"
   ledger() { echo 0; }
   spent() { echo 0; }
   guard() { echo "=== DRY $1 (estimate $2)"; }
@@ -34,17 +34,18 @@ else
     fi
     echo "=== $(date '+%F %T') $1 (ledger $t, study $s, estimate $2, cap $CAP, guard $BUDGET)"
   }
-  busy() {   # another study's queue script (not this one) or any paced job
-    pgrep -f "queue[0-9]*\.sh" | grep -vx "$$" | while read -r p; do
-      ps -o command= -p "$p" | grep -q "couzin_queue" || echo "$p"; done | grep -q . && return 0
+  busy() {   # a running stage script of another study (not a waiting "bash -c" wrapper) or any paced job
+    local pat='^(caffeinate -i )?bash (code|scratch)/[A-Za-z0-9_]*(queue[0-9]*|_q[0-9]+)\.sh'
+    pgrep -fl "$pat" 2>/dev/null | grep -v couzin_ | grep -q . && return 0
     pgrep -f "chase_paced\.py" > /dev/null
   }
-  wait_turn() {
+  wait_turn() {   # [pid ...]
+    local p
     for p in "$@"; do
       echo "=== $(date '+%F %T') waiting for pid $p"
       while kill -0 "$p" 2>/dev/null; do sleep 60; done
     done
-    echo "=== $(date '+%F %T') waiting until no other queue script or paced job runs"
+    echo "=== $(date '+%F %T') waiting until no other stage script or paced job runs"
     while true; do
       if ! busy; then sleep 120; busy || break; fi
       sleep 120

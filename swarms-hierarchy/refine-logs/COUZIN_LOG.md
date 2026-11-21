@@ -1,0 +1,41 @@
+# Couzin study — lab log
+
+Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_freeze.json`). Proposal:
+`COUZIN_PROPOSAL.md`. Amendments are numbered M-A1, M-A2, …
+
+## M-0 (2026-11-20/21): approval, build and offline checks (before the stamp; no API calls)
+
+- **2026-11-20.** The owner chose the full program. Decisions 2–5 were left open; the defaults are in
+  pre-registration §0:
+  - a 20-credit study guard;
+  - cheap M4b candidates only;
+  - queue after everything already waiting;
+  - no Claude or GPT kernels.
+- **Branch and worktree.** Branch `couzin-minorities` in `.worktrees/couzin`, cut from `rosen-specialization`
+  (2be2929). It uses the shared ledger via `ADAPTION_LEDGER_DIR`.
+- **Hartnett et al. (2016) model, as restated by Sarkanych et al., arXiv 2409.11475:**
+  - G = ½[1 + tanh(b h)/tanh(b)], with h = (ω n₊ − n₋)/(ω n₊ + n₋);
+  - b → 0 gives the voter model; b → ∞ gives majority rule.
+  - The simulator check (pre-registration rule 7) passed. P(majority) over ρ₀ = 0, .3, .6, .9 was
+    0.04, 0.11, 0.23, 0.38 at b = 0.3 and 0.92, 0.84, 0.71, 0.59 at b = 10.
+  - **Reading:** uninformed agents mainly dilute toward a coin flip, and nonlinearity decides who wins without them.
+    So H6 (falling below 0.5), not H5, is the strong Couzin 2011 claim.
+- **Offline check, engine against simulator** with the exact tables of the scripted agents (8 arms, 150 groups):
+  every outcome agreed within |z| < 1.7. Passed.
+- **Estimator fix found by the dry run.** The first estimator, (s + ½)/(n + 1) with Beta bootstrap draws, put a
+  floor of about 2% on "leave a 5-of-5 majority". Compounded over N agents and 5 rounds, that broke simulated
+  consensus: M4 n_u = 0 was forecast at 0.58 against 0.89 with exact tables. The proposal had specified an unshrunk
+  estimator, so the code now uses s/n with a monotone fit and binomial bootstrap draws.
+- **Interval calibration.** 6 independent offline replications at the real draw counts (20 per cell, 40 for the
+  primary model, plus M2 calibration), 9 arms. The 90% kernel interval contained the exact-table truth in 49 of 54
+  cases (M3 cells 24/24, M4 arms 21/24, M6 6/6). The `DRY=1` run uses half the draws and a quarter of the groups,
+  so its lower coverage (21/33) is expected.
+- **Sensitivity to note.** The ω rule compares estimated cells with fixed thresholds. In one replication the
+  scripted weak agents sat at the threshold (true P(follow 4 of 5) = 0.51 at ω = 2) and the rule chose weak ω = 2
+  instead of 0.5. That changes the M4 composition, but the forecast uses the same choice, so the test stays valid.
+  The chosen ω values are reported with their cell estimates.
+- **Deadlock found before launch.** The hierarchy G0 wrapper (pid 29071) waits while any process matching
+  `queue[0-9]*\.sh` runs. A Couzin queue waiting under such a name for that wrapper would deadlock. The queues are
+  therefore started through `code/couzin_launch.sh`, and the busy check only counts running stage scripts.
+- **Power at the dry-run scale.** The power rule gave 0.43 at 40 groups for the scripted kernel, so H1 would be
+  reported as an estimate. The real value comes from the frozen forecast.

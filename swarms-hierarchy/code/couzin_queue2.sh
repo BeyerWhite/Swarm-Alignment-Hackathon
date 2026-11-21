@@ -3,11 +3,10 @@
 # M2 calibration -> Hartnett check + write-once forecast -> M3, M4, M4b, M5, M6, M7 populations -> evaluation.
 # Launched by hand after queue 1 is inspected. Restart-safe: every runner skips rows already written and the
 # write-once steps are skipped when their file exists.
-# Usage: bash code/couzin_queue2.sh <ledger-cap> [pid ...]  > scratch/couzin_queue2.log 2>&1   (DRY=1 as queue 1)
+# Launch through code/couzin_launch.sh. Usage: bash code/couzin_queue2.sh <ledger-cap> [pid ...]  > scratch/couzin_queue2.log 2>&1   (DRY=1 as queue 1)
 cd "$(dirname "$0")/.." || exit 1
 . code/couzin_common.sh "$@" || exit $?
-shift
-wait_turn "$@"
+wait_turn      # pids are waited for by couzin_launch.sh; here only the busy check
 freeze_ok
 [ -f "$RES/couzin_m0_gate.json" ] || { echo "=== no M0 gate; run queue 1 first"; exit 5; }
 MODELS=$($PY -c "import json; print(' '.join(json.load(open('$RES/couzin_m0_gate.json'))['passed']))")

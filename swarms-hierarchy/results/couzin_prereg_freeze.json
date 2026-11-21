@@ -1,0 +1,21 @@
+{
+ "time": "2026-11-21 15:55:31",
+ "sha256": {
+  "refine-logs/COUZIN_PREREGISTRATION.md": "a25e3acabfddccc1cf678cc61532be24f4f9d2121a4e908764c929596a7e2548",
+  "refine-logs/COUZIN_PROPOSAL.md": "7a0005163b4ae7d80c9bc3bbfa6c18b993be556975c6baaf2f51b87512a2a8af",
+  "code/couzin.py": "d6bdce85fc899de87c54b70a1552171970a71b557e437d81b9abab4db193169a",
+  "code/couzin_kernel.py": "49ac3c374b2c02cb0c1aa82a839529abeaa56f91bf307cd38589860f377201f6",
+  "code/couzin_forecast.py": "5dd74bf6010f4b7a36c5d77dfbdcef3b393dd0261b51a3b1884717a76dc0faf5",
+  "code/couzin_eval.py": "03ce0a04be97cd48b71a3e91c3c2da8c8b070ad37449fc6f00148802b70f8449",
+  "code/couzin_budget.py": "81bed59a766e465f174a6a3a7c3fd2f91431416bd9a84ce9174aa5170e2da1d7",
+  "code/couzin_offline_check.py": "69f95a1d32278b4202cea439980db77f8140f4d7377a9b6b3119baf4fbb6caee",
+  "code/couzin_queue1.sh": "e5392173c153f13a5b0bb794068ed9413f4443f797f6243de21f4693d0ca4f56",
+  "code/couzin_queue2.sh": "9836c4ee346297a84611b51d3cabcaa6eb9bfccc2c870f37dc28bad2ed305f13",
+  "code/couzin_common.sh": "dee40ed8eea6e9b06111a5bdd3eaf044413ce26041420a046e1d4904dc7c91be",
+  "code/couzin_run.py": "610c08b4bb56dd6fa849fa4cc53187a9901982006e2c9d8858f010f33e690b3a",
+  "code/couzin_launch.sh": "0d0524e76c7c73bea447cb6c7800e12310f2ecdc1b04d34b4e59897172dc59b1",
+  "code/couzin_freeze.py": "86f25d7a3d421d9ee4113172d002d03d2ad66723556474b5daea749ac1b4a155",
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b",
+  "code/chase_paced.py": "e729d7eb262b03f3ad6ccabfe1c84a9b9e5cb3978f96a95d0e60669d45d08a01"
+ }
+}

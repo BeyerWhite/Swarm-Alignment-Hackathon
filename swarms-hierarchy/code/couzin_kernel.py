@@ -10,7 +10,9 @@ Count tables per model (successes s, trials n of "chose A"):
   I1[w][6]     informed, own last = preferred, j of 5 visible on the preferred site
   I2[w][6]     informed, own last = other, j on the preferred site
   CL[2][6]     (primary model, robustness) uninformed with one visible claimant on A: own A / own B, j on A; folded
-Point estimates are monotone in j (weighted pool-adjacent-violators, unshrunk apart from a (s+.5)/(n+1) floor).
+Point estimates are monotone in j (weighted pool-adjacent-violators on the unshrunk proportions s/n); bootstrap
+draws resample each cell binomially and refit. Shrinking toward 0.5 is not used: a 2% floor on 'leave a 5-of-5
+majority' would break every simulated consensus (offline check, 2026-11-21).
 
 Usage: couzin_kernel.py gate | rules | show [--model m]
 """
@@ -130,19 +132,23 @@ def pava(y, w):
     return np.array(out)
 
 
+def _raw(s, n, draw):
+    """Unshrunk proportion s/n (0.5 with no data); draw -> nonparametric (binomial) bootstrap of the cell."""
+    s, n = np.asarray(s, float), np.asarray(n, float)
+    if draw is not None:
+        s = np.asarray(draw.binomial(n.astype(int), np.where(n > 0, s / np.maximum(n, 1), .5)), float)
+    return np.where(n > 0, s / np.maximum(n, 1), .5)
+
+
 def iso(counts, draw=None):
-    """counts: (6, 2) array of (s, n). draw: numpy Generator -> one parametric-bootstrap draw (Beta(s+.5, n-s+.5))."""
-    s, n = counts[:, 0], counts[:, 1]
-    if draw is None:
-        p = (s + 0.5) / (n + 1)
-    else:
-        p = draw.beta(s + 0.5, n - s + 0.5)
-    return pava(p, n + 1)
+    """counts: (6, 2) array of (s, n): weighted monotone fit of the unshrunk proportions (weight n; empty cells
+    take their neighbours' value). draw: numpy Generator -> one bootstrap draw (cells resampled, then fitted)."""
+    n = counts[:, 1]
+    return pava(_raw(counts[:, 0], n, draw), n + 1e-6)
 
 
 def point(counts, draw=None):
-    s, n = counts
-    return (s + 0.5) / (n + 1) if draw is None else draw.beta(s + 0.5, n - s + 0.5)
+    return float(_raw(counts[0], counts[1], draw))
 
 
 def estimates(T, draw=None):

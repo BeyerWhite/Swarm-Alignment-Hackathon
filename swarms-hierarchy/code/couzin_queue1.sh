@@ -3,12 +3,11 @@
 # write-once gate, and a 3-group pilot on the primary model. Stops there: queue 2 is launched by hand after inspection.
 # Waits for every pid given after the cap, then until no other study's queue script and no paced job runs.
 # Guards: ledger + estimate < cap - 1 (the owner's cap, 150) and this study's spend + estimate <= 20 credits.
-# Usage: bash code/couzin_queue1.sh <ledger-cap> [pid ...]  > scratch/couzin_queue1.log 2>&1
+# Launch through code/couzin_launch.sh. Usage: bash code/couzin_queue1.sh <ledger-cap> [pid ...]  > scratch/couzin_queue1.log 2>&1
 #        DRY=1 bash code/couzin_queue1.sh 150   (scripted agents, results in scratch/couzin_dry; no API calls)
 cd "$(dirname "$0")/.." || exit 1
 . code/couzin_common.sh "$@" || exit $?
-shift
-wait_turn "$@"
+wait_turn      # pids are waited for by couzin_launch.sh; here only the busy check
 freeze_ok
 
 guard "M0 comprehension items" 0.15

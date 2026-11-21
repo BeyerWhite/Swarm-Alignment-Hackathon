@@ -157,8 +157,11 @@ def rows(path):
     return [json.loads(l) for l in open(path)] if Path(path).exists() else []
 
 
+SALT = os.environ.get("COUZIN_SALT", "")          # offline replications only (default: no salt)
+
+
 def seed_of(*parts):
-    return int(hashlib.sha256("|".join(map(str, parts)).encode()).hexdigest()[:12], 16)
+    return int(hashlib.sha256(("|".join(map(str, parts)) + SALT).encode()).hexdigest()[:12], 16)
 
 
 def frozen_labels():
