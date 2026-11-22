@@ -68,3 +68,9 @@ Both run under `code/rt_phase2_launch.sh` (name chosen to match no study's queue
 other study's stage script or paced job runs, then runs GLM and then RT-R. Cap argument 200 (owner, 21 Nov).
 
 **Frozen 2026-11-22.** RT-A1: `results/rt_A1_freeze.json` stamp 4f0d6ce1a28bbaf349e4f3e18a5acd3211af33efad32bdb353156a7be3bb77f7. RT-R: `results/rest/rt_prereg_freeze.json` stamp ef0706288db60f0c7c566e22a6c1cdc615b46d8fb3c68d518f39554eb33709fd.
+
+**2026-11-22 13:39 — follow-ups launched.** `nohup caffeinate -i bash code/rt_phase2_launch.sh 200 29491 29645 29071 43529`
+(pid 72577, log `scratch/rt_phase2.log`): waits for Chase E14, tournament queue 1, hierarchy G0 and Couzin queue 1,
+then for an idle account, then runs `rt_glm_queue.sh 200` and `rt_rest_queue.sh 200`. Checked: the launcher's command
+line matches neither the hierarchy wrapper's `queue[0-9]*.sh` pattern nor the Couzin launcher's busy pattern.
+Restart after a reboot: the same command with whichever of those pids still exist (both queues are restart-safe).
