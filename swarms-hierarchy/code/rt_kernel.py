@@ -4,7 +4,7 @@ Every call is one agent's turn in a fresh synthetic state built with rt.render (
 is measured on exactly the prompt format the populations use.
 
   comp     RT1: 10 rule questions x 20 calls per model                         -> results/rt_comp.jsonl
-  calib    RT1: c in {0.25, 0.5, 0.75} x backlog {1, 1+1, 2+2, 4+4} x position {1, 8} x 20  -> results/rt_calib.jsonl
+  calib    RT1: c in C_GRID (effort {0.25, 0.5, 0.75}; RT-R rest reward {0.5, 1, 2}) x backlog {1, 1+1, 2+2, 4+4} x position {1, 8} x 20  -> results/rt_calib.jsonl
   choose   RT1: write-once choice of c (rule below)                           -> results/rt_c_choice.json
   gate     RT1: comprehension >= 0.6 and >= 90% valid pilot turns            -> results/rt_gate.json
   grid     RT2a: backlog (sA, sB) in {0,1,2,4,7,11}^2 minus (0,0) x 7 own-history profiles x 8   -> rt_kernel.jsonl
@@ -15,7 +15,7 @@ is measured on exactly the prompt format the populations use.
 
 c-choice rule (frozen in the pre-registration): over the models that passed comprehension, the pooled share of DO
 answers in the calibration cell backlog A 2, B 2, position 1 of 8 (balanced own history); choose the c whose share is
-closest to 0.5 (ties: the smaller c). If every c gives a share above 0.9 the study is flagged "saturated" (c = 0.75):
+closest to 0.5 (ties: the smaller c). If every c gives a share above 0.9 the study is flagged "saturated" (largest c):
 the uptake half of the kernel is then reported as saturated and the type-choice half is primary.
 """
 import argparse, json, random, re, sys, threading
@@ -28,7 +28,7 @@ import rt
 from rt import TYPES, HWIN, R, kind_map, make_task, parse, render, system_prompt, reply
 
 COMP, CALIB, KERNEL, GATE = R / "rt_comp.jsonl", R / "rt_calib.jsonl", R / "rt_kernel.jsonl", R / "rt_gate.json"
-C_GRID = (0.25, 0.5, 0.75)
+C_GRID = (0.25, 0.5, 0.75) if rt.FRAME == "effort" else (0.5, 1.0, 2.0)   # RT-R: rest reward r
 S_GRID = (0, 1, 2, 4, 7, 11)
 PROFILES = {"none": None, "8A": "AAAAAAAA", "5A1B2R": "AAAAABRR", "3A3B2R": "AAABBBRR", "1A5B2R": "ABBBBBRR",
             "8B": "BBBBBBBB", "8R": "RRRRRRRR"}
@@ -169,15 +169,23 @@ def _word(a):
 
 def cmd_comp(a):
     done = _done_keys(COMP)
-    jobs = [(m, k, q, chk, r) for m in a.models for (k, q, chk) in COMP_ITEMS for r in range(a.reps)
-            if (m, "comp", k, r) not in done]
-    print(f"comp: {len(jobs)} calls", flush=True)
     answers = {"net": "0.5", "rest": "0", "wait3": "3", "worth": "no", "wrong": "0.5", "arrB": "2", "later": "yes",
                "last": "4", "cap": "12", "rounds": "24"}
+    items, c_comp = COMP_ITEMS, 0.5
+    if rt.FRAME == "rest":     # RT-R: the three cost items change; comprehension prompt uses r = 2
+        c_comp = 2.0
+        alt = {"net": ("How many points does one correct task earn the team?", lambda x: _num(x) == 1),
+               "rest": ("How many points does the team get when you rest?", lambda x: _num(x) == 2),
+               "wrong": ("How many points does a wrong answer earn the team?", lambda x: _num(x) == 0)}
+        items = [(k,) + alt[k] if k in alt else (k, q, chk) for (k, q, chk) in COMP_ITEMS]
+        answers.update(net="1", rest="2", wrong="0")
+    jobs = [(m, k, q, chk, r) for m in a.models for (k, q, chk) in items for r in range(a.reps)
+            if (m, "comp", k, r) not in done]
+    print(f"comp: {len(jobs)} calls", flush=True)
 
     def go(job):
         m, k, q, chk, r = job
-        sysp = system_prompt(10 + r, 0.5, 0.5)
+        sysp = system_prompt(10 + r, c_comp, 0.5)
         prompt = f"Question about the rules (answer with a single number or word, nothing else): {q}"
         if rt.FAKE:
             text = answers[k]
@@ -230,7 +238,7 @@ def cmd_choose(a):
             per.append(float(np.mean(v)) if v else float("nan"))
         share[c] = float(np.nanmean(per))
     saturated = all(v > 0.9 for v in share.values())
-    c = 0.75 if saturated else min(C_GRID, key=lambda x: (abs(share[x] - 0.5), x))
+    c = max(C_GRID) if saturated else min(C_GRID, key=lambda x: (abs(share[x] - 0.5), x))
     out = dict(c=c, saturated=saturated, share_do_at_2plus2_pos1=share, models=passing, comprehension=comp)
     json.dump(out, open(rt.CCHOICE, "x"), indent=1)       # write once
     print("chosen:", out)
@@ -245,10 +253,12 @@ def cmd_gate(a):
                 pil.setdefault(r["model"], []).append(x[0] in ("do", "rest"))
     valid = {m: float(np.mean(v)) for m, v in pil.items()}
     passing = [m for m in a.models if comp.get(m, 0) >= 0.6 and valid.get(m, 0) >= 0.9]
+    if GATE.exists():          # RT-A1: a later model is added to the earlier gate, not instead of it
+        passing = [m for m in json.load(open(GATE))["passing"] if m not in a.models] + passing
     out = dict(passing=passing, comprehension=comp, pilot_valid=valid)
     json.dump(out, open(GATE, "w"), indent=1)
     print(out)
-    if not passing:
+    if not [m for m in a.models if m in passing]:
         sys.exit(3)
 
 

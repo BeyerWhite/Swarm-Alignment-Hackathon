@@ -10,7 +10,7 @@
   H6b             spec_post and waitA_post against the full and history-blind forecasts (descriptive)
   H7 sufficiency  others hidden vs shown (K = 8, D = 0.5): dol_excess, two-sided permutation; forecast interval
   H8 size         RT4 model: Spearman(N, dol_excess) over N = 4, 8 (RT3 arm), 16 > 0, one-sided permutation
-  Holm over H2, H3, H6a within each model (alpha 0.05).
+  Holm over H2, H3, H6a within each model (alpha 0.05); RT-R (RT_FRAME=rest) adds H1r: n > 0, bootstrap p.
 
   rt_eval.py [--out results/rt_eval.json]
 """
@@ -181,7 +181,9 @@ def evaluate_model(m, pred, rng):
             null = [spearmanr(rng.permutation(Ns), ys).correlation for _ in range(5000)]
             out["H8"] = dict(rho=float(rho), p=float((np.sum(np.array(null) >= rho) + 1) / 5001),
                              by_N={int(n): float(np.mean(ys[Ns == n])) for n in sorted(set(Ns))})
-    ps = {k: out[k]["p"] for k in ("H2", "H3", "H6a") if k in out}
+    if rt.FRAME == "rest":     # RT-R: an uptake threshold exists iff work rises with backlog (n > 0), confirmatory
+        out["H1r"] = dict(n=out["H1"]["n"], n_ci90=out["H1"]["n_ci90"], p=float((np.sum(np.array(nb) <= 0) + 1) / (len(nb) + 1)))
+    ps = {k: out[k]["p"] for k in ("H1r", "H2", "H3", "H6a") if k in out}
     out["holm"] = holm(ps) if ps else {}
     out["observed_by_arm"] = obs
     return out
@@ -199,7 +201,7 @@ def main():
     json.dump(res, open(a.out, "w"), indent=1)
     for m, r in res["models"].items():
         print(f"== {m}")
-        for k in ("H1", "H2", "H3", "H4", "H5", "H6a", "H6b", "H7", "H8", "holm"):
+        for k in ("H1", "H1r", "H2", "H3", "H4", "H5", "H6a", "H6b", "H7", "H8", "holm"):
             if k in r:
                 print(f"  {k}: {json.dumps(r[k])[:400]}")
 

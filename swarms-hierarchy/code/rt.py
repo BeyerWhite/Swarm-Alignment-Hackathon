@@ -33,6 +33,10 @@ ROOT = Path(__file__).resolve().parents[1]
 R = Path(os.environ.get("RT_RESULTS", ROOT / "results"))
 N, T, CAP, WARM, HWIN = 8, 24, 12, 4, 8        # agents, rounds, max waiting per type, warm-up rounds dropped, history window
 TYPES = ("A", "B")
+# RT-R (rest-reward framing, RT_REST_PREREGISTRATION.md): RT_FRAME=rest. There is no effort cost and the parameter
+# c is the rest reward r: a correct task earns 1, a wrong answer 0, resting earns r, each waiting task costs 1 per
+# round. The team-optimal benchmark is unchanged (work iff open tasks >= agents still to move, while rounds remain).
+FRAME = os.environ.get("RT_FRAME", "effort")
 KINDS = ("add", "upper", "next")
 MAX_TOKENS = 60
 WORDS = ["apple", "river", "stone", "cloud", "tiger", "maple", "piano", "lemon", "candle", "garden", "rocket", "silver",
@@ -108,10 +112,13 @@ def system_prompt(me, c, D, n=N, rounds=T, K=8, others="shown"):
             f"{plural(each, 'new task')} of type B arrive (at most {CAP} tasks of one type can wait at once; extra "
             f"arrivals are lost). The two types are worth the same.\n\n"
             f"On your turn you either do one open task or rest.\n"
-            f"- A correct task earns the team 1 point and costs the team {fmt(c)} points of effort (net "
-            f"{fmt(round(1 - c, 4))}). A wrong answer costs the effort and leaves the task open.\n"
-            f"- Resting costs nothing.\n"
-            f"- At the end of every round, each task still waiting costs the team 1 point.\n\n"
+            + (f"- A correct task earns the team 1 point and costs the team {fmt(c)} points of effort (net "
+               f"{fmt(round(1 - c, 4))}). A wrong answer costs the effort and leaves the task open.\n"
+               f"- Resting costs nothing.\n" if FRAME == "effort" else
+               f"- A correct task earns the team 1 point. A wrong answer earns nothing and leaves the task open.\n"
+               f"- Resting earns the team {plural(int(c), 'point') if float(c).is_integer() else fmt(c) + ' points'} "
+               f"(an agent who rests does routine upkeep instead).\n")
+            + f"- At the end of every round, each task still waiting costs the team 1 point.\n\n"
             "Reply with one line in exactly one of these formats:\nDO <task id>: <answer>\nREST")
 
 
@@ -206,7 +213,7 @@ def run_pop(model, K, D, c, seed, others="shown", decide=None, rounds=T, n_agent
                     hist[a].append("nothing"); earlier.append(f"- Agent {a} named a task that was not open")
                     continue
                 ok = correct(task, act[2])
-                points -= c; st["work"] += 1
+                points -= c if FRAME == "effort" else 0.0; st["work"] += 1
                 if ok:
                     points += 1; st["done"][task["type"]] += 1
                     queues[task["type"]] = [x for x in queues[task["type"]] if x["id"] != task["id"]]
@@ -218,6 +225,8 @@ def run_pop(model, K, D, c, seed, others="shown", decide=None, rounds=T, n_agent
                 earlier.append(f"- Agent {a} did T{task['id']} ({task['type']})" + ("" if ok else ", wrong answer"))
             elif act[0] == "rest":
                 st["rest"] += 1; hist[a].append("rest")
+                if FRAME == "rest":
+                    points += c
                 rec["acts"][str(a)] = ["rest", None, None, None, None, type_order[0], view["nA"], view["nB"]]
                 earlier.append(f"- Agent {a} rested")
             else:
@@ -411,7 +420,8 @@ def make_hill(n=2.0, theta=4.0, xi=0.25, phi=0.05, beta_pos=0.0, g_rem=0.0, k0_s
 # RT_FAKE=1 replaces every call by a scripted agent with known parameters (offline pipeline test; no API calls).
 FAKE = os.environ.get("RT_FAKE") == "1"
 FAKE_PARAMS = {"gemma": dict(n=1.5, theta=3.0, xi=0.0, phi=0.0, beta_pos=1.5, g_rem=-0.3, acc=0.97),
-               "qwen": dict(n=2.0, theta=4.0, xi=0.3, phi=0.05, beta_pos=0.3, g_rem=-0.2, k0_shift=0.5, acc=0.97)}
+               "qwen": dict(n=2.0, theta=4.0, xi=0.3, phi=0.05, beta_pos=0.3, g_rem=-0.2, k0_shift=0.5, acc=0.97),
+               "glm": dict(n=2.0, theta=3.0, xi=0.4, phi=0.05, beta_pos=0.2, g_rem=-0.2, acc=0.97)}
 _fake_n = [0]
 
 
@@ -435,7 +445,7 @@ PILOT_SEEDS = (7, 8)
 POP_SEEDS = tuple(range(51001, 51009))
 PREREG = R / "rt_prereg_freeze.json"
 CCHOICE = R / "rt_c_choice.json"
-FORECAST = R / "rt_predictions.json"
+FORECAST = Path(os.environ.get("RT_FORECAST", R / "rt_predictions.json"))   # RT-A1: GLM-5.2 has its own file
 
 
 def arms(stage):
