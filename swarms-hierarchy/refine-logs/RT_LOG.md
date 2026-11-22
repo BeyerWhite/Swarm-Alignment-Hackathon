@@ -26,3 +26,12 @@ started together and shared the 50-per-minute limit. The RT queue (pid 28478) wa
 relaunched under a wrapper (pid 28523, log `scratch/rt_queue.log`) that waits until both pid 1644 and pid 28072 have
 exited and then runs the frozen `code/rt_queue.sh 150` unchanged. Order: Rosen phase 2 → tournament queue 1 → RT →
 Chase E14; the tournament study's larger queue 2 must also wait for RT.
+
+## 2026-11-21 / 22
+
+**Queue ran** 21 Nov 05:10 → 22:05 (stage times in `scratch/rt_queue.log`): RT1, c = 0.75 by the saturation rule
+(DO share 1.00, 1.00, 0.97), both models gated in, RT2, forecast frozen 09:34 (B = 500, RT4 model Qwen3.8-27B), RT3,
+RT4, evaluation. Ledger 97.6 → 99.4. No amendment.
+
+**2026-11-22 — results written up** in `RT_REPORT.md`. Post hoc observation: all of Qwen's wrong answers are on the
+"next number" task kind (30% wrong there), which the forecast's single accuracy rate did not capture.
