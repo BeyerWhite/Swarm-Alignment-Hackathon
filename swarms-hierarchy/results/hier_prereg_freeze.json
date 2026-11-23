@@ -1,10 +1,10 @@
 {
- "written": "2026-11-20 14:24:52 EST",
- "amendment": "H-A1 (hier_common.sh other_queue pattern), before any API call",
- "supersedes": "d68e173c49a39af59d271caca5195ae133923ddd713ec502401f0aa50cf7db91",
+ "written": "2026-11-23 18:49:46 EST",
+ "amendment": "H-A2 (numeric answer extraction; G0 battery re-scored from logged responses), before any G1 call",
+ "supersedes": "638d00bd1db567715dfacd1a39c4175ed7f059c09513bac43132bca8800e9405",
  "files": {
   "refine-logs/HIERARCHY_PREREGISTRATION.md": "93f2babe4d8337cbe52ef03e35d0151c77f191c2c5b6c31bb20eb896bcee55dc",
-  "code/hier_tasks.py": "86fc1ba328a8cb35c590cedb1b3acb02e39e191de6101b5fc8497d282526140f",
+  "code/hier_tasks.py": "b98225f148d76ee4bd05f741d603e9c90898b447f42c4f7fc093a204798a8635",
   "code/office.py": "2192e7f3029f7ba7d9be72f034d98bdae07c3c03ccf84e916b060b0b050d6a35",
   "code/hier_measure.py": "35de2137f80183b7b75b17d97297974260ef1692a425b833c1f452117ac7f1bd",
   "code/hier_sim.py": "9458d5432d072b7274b3683b087467f82e33872ab797ebfb7cab80f96cb2c037",
@@ -14,6 +14,7 @@
   "code/hier_q0.sh": "082cf22fffce10201a31f6c2028c3ce7785093706f31f463d75caab4754ef62c",
   "code/hier_q1.sh": "d2bed6badadb84bcabf6a84843d4a57446fc17ab854bd0e9a66c38bec3acf12e",
   "code/chase_paced.py": "e729d7eb262b03f3ad6ccabfe1c84a9b9e5cb3978f96a95d0e60669d45d08a01",
-  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b"
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b",
+  "code/hier_rescore.py": "5348ac6f5d7c6a48934b1c6350648ccafaa330d38e8aa9c664954aff7ef0ee53"
  }
 }

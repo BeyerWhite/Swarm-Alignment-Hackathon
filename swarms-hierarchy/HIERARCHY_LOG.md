@@ -21,3 +21,23 @@ Amendments are numbered H-A1, H-A2, …
   `hier_prereg_freeze_v0_superseded.json`). G0 relaunched under a wrapper that waits until no other study's queue
   script is running, so this study runs after the Rosen, tournament and response-threshold queues already launched.
 - 14:25 G0 wrapper launched (pid 29071, log `scratch/hier_q0.log`).
+
+## 2026-11-23
+
+- **G0 ran** 05:29–06:54 (the wrapper waited until no other study's queue ran). Cost 0.57 credits (ledger 112.01 →
+  112.58). All six models passed the gates (battery parse 0.96–1.00, comprehension 0.98–1.00, pilot valid replies
+  0.975–1.00). The frozen rule chose remainder L1, digitsum L2, reverse L2 and shift L2 (spreads 0.55–0.70, mean
+  accuracies 0.26–0.61), with different best models (Gemma-26B; Qwen3.5-397B; GLM-5.2; Qwen3.5-397B), so matching
+  tasks to agents matters. Pilot (not used for hypotheses): throughput 0.7–2.5 of 8 per round; follow rates
+  0.94–0.98; Gemma-26B planned most (0.47–0.57 of its turns), DeepSeek almost never.
+- **Amendment H-A2** (after G0, before any G1 call). Inspecting the pilot showed that the numeric checker scored the
+  first integer of a reply, so answers that show their working ("638 % 7 = 1", "1+7+…+3 = 66") were marked wrong
+  even when right. Only DeepSeek writes such replies: its pilot accuracy is 0.28 under the old checker and 0.49 under
+  the new one; the other models are unchanged. Fix in `hier_tasks.extract`: a leading number counts only if no
+  operator follows it, otherwise the number after the first "=", otherwise the first number. `code/hier_rescore.py`
+  rebuilt every battery prompt, matched all 2,640 rows to their logged full responses (0 missing) and re-scored
+  them: 19 rows change (DeepSeek multiply L2, digitsum L1/L2, add3 L2; one Gemma-31B subtract L2). The frozen
+  selection rule and the gates were re-applied unchanged: the **same four kinds** are chosen, and all models pass.
+  Old files kept: `hier_g0_battery_v0_firstint.jsonl`, `hier_g0_selection_v0_superseded.json`,
+  `hier_g0_gate_v0_superseded.json`. Offline dry run passes. Stamp rewritten (previous kept as
+  `hier_prereg_freeze_v1_superseded.json`).

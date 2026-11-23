@@ -1,0 +1,49 @@
+{
+ "task_gate": true,
+ "models": {
+  "adaption:gemma-4-31b-it": {
+   "parse_battery": 0.975,
+   "comprehension": 1.0,
+   "parse_pilot": 0.944,
+   "passed": true
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "parse_battery": 0.975,
+   "comprehension": 1.0,
+   "parse_pilot": 1.0,
+   "passed": true
+  },
+  "adaption:qwen3.8-27b": {
+   "parse_battery": 0.963,
+   "comprehension": 1.0,
+   "parse_pilot": 0.975,
+   "passed": true
+  },
+  "adaption:deepseek-v4-flash": {
+   "parse_battery": 0.975,
+   "comprehension": 0.983,
+   "parse_pilot": 0.975,
+   "passed": true
+  },
+  "adaption:qwen3.5-397b": {
+   "parse_battery": 1.0,
+   "comprehension": 1.0,
+   "parse_pilot": 1.0,
+   "passed": true
+  },
+  "adaption:glm-5.2": {
+   "parse_battery": 1.0,
+   "comprehension": 1.0,
+   "parse_pilot": 0.975,
+   "passed": true
+  }
+ },
+ "passed_models": [
+  "adaption:gemma-4-31b-it",
+  "adaption:gemma-4-26b-a4b-it",
+  "adaption:qwen3.8-27b",
+  "adaption:deepseek-v4-flash",
+  "adaption:qwen3.5-397b",
+  "adaption:glm-5.2"
+ ]
+}

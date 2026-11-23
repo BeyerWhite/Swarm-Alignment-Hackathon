@@ -1,0 +1,485 @@
+{
+ "chosen": [
+  {
+   "kind": "remainder",
+   "level": 1,
+   "spread": 0.7,
+   "mean": 0.6083,
+   "best_model": "adaption:gemma-4-26b-a4b-it"
+  },
+  {
+   "kind": "digitsum",
+   "level": 2,
+   "spread": 0.6,
+   "mean": 0.275,
+   "best_model": "adaption:qwen3.5-397b"
+  },
+  {
+   "kind": "reverse",
+   "level": 2,
+   "spread": 0.6,
+   "mean": 0.4333,
+   "best_model": "adaption:glm-5.2"
+  },
+  {
+   "kind": "shift",
+   "level": 2,
+   "spread": 0.55,
+   "mean": 0.2583,
+   "best_model": "adaption:qwen3.5-397b"
+  }
+ ],
+ "candidates": [
+  {
+   "kind": "remainder",
+   "level": 1,
+   "spread": 0.7,
+   "mean": 0.6083,
+   "best_model": "adaption:gemma-4-26b-a4b-it"
+  },
+  {
+   "kind": "digitsum",
+   "level": 2,
+   "spread": 0.6,
+   "mean": 0.275,
+   "best_model": "adaption:qwen3.5-397b"
+  },
+  {
+   "kind": "reverse",
+   "level": 2,
+   "spread": 0.6,
+   "mean": 0.4333,
+   "best_model": "adaption:glm-5.2"
+  },
+  {
+   "kind": "shift",
+   "level": 2,
+   "spread": 0.55,
+   "mean": 0.2583,
+   "best_model": "adaption:qwen3.5-397b"
+  },
+  {
+   "kind": "weekday",
+   "level": 1,
+   "spread": 0.55,
+   "mean": 0.5083,
+   "best_model": "adaption:glm-5.2"
+  },
+  {
+   "kind": "add3",
+   "level": 2,
+   "spread": 0.5,
+   "mean": 0.8583,
+   "best_model": "adaption:gemma-4-31b-it"
+  },
+  {
+   "kind": "multiply",
+   "level": 2,
+   "spread": 0.3,
+   "mean": 0.8667,
+   "best_model": "adaption:glm-5.2"
+  }
+ ],
+ "swapped": null,
+ "gate_passed": true,
+ "accuracy": {
+  "multiply": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.8,
+    "adaption:gemma-4-26b-a4b-it": 0.8,
+    "adaption:qwen3.8-27b": 0.9,
+    "adaption:deepseek-v4-flash": 0.7,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "count": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.85,
+    "adaption:gemma-4-26b-a4b-it": 0.85,
+    "adaption:qwen3.8-27b": 0.7,
+    "adaption:deepseek-v4-flash": 0.65,
+    "adaption:qwen3.5-397b": 0.5,
+    "adaption:glm-5.2": 0.7
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.65,
+    "adaption:gemma-4-26b-a4b-it": 0.7,
+    "adaption:qwen3.8-27b": 0.3,
+    "adaption:deepseek-v4-flash": 0.6,
+    "adaption:qwen3.5-397b": 0.5,
+    "adaption:glm-5.2": 0.25
+   }
+  },
+  "reverse": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.7,
+    "adaption:gemma-4-26b-a4b-it": 0.45,
+    "adaption:qwen3.8-27b": 0.35,
+    "adaption:deepseek-v4-flash": 0.55,
+    "adaption:qwen3.5-397b": 0.5,
+    "adaption:glm-5.2": 0.8
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.45,
+    "adaption:gemma-4-26b-a4b-it": 0.5,
+    "adaption:qwen3.8-27b": 0.1,
+    "adaption:deepseek-v4-flash": 0.4,
+    "adaption:qwen3.5-397b": 0.45,
+    "adaption:glm-5.2": 0.7
+   }
+  },
+  "weekday": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.3,
+    "adaption:gemma-4-26b-a4b-it": 0.5,
+    "adaption:qwen3.8-27b": 0.25,
+    "adaption:deepseek-v4-flash": 0.55,
+    "adaption:qwen3.5-397b": 0.65,
+    "adaption:glm-5.2": 0.8
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.1,
+    "adaption:gemma-4-26b-a4b-it": 0.15,
+    "adaption:qwen3.8-27b": 0.15,
+    "adaption:deepseek-v4-flash": 0.0,
+    "adaption:qwen3.5-397b": 0.15,
+    "adaption:glm-5.2": 0.3
+   }
+  },
+  "sort": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.95,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "shift": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 0.85,
+    "adaption:qwen3.8-27b": 0.6,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 0.95,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.1,
+    "adaption:gemma-4-26b-a4b-it": 0.2,
+    "adaption:qwen3.8-27b": 0.0,
+    "adaption:deepseek-v4-flash": 0.45,
+    "adaption:qwen3.5-397b": 0.55,
+    "adaption:glm-5.2": 0.25
+   }
+  },
+  "subtract": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.95,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "remainder": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.45,
+    "adaption:gemma-4-26b-a4b-it": 0.9,
+    "adaption:qwen3.8-27b": 0.2,
+    "adaption:deepseek-v4-flash": 0.8,
+    "adaption:qwen3.5-397b": 0.4,
+    "adaption:glm-5.2": 0.9
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.0,
+    "adaption:gemma-4-26b-a4b-it": 0.05,
+    "adaption:qwen3.8-27b": 0.0,
+    "adaption:deepseek-v4-flash": 0.05,
+    "adaption:qwen3.5-397b": 0.05,
+    "adaption:glm-5.2": 0.05
+   }
+  },
+  "alphabet": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.9,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 0.95
+   }
+  },
+  "digitsum": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.95,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.6,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.1,
+    "adaption:gemma-4-26b-a4b-it": 0.25,
+    "adaption:qwen3.8-27b": 0.15,
+    "adaption:deepseek-v4-flash": 0.05,
+    "adaption:qwen3.5-397b": 0.65,
+    "adaption:glm-5.2": 0.45
+   }
+  },
+  "add3": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 0.9,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 0.85,
+    "adaption:qwen3.8-27b": 0.85,
+    "adaption:deepseek-v4-flash": 0.5,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 0.95
+   }
+  }
+ },
+ "parse": {
+  "multiply": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "count": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.85,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.8,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.85,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "reverse": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.95,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "weekday": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.9,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.7,
+    "adaption:gemma-4-26b-a4b-it": 0.9,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "sort": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.95,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "shift": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 0.95,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 0.9,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "subtract": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "remainder": {
+   "1": {
+    "adaption:gemma-4-31b-it": 0.9,
+    "adaption:gemma-4-26b-a4b-it": 0.95,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 0.05,
+    "adaption:gemma-4-26b-a4b-it": 0.75,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "alphabet": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 0.95
+   }
+  },
+  "digitsum": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.95,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  },
+  "add3": {
+   "1": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 1.0,
+    "adaption:deepseek-v4-flash": 0.95,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   },
+   "2": {
+    "adaption:gemma-4-31b-it": 1.0,
+    "adaption:gemma-4-26b-a4b-it": 1.0,
+    "adaption:qwen3.8-27b": 0.9,
+    "adaption:deepseek-v4-flash": 1.0,
+    "adaption:qwen3.5-397b": 1.0,
+    "adaption:glm-5.2": 1.0
+   }
+  }
+ }
+}

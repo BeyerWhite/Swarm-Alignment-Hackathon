@@ -81,6 +81,7 @@ def make_task(tid, kind, level, rng):
 
 
 NUMERIC = {"multiply", "count", "subtract", "remainder", "digitsum", "add3"}
+OPS = r"([+\-−*/×%÷^]|x\b|mod\b|plus\b|minus\b|times\b|divided\b)"
 WORDISH = {"reverse", "shift"}
 
 
@@ -93,9 +94,15 @@ def extract(task, ans):
     a = _clean(ans)
     k = task["kind"]
     if k in NUMERIC:
+        # Amendment H-A2: a reply that shows its working ("638 % 7 = 1", "1+7+...+3 = 66") is scored on the result,
+        # not on the first number. A leading number counts only if no operator follows it; otherwise the number
+        # after the first "=" counts; otherwise the first number.
         a = re.sub(r"(?<=\d)[,\s](?=\d{3}\b)", "", a)
-        m = re.search(r"-?\d+", a)
-        return m.group(0) if m else None
+        m = re.match(r"^\s*(-?\d+)(.*)$", a, re.S)
+        if m and not re.match(OPS, m.group(2).lstrip(), re.I):
+            return m.group(1)
+        m = re.search(r"=\s*(-?\d+)", a) or re.search(r"-?\d+", a)
+        return m.group(1) if m and m.re.groups else (m.group(0) if m else None)
     if k in WORDISH:
         m = re.search(r"[A-Za-z]+", a)
         return m.group(0).lower() if m else None
