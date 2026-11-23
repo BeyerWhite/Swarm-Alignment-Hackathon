@@ -41,3 +41,8 @@ Amendments are numbered H-A1, H-A2, …
   Old files kept: `hier_g0_battery_v0_firstint.jsonl`, `hier_g0_selection_v0_superseded.json`,
   `hier_g0_gate_v0_superseded.json`. Offline dry run passes. Stamp rewritten (previous kept as
   `hier_prereg_freeze_v1_superseded.json`).
+- 18:50 G1–G4 queued, last in line as the owner chose: a wrapper (log `scratch/hier_q1.log`, cap 200, the owner's cap
+  since 21 Nov) waits for the RT phase-2 launcher (72577), Rosen phase 3 (60296) and Couzin queue 2 (75855), then
+  for no `*queue[N].sh` script and no paced job (two checks three minutes apart), then runs `hier_q1.sh 200`.
+  The wrapper's command line does not contain the script name, because `rosen_p3_wait.sh` counts any
+  `hier_q[N].sh` process as busy (a first wrapper that did was stopped after 30 s, before it could block Rosen).
