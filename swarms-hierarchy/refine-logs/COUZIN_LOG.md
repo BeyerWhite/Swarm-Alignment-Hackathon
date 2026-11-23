@@ -72,3 +72,22 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
 - **Smoke test:** one real decision each from Haiku and Sonnet, each a one-word valid reply in about 4 s
   (`scratch/couzin_followup_smoke`; not data).
 - **Launch:** `nohup caffeinate -i bash code/couzin_claude_run.sh`, log `scratch/couzin_claude_run.log`.
+
+## Queue 1 done (2026-11-23 07:13–07:33)
+
+- **Gate:** all six models passed. The frozen label pair is ORION / LYRA (`results/couzin_m0_gate.json`).
+- **Pilot** (3 groups; never tested): both M3_N10_p0.2 groups reached target consensus, at rounds 3 and 2. In the
+  M4_obs_nu6 group the weak majority won (share at the minority's site 0.24).
+
+## M-A2 (2026-11-23): budget meter fixed; new stamp
+
+- **The bug.** `couzin_budget.py` read costs from this worktree's `results/calls.jsonl`. This worktree's `llm.py`
+  (the `rosen-specialization` tip) does not log usage there, so every call was charged the 0.001 fail-closed amount.
+  - The meter reported 1.656 credits for queue 1.
+  - The real spend, matched against the shared ledger, was 0.057.
+  - At about 0.001 per call, the 20-credit guard would have stopped queue 2 after about 20k of its ~120k calls.
+- **The fix.** Each Couzin call is now matched to its shared-ledger entry: same model, nearest timestamp within
+  2 s. Every queue 1 call matched, with a largest gap of 2 ms. An unmatched call with a reply still counts 0.001.
+- **New stamp.** `couzin_budget.py` is a stamped file, so the old stamp is kept as
+  `results/couzin_prereg_freeze_v1.json` and a new `results/couzin_prereg_freeze.json` was written. Nothing else
+  changed. The Claude follow-up's own stamp does not cover this file.

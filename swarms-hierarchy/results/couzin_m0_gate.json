@@ -1,0 +1,154 @@
+{
+ "models": {
+  "adaption:gemma-4-31b-it": {
+   "quiz_acc": 1.0,
+   "quiz_parse": 1.0,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "1": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "2": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    }
+   }
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "quiz_acc": 0.95,
+   "quiz_parse": 1.0,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "1": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "2": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    }
+   }
+  },
+  "adaption:qwen3.8-27b": {
+   "quiz_acc": 0.825,
+   "quiz_parse": 1.0,
+   "label_parse": 0.975,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.5555555555555556,
+     "p_first_named": 0.9444444444444444
+    },
+    "1": {
+     "p_first_label": 0.45,
+     "p_first_named": 0.8
+    },
+    "2": {
+     "p_first_label": 0.45,
+     "p_first_named": 0.95
+    }
+   }
+  },
+  "adaption:qwen3.5-397b": {
+   "quiz_acc": 0.8166666666666667,
+   "quiz_parse": 1.0,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "1": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "2": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    }
+   }
+  },
+  "adaption:glm-5.2": {
+   "quiz_acc": 0.825,
+   "quiz_parse": 1.0,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.2,
+     "p_first_named": 0.7
+    },
+    "1": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "2": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    }
+   }
+  },
+  "adaption:deepseek-v4-flash": {
+   "quiz_acc": 0.8916666666666667,
+   "quiz_parse": 1.0,
+   "label_parse": 0.9833333333333333,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.475,
+     "p_first_named": 0.975
+    },
+    "1": {
+     "p_first_label": 0.6052631578947368,
+     "p_first_named": 0.7894736842105263
+    },
+    "2": {
+     "p_first_label": 0.6,
+     "p_first_named": 0.9
+    }
+   }
+  }
+ },
+ "passed": [
+  "adaption:gemma-4-31b-it",
+  "adaption:gemma-4-26b-a4b-it",
+  "adaption:qwen3.8-27b",
+  "adaption:qwen3.5-397b",
+  "adaption:glm-5.2",
+  "adaption:deepseek-v4-flash"
+ ],
+ "label_pair": [
+  "ORION",
+  "LYRA"
+ ],
+ "pair_scores": {
+  "0": 0.3,
+  "1": 0.10526315789473684,
+  "2": 0.09999999999999998
+ },
+ "primary_passed": true
+}
