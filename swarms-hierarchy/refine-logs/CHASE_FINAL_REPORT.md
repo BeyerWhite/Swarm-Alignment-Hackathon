@@ -15,7 +15,8 @@ Updated 2026-11-20 with E10 (amendment C9), the registered replication of the Qw
 (`CHASE_E10_REPORT.md`). The summary and sections 2, 3, 5, 6, 7, 8 and 9 were revised to match.
 
 Updated again on 2026-11-20 with the three no-call analyses of amendment C10 (E11–E13, `CHASE_C10_REPORT.md`):
-sections 5, 6, 8 and 9 gained one entry each. E14 is registered and has not run.
+sections 5, 6, 8 and 9 gained one entry each. Updated 2026-11-23 with E14, the last of them, which needed calls
+(sections 5, 8 and 9).
 
 ## Summary
 
@@ -340,6 +341,8 @@ their own experience from one pairing to the next, which would be closer to OWN 
 - **After C10 (E12, E13):** the two remaining misses persist when the decision model is fitted on the groups' own
   decisions (Qwen `comp` LOG 0.67 against 0.81; Gemma-26B `norm0` OWN 0.33 against 0.41 on 180 groups). They are
   not calibration problems; independent single-decision models miss some group-level source of order.
+- **The simplest rule did not forecast new cells either (E14).** Predicting a gain from round-1 LEAD rates alone got
+  3 of 5 fresh cells right. All five were null, and the two predicted gains, both close calls, did not appear.
 
 ## 6. What this says about Chase's account
 
@@ -404,7 +407,7 @@ their own experience from one pairing to the next, which would be closer to OWN 
   the follow-ups, the LEAD-rate tables of E7 and E10 and the comparisons marked descriptive in their reports are
   also post hoc.
 
-## 8. The open questions, followed up (E6–E13)
+## 8. The open questions, followed up (E6–E14)
 
 The first version of this report listed four open questions. Amendment C8 registered one experiment for each;
 all four have now run, and one registered replication (E10, amendment C9) followed from the first.
@@ -431,8 +434,8 @@ all four have now run, and one registered replication (E10, amendment C9) follow
   primary predictions hold (Holm p 0.003 or below): partner records raise DD + DS under `comp` (0.49 → 0.72) and
   move triads from DS to DD under `norm100` (DD 0.18 → 0.59). `CHASE_E9_REPORT.md`.
 
-Amendment C10 (20 November) registered one more experiment for each question that remained. Three need no calls
-and have run (`CHASE_C10_REPORT.md`):
+Amendment C10 (20 November) registered one more experiment for each question that remained. Three needed no
+calls; E14 needed calls. All four have run (`CHASE_C10_REPORT.md`):
 - **How the order is built (E11).** In both responsive models the gain from partner records arises after
   relationships form: Qwen3.5-397B later − formation +0.31 [+0.19, +0.42] (predicted), Gemma-4-31B +0.23
   [+0.08, +0.38] (predicted the other way, so P2 failed). Partner records do make the first relationships more often
@@ -445,11 +448,16 @@ and have run (`CHASE_C10_REPORT.md`):
 - **The Gemma-26B equal-turns gap (E13).** At 180 groups it remains (0.33 [0.27, 0.38] simulated against 0.41).
   Agents differ beyond their records (σ 0.39, p = 6 × 10⁻²⁶), but those differences do not explain it, and neither
   does the round number.
-- **The LEAD-rate rule (E14).** Registered on four fresh cells with calls; not yet run.
+- **The LEAD-rate rule (E14).** Fails. On five fresh cells (four planned plus GLM-5.2 `norm100`), 80 groups per
+  arm, it predicted gains in Gemma-26B `norm100` and Qwen3.8-27B `comp`; neither gained (mean −0.04 [−0.14, +0.07]).
+  The three predicted nulls held, but no fresh cell gained at all, so that part says little. The closest to a gain
+  was Gemma-31B under equal turns (0.26 → 0.39, p 0.064), a cell predicted null. Responsive cells are still only
+  Gemma-31B `comp`/`norm100` and Qwen3.5-397B `comp`, and no rule found so far says in advance which cells respond.
 
 Still open: in two cells a model of independent single decisions, fitted on the very decisions groups made, yields
 less hierarchy than the groups showed. A post hoc check rules out complementary answers within a contest;
-persistence in specific pairs beyond the visible record is untested.
+persistence in specific pairs beyond the visible record is untested. Which cells show the bystander effect at all
+cannot yet be predicted from single decisions (E14).
 
 ## 9. Files
 
@@ -463,5 +471,5 @@ persistence in specific pairs beyond the visible record is untested.
 | Evaluations | `results/chase_e3_eval.json`, `chase_e4_eval.json`, `chase_e5_eval.json` |
 | Sequence re-count (post hoc) | `code/chase_seq_posthoc.py` → `results/chase_seq_posthoc.json` |
 | Follow-ups (C8, C9) | reports `CHASE_E7_REPORT.md` … `CHASE_E10_REPORT.md`; forecasts `results/chase_e6_predictions.json` … `chase_e8_predictions.json`; populations `chase_e7_pop.jsonl` … `chase_e10_pop.jsonl` (E10 plan `chase_e10_plan.json`); evaluations `code/chase_e7_eval.py` … `chase_e10_eval.py` → `results/chase_e7_eval.json` … `chase_e10_eval.json`; E6 part A `results/chase_e6a.json` |
-| Follow-ups (C10) | report `CHASE_C10_REPORT.md`; `code/chase_c10.py`, `chase_e11_eval.py`, `chase_e12.py`, `chase_e13.py` → `results/chase_e11_eval.json`, `chase_e12.json`, `chase_e13.json`; E14 `code/chase_e14.py` (not yet run) |
+| Follow-ups (C10) | report `CHASE_C10_REPORT.md`; `code/chase_c10.py`, `chase_e11_eval.py`, `chase_e12.py`, `chase_e13.py` → `results/chase_e11_eval.json`, `chase_e12.json`, `chase_e13.json`; E14 `code/chase_e14.py` → `results/chase_e14_statecal.jsonl`, `chase_e14_rule.json`, `chase_e14_pop.jsonl`, `chase_e14_eval.json` |
 | Code | `code/chase_*.py`; hashes of every frozen script and forecast are in the log |

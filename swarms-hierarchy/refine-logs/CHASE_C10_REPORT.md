@@ -4,8 +4,8 @@ Run 20 Nov 2026 on existing groups only, no model calls. The scripts were checke
 the runs: `chase_c10.py` f92cca00…, `chase_e11_eval.py` 14a5a848…, `chase_e12.py` 1689d2ec…, `chase_e13.py`
 986c45c4…. `chase_fit.py`, which they import, was never hashed in the log; it is unchanged since the study's first
 commit (454d89a). Every rebuilt feature matched the stored values (0 mismatches). Outputs: `results/chase_e11_eval.json`,
-`results/chase_e12.json`, `results/chase_e13.json`. E14, the fresh-cell test of the LEAD-rate rule, needs calls
-and has not been run.
+`results/chase_e12.json`, `results/chase_e13.json`. E14, the fresh-cell test of the LEAD-rate rule, needed calls;
+it ran 21–23 November and is reported in its own section below.
 
 ## Summary
 
@@ -21,6 +21,8 @@ and has not been run.
 - **E13 (the Gemma-26B equal-turns gap).** Reading "neither". On all 180 groups the gap remains: 0.33 [0.27, 0.38]
   simulated against 0.41 observed. Agents do differ from each other beyond their records (σ 0.39, LR p = 6 × 10⁻²⁶),
   but simulating those differences does not raise linearity. The round number adds nothing.
+- **E14 (the LEAD-rate rule on fresh cells).** The rule fails. Neither of the two cells it predicted to gain
+  gained (mean −0.04 [−0.14, +0.07]), while the three predicted nulls stayed null. No fresh cell gained at all.
 - **Together.** In two cells, a model of independent single decisions, fitted to the very decisions the groups
   made, produces less hierarchy than the groups did. Something at the level of the group, not in any tested feature
   of a single decision, adds order.
@@ -105,6 +107,39 @@ Reading: **"neither"**.
   Qwen `comp` OWN σ 0.33 (LR 35). But at this size they do not change the simulated linear share.
 - **The earlier misses.** At 180 groups the forecast gap is smaller than E5's 0.50 suggested, but it is not gone.
 
+## E14 — the LEAD-rate rule on five fresh cells
+
+The rule (frozen 21 Nov 23:13, before any population call, stamp acb78687…): from round-1 calibration rows, a cell
+gains from partner records iff q(l_LOG) − q(l_OWN) > 0, with q(l) = 2l(1 − l), the decided share if the two answers
+were independent. 80 OWN and 80 LOG groups of four per cell, seeds 54000–54079, run whatever the prediction.
+"Gain" means LOG > OWN with one-sided Fisher p < 0.05.
+
+| Fresh cell | l_OWN → l_LOG (calibration) | dq, P(dq > 0) | Predicted | OWN | LOG | LOG − OWN [95%] | Observed |
+|---|---|---|---|---|---|---|---|
+| Gemma-4-26B `comp` | 0.83 → 0.87 | −0.055, 0.07 | no gain | 0.66 | 0.55 | −0.11 [−0.26, +0.04] | no gain |
+| Gemma-4-26B `norm100` | 0.93 → 0.93 | +0.004, 0.53 | gain | 0.44 | 0.33 | −0.11 [−0.26, +0.04] | no gain |
+| Gemma-4-31B `norm0` | 0.21 → 0.15 | −0.072, 0.02 | no gain | 0.26 | 0.39 | +0.12 [−0.02, +0.26], p 0.064 | no gain |
+| Qwen3.8-27B `comp` | 0.71 → 0.69 | +0.016, 0.71 | gain | 0.50 | 0.54 | +0.04 [−0.11, +0.19] | no gain |
+| GLM-5.2 `norm100` | 0.87 → 0.91 | −0.064, 0.05 | no gain | 0.41 | 0.39 | −0.02 [−0.17, +0.12] | no gain |
+
+| | Cells | Mean LOG − OWN [95%] | Criterion | Holds |
+|---|---|---|---|---|
+| P1, predicted gain | 2 | −0.04 [−0.14, +0.07] | lower bound > 0 | no |
+| P2, predicted no gain | 3 | −0.00 [−0.09, +0.08] | upper bound < 0.17 | yes |
+
+Reading: **the rule fails** (3 of 5 cells correct).
+- **The test was weak in the direction that mattered.** No fresh cell gained, so a rule that never predicts a gain
+  would have scored 5 of 5. Both gain predictions sat on the line: P(dq > 0) 0.53 and 0.71, with 90% intervals
+  across zero. So P2 holding says little; what the test shows is that the rule found no new cell that gains.
+- **Round-1 LEAD rates did not carry over to groups (descriptive).** In the groups the LEAD rate moved with partner
+  records differently from the calibration: Gemma-26B `norm100` 0.92 → 0.95 (calibration flat), so decided contests
+  fell from 0.15 to 0.09; Qwen3.8-27B 0.73 → 0.73 (calibration 0.71 → 0.69); Gemma-31B `norm0` 0.20 → 0.20
+  (calibration 0.21 → 0.15).
+- **The largest difference was in a cell predicted null.** Gemma-4-31B under equal turns rose 0.26 → 0.39 (p 0.064),
+  short of the gain criterion. It is the model that gains under `comp` and `norm100`. Not tested further here.
+- **Invalid answers.** GLM-5.2 LOG 349 (about 4–5% of its decisions), Gemma-4-31B `norm0` 111 and 86; the others 0–1.
+- **Cost.** 12.2 credits (estimated 11.3), shared ledger 99.43 → 111.66, under the cap of 150.
+
 ## Post hoc check (after the results above; not registered)
 
 Candidate: the two answers in a contest might be complementary beyond the model, with one agent deferring more often
@@ -124,7 +159,7 @@ pair (d, last ten rounds) shows.
 
 ## Limits
 
-- All three analyse groups already analysed. E11's predictions were formed from the E9 and E10 sequence results.
+- E11–E13 analyse groups already analysed. E11's predictions were formed from the E9 and E10 sequence results.
 - The adequacy intervals come from group-bootstrap refits of the same decisions they are compared with. So a miss
   is a strong result, and a cover a weak one.
 - "Neither" in E12 and E13 says what the gap is not. It does not say what it is.

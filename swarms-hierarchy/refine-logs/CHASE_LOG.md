@@ -876,3 +876,27 @@ cap is 150 (shared Chase + Rosen ledger at 87.35 when queued). `scratch/chase_e1
 waits for the Rosen queue (1644) and the tournament queue (28072), so no two paced jobs share the account. Nothing of
 E14 has been called yet; the rule file is written and frozen by the script before the first population call.
 Estimated cost: about 2.3 credits for the four fresh cells plus about 9 for GLM.
+
+**2026-11-21 23:13 — E14 rule file frozen (written by the queue script, before the first E14 population call).** `results/chase_e14_rule.json`, stamp acb78687c99595bebb2daf6f33f28a72512a2cbacccdce88b5c3c98b179afcdf, file sha256 0e0f16917356da4f4af3a476e0c8e481462e193db2e3ec3cf9125cab2a7fb5ca. Predictions: gemma-4-26b-a4b-it|comp no gain (dq -0.055, P 0.07); gemma-4-26b-a4b-it|norm100 gain (dq +0.004, P 0.53); gemma-4-31b-it|norm0 no gain (dq -0.072, P 0.02); qwen3.8-27b|comp gain (dq +0.016, P 0.71); glm-5.2|norm100 no gain (dq -0.064, P 0.05).
+
+## 2026-11-23
+
+**E14 run and evaluated.** The queue started at 2026-11-21 22:06 (ledger 99.43), froze the rule file at 23:13 (entry
+above) and finished the 800 planned groups at 2026-11-23 04:43, exit 0 (ledger 111.66, so E14 cost 12.2 credits against
+the 11.3 estimated). `code/chase_e14.py eval` (sha256 ebab43a9…, as in C10; `chase_c10.py` f92cca00…) was run as
+registered, 5,000 bootstrap draws. Hashes: `results/chase_e14_statecal.jsonl` f64e9b12…, `chase_e14_pop.jsonl`
+e07796ab…, `chase_e14_eval.json` 53a8feb5….
+
+| Fresh cell | Predicted | OWN | LOG | LOG − OWN [95%] | Fisher p | Observed |
+|---|---|---|---|---|---|---|
+| Gemma-4-26B `comp` | no gain | 0.66 | 0.55 | −0.11 [−0.26, +0.04] | 0.95 | no gain |
+| Gemma-4-26B `norm100` | gain | 0.44 | 0.33 | −0.11 [−0.26, +0.04] | 0.95 | no gain |
+| Gemma-4-31B `norm0` | no gain | 0.26 | 0.39 | +0.12 [−0.02, +0.26] | 0.064 | no gain |
+| Qwen3.8-27B `comp` | gain | 0.50 | 0.54 | +0.04 [−0.11, +0.19] | 0.38 | no gain |
+| GLM-5.2 `norm100` | no gain | 0.41 | 0.39 | −0.02 [−0.17, +0.12] | 0.69 | no gain |
+
+P1 (predicted-gain cells): mean −0.04 [−0.14, +0.07], does not hold. P2 (predicted-null cells): −0.00 [−0.09, +0.08],
+upper bound below 0.17, holds. **The rule fails** (3 of 5 cells correct). Noted with the result: no fresh cell
+gained, so a rule that never predicts a gain would have scored 5 of 5; both gain predictions were close calls (P(dq > 0)
+0.53 and 0.71, 90% intervals across zero). Invalid answers: GLM-5.2 LOG 349 (about 4–5% of decisions), Gemma-4-31B
+`norm0` 111 and 86; the others 0–1.
