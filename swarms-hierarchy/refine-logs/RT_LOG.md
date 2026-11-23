@@ -74,3 +74,7 @@ other study's stage script or paced job runs, then runs GLM and then RT-R. Cap a
 then for an idle account, then runs `rt_glm_queue.sh 200` and `rt_rest_queue.sh 200`. Checked: the launcher's command
 line matches neither the hierarchy wrapper's `queue[0-9]*.sh` pattern nor the Couzin launcher's busy pattern.
 Restart after a reboot: the same command with whichever of those pids still exist (both queues are restart-safe).
+
+**2026-11-23 15:03 — RT-A1 (GLM) done**, rc 0, ≈ 10.0 credits; results in `RT_REPORT.md` (amendment section). RT-R
+started at once: r = 2 chosen (DO share at 2+2, position 1: 1.00 / 1.00 / 0.575 at r = 0.5 / 1 / 2; not saturated);
+both models passed the gate (comprehension 0.96 / 0.97).

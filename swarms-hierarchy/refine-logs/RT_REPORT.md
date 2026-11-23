@@ -77,3 +77,36 @@ intervals. Gemma's misses are the invalid rate (4% in the kernel, 1% in populati
    About 22,000 calls, ≈ 16 credits, ≈ 8 hours.
 2. **A framing that makes resting attractive**, to test the uptake threshold itself (new pre-registration).
 3. Claude Haiku, through the CLI on the Pro plan (no Adaption credits, slower).
+
+## Amendment RT-A1 — GLM-5.2 on the frozen design
+
+Run 23 Nov 07:35–15:03 (ledger 112.63 → 122.61, ≈ 10.0 credits; estimate was 12–16). Forecast
+`results/rt_predictions_glm.json` (sha256 05b3040b…, frozen 09:34, before any GLM population), evaluation
+`results/rt_eval_glm.json`. Comprehension 1.00, valid pilot turns 1.00, invalid/stale 0 in the kernel.
+
+| Test | GLM-5.2 |
+|---|---|
+| Work uptake (grid) | P(work) 1.00 in every history profile: saturated, as Gemma and Qwen |
+| H1 log stimulus beats linear | no (n = 0.07 [0.01, 0.12]; ΔAIC −47) |
+| H2 τ = κ + ω > 0 | **no**: τ = −0.11 [−0.126, −0.096] (balancing) |
+| H3 specialization higher with own history | nominal p = 0.049, Holm p = 0.098: **no** |
+| H4 full forecast vs history-blind / position null (ΔLPD) | −25.2 / −25.2; coverage 67 / 75 / 71 of 78 |
+| H5 step against demand | no |
+| H6a new specialists after removal | gain +0.75, nominal p = 0.031, Holm p = 0.094: **no** |
+| H7 hiding others' records | no (p = 0.83) |
+
+**What GLM does: strong alternation, not habit.** After 8 turns on A it picks A 17% of the time; after 8 on B, 64%
+(grid, both types open). That is the opposite of the 88–100% own-type persistence in the Rosen pilot, so the Rosen
+"habit" was a property of that environment (unequal demand, fixed listing, workbenches), not of the model. GLM
+ignores list position (b1 ≈ 0, unlike Gemma's 86% first-listed) and leans against the type others are doing
+(σ = −1.5 [−1.75, −1.36]).
+
+**Populations.** dol_excess is +0.008 to +0.029 with own history (K = 8) and −0.004 to +0.003 without (K = 0), so
+showing the record raises specialization slightly, against the balancing kernel's direction, but the effect does not
+survive Holm and persistence stays at 0.50. The frozen full kernel forecast worse than both nulls (ΔLPD −25): the
+history terms fitted in the kernel did not transfer to populations. Points match the always-work benchmark except at
+D = 1 (waiting 0.24 at K = 0, 0.69 at K = 8).
+
+**Reading.** None of the three models has a response threshold in the effort frame, and none reinforces its own type:
+Gemma follows list position, Qwen has a weak habit, GLM balances. The reinforcement half of Theraulaz et al. (1998)
+is not what these agents do.
