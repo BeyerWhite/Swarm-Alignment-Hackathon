@@ -91,3 +91,21 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
 - **New stamp.** `couzin_budget.py` is a stamped file, so the old stamp is kept as
   `results/couzin_prereg_freeze_v1.json` and a new `results/couzin_prereg_freeze.json` was written. Nothing else
   changed. The Claude follow-up's own stamp does not cover this file.
+
+## 2026-11-23 18:46–18:49: Claude run resumed; queue 2 launched
+
+- **Claude run.** It had stopped on the stop-on-quota rule on 2026-11-21 at 19:59, during the Haiku groups. 121 of
+  128 Haiku groups were done, with no invalid decisions. It was resumed with the same command; the done steps were
+  skipped.
+- **Interim Haiku result** (not the registered evaluation, which runs when all groups are in):
+  - Nonlinearity index a = 4.72, a strongly conformist response.
+  - The ω rule fell back to strong = 6, because no level reached 90% staying.
+  - P(minority wins): simultaneous start 0.38 / 0.38 / 0.33 at n_u 0 / 12 / 24; observe-first 0.12 / 0.00 at
+    n_u 12 / 24 (17 of 24 groups).
+  - The n_u = 0 arm is outside its forecast interval: 0.38 observed against 0.68 forecast, [0.46, 0.88]. The other
+    four arms are inside.
+- **Label screen.** Most models choose the first-named option at round 0: P = 1.00 for Gemma-31B, Gemma-26B and
+  Qwen3.5-397B. The naming order is randomised per call, so round-0 choices are a fair coin, not a label bias.
+- **Queue 2** was launched through `couzin_launch.sh 2 200 72577 60296`. It waits for the RT phase 2 launcher
+  (72577) and the Rosen phase 3 waiter (60296). Neither name matches the busy pattern, so their pids are waited for
+  explicitly; after that it waits for an idle account.
