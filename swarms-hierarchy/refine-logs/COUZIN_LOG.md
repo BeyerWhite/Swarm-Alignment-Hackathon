@@ -109,3 +109,14 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
 - **Queue 2** was launched through `couzin_launch.sh 2 200 72577 60296`. It waits for the RT phase 2 launcher
   (72577) and the Rosen phase 3 waiter (60296). Neither name matches the busy pattern, so their pids are waited for
   explicitly; after that it waits for an idle account.
+
+## 2026-11-24 00:30: auto-resume of the Claude follow-up (owner OK)
+
+- **What it does.** `code/couzin_claude_autoresume.sh` (not a stamped file) waited for the running runner
+  (pid 48268). After every stop-on-quota exit (code 75) it waits 30 minutes and reruns `couzin_claude_run.sh`,
+  for at most 60 attempts.
+- **When it stops.** On completion, or on any other failure, so a real error is never retried blindly.
+- **Effect on the data.** None. The stop-on-quota rule still keeps every affected decision out of the data.
+- **Logs.** Earlier runner logs are appended to `scratch/couzin_claude_run_all.log`; the wrapper's own log is
+  `scratch/couzin_claude_autoresume.log`.
+- **Progress at hand-over:** Sonnet M4b_sim_nu0 24/24 and M4b_sim_nu12 11/24.
