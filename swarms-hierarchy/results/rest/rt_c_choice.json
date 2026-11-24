@@ -1,0 +1,17 @@
+{
+ "c": 2.0,
+ "saturated": false,
+ "share_do_at_2plus2_pos1": {
+  "0.5": 1.0,
+  "1.0": 1.0,
+  "2.0": 0.575
+ },
+ "models": [
+  "adaption:gemma-4-31b-it",
+  "adaption:qwen3.8-27b"
+ ],
+ "comprehension": {
+  "adaption:gemma-4-31b-it": 0.96,
+  "adaption:qwen3.8-27b": 0.97
+ }
+}

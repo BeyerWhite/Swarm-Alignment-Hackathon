@@ -1,0 +1,14 @@
+{
+ "passing": [
+  "adaption:gemma-4-31b-it",
+  "adaption:qwen3.8-27b"
+ ],
+ "comprehension": {
+  "adaption:gemma-4-31b-it": 0.96,
+  "adaption:qwen3.8-27b": 0.97
+ },
+ "pilot_valid": {
+  "adaption:qwen3.8-27b": 0.9609375,
+  "adaption:gemma-4-31b-it": 0.9817708333333334
+ }
+}

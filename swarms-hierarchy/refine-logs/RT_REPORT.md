@@ -110,3 +110,54 @@ D = 1 (waiting 0.24 at K = 0, 0.69 at K = 8).
 **Reading.** None of the three models has a response threshold in the effort frame, and none reinforces its own type:
 Gemma follows list position, Qwen has a weak habit, GLM balances. The reinforcement half of Theraulaz et al. (1998)
 is not what these agents do.
+
+## RT-R — rest-reward framing (Gemma-4-31B, Qwen3.8-27B)
+
+Pre-registration `RT_REST_PREREGISTRATION.md` (freeze `results/rest/rt_prereg_freeze.json`). Run 23 Nov 15:03 – 24 Nov
+08:13 (ledger 122.61 → 124.79, ≈ 2.2 credits). Forecast `results/rest/rt_predictions.json` (sha256 588c0a23…, frozen
+23 Nov 19:48, before any RT3 population); evaluation `results/rest/rt_eval.json`. No change after the freeze.
+
+**r rule:** DO share at backlog 2+2, first mover: 1.00 / 1.00 / 0.575 at r = 0.5 / 1 / 2, so r = 2, not saturated.
+Comprehension 0.96 (Gemma), 0.97 (Qwen); valid pilot turns 0.98 / 0.96.
+
+| | Gemma-4-31B | Qwen3.8-27B |
+|---|---|---|
+| H1r uptake rises with backlog (n > 0) | **no**: n = −0.21 [−0.26, −0.17] | **no**: n = −0.25 [−0.29, −0.20] |
+| H1 log stimulus beats linear | no | yes (ΔAIC 5.2), but n < 0 |
+| H2 τ > 0 | no: τ = −0.07 (balancing, as in the first run) | **yes**: τ = 0.035 [0.019, 0.051], Holm p = 0.008 |
+| H3 specialization higher with own history | no (p = 0.92) | no (p = 0.97) |
+| H4 full forecast vs history-blind / position (ΔLPD) | +195 / +7,069 (flex better still); coverage 38 of 78 | −49 / −486; coverage 44 of 78 |
+| H5 step against demand | no | no |
+| H6a new specialists after removal | no (0.0, p = 0.75) | no (+0.5, p = 0.06; Holm 0.19) |
+| H7 hiding others' records | no (p = 0.31) | no (p = 0.10) |
+| H8 specialization with group size (RT4, Qwen) | — | no (ρ = 0.11, p = 0.30) |
+
+**Resting is now chosen, but not by a threshold.** Rest share in populations was 19–96%, against 0–3% at full demand
+in the first run. But in the kernel the chance of working falls slightly as the backlog grows (n < 0 for both),
+the reverse of the threshold model, and in the r = 2 calibration Gemma worked 95% with one open task and 0–15% with
+four of each type.
+
+**Own record drives uptake for Gemma.** With no own record shown (K = 0) Gemma worked 4–11% of turns at every
+demand level and the backlog grew to 18–23 waiting tasks; with its record shown (K = 8) it worked 24–70%, tracking
+demand roughly. The grid gives the same picture: P(work) 0.14 with no record, 0.56–0.81 with any 8-turn record.
+Qwen's uptake did not depend on K.
+
+**Over-resting at high demand (reading 6, "over-resting").** Points against the team-optimal policy on the same
+task streams (`policy_rational`, r = 2: 336 / 288 / 240 / 192 at D = 0.25 / 0.5 / 0.75 / 1):
+
+| D | Gemma K=0 | Gemma K=8 | Qwen K=0 | Qwen K=8 |
+|---|---|---|---|---|
+| 0.25 | 12 | 326 | 311 | 316 |
+| 0.5 | −124 | 224 | 189 | 252 |
+| 0.75 | −154 | −43 | 63 | 115 |
+| 1.0 | −167 | −116 | −8 | −14 |
+
+At low demand the models are near the optimum; as demand rises they keep resting while tasks pile up (Qwen 5–11
+waiting tasks at D ≥ 0.75; Gemma 15–23 in most arms). The upkeep reward is taken even when each waiting task costs
+more than it.
+
+**Specialization:** dol_excess −0.04 to +0.03 in every arm, persistence 0.43–0.64; no change from the first run.
+
+**Reading.** Making rest attractive moves both models off "always work", but what replaces it is not a response
+threshold: uptake is flat or falling in backlog, so the work-or-rest half of Bonabeau–Theraulaz fails in both
+framings. Qwen's weak type habit (H2) replicates across framings; it still makes no specialists.

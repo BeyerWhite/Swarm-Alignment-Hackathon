@@ -78,3 +78,7 @@ Restart after a reboot: the same command with whichever of those pids still exis
 **2026-11-23 15:03 — RT-A1 (GLM) done**, rc 0, ≈ 10.0 credits; results in `RT_REPORT.md` (amendment section). RT-R
 started at once: r = 2 chosen (DO share at 2+2, position 1: 1.00 / 1.00 / 0.575 at r = 0.5 / 1 / 2; not saturated);
 both models passed the gate (comprehension 0.96 / 0.97).
+
+**2026-11-24 08:13 — RT-R done**, rc 0, ≈ 2.2 credits; RT4 ran for Qwen (τ rule). Results in `RT_REPORT.md` (RT-R
+section). The benchmark points there (`policy_rational` on the RT3 seeds, rest frame, r = 2) were computed after the
+run as a descriptive comparison named in the pre-registration (section 6).
