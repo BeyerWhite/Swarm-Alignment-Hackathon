@@ -1,0 +1,62 @@
+{
+ "models": {
+  "claude:haiku": {
+   "quiz_acc": 0.9916666666666667,
+   "quiz_parse": 1.0,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.55,
+     "p_first_named": 0.85
+    },
+    "1": {
+     "p_first_label": 0.475,
+     "p_first_named": 0.975
+    },
+    "2": {
+     "p_first_label": 0.4,
+     "p_first_named": 0.9
+    }
+   }
+  },
+  "claude:sonnet": {
+   "quiz_acc": 0.9583333333333334,
+   "quiz_parse": 0.975,
+   "label_parse": 1.0,
+   "n_quiz": 120,
+   "n_labels": 120,
+   "passed": true,
+   "bias": {
+    "0": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "1": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    },
+    "2": {
+     "p_first_label": 0.5,
+     "p_first_named": 1.0
+    }
+   }
+  }
+ },
+ "passed": [
+  "claude:haiku",
+  "claude:sonnet"
+ ],
+ "label_pair": [
+  "MAPLE",
+  "CEDAR"
+ ],
+ "pair_scores": {
+  "0": 0.050000000000000044,
+  "1": 0.025000000000000022,
+  "2": 0.09999999999999998
+ },
+ "primary_passed": false
+}

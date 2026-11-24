@@ -1,0 +1,306 @@
+{
+ "time": "2026-11-23 19:12:58",
+ "model": "claude:sonnet",
+ "hartnett": {
+  "passed": true,
+  "results": {
+   "0.3": {
+    "p_majority": [
+     0.043333333333333335,
+     0.10666666666666667,
+     0.22833333333333333,
+     0.38166666666666665
+    ],
+    "slope": 0.378888888888889
+   },
+   "10.0": {
+    "p_majority": [
+     0.9233333333333333,
+     0.84,
+     0.7066666666666667,
+     0.59
+    ],
+    "slope": -0.3777777777777776
+   }
+  },
+  "rule": "slope of P(majority) over rho0 > 0 at b=0.3 and < 0 at b=10"
+ },
+ "omegas": [
+  0.5,
+  2.0
+ ],
+ "kernel_counts_sha256": "8c8167e4c9e5b9b633375c072c1773603a8e00c841ac6d7210a33778d7d2c881",
+ "forecast_slopes": {
+  "sim": 0.01295833333333333,
+  "obs": -0.0010541666666666666
+ },
+ "arms": {
+  "M4b_sim_nu0": {
+   "model": "claude:sonnet",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.00085,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.01,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "majA": {
+    "point": 0.02605,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.060499999999999825,
+    "lo": 0.0,
+    "hi": 0.08333333333333333
+   },
+   "cohesion": {
+    "point": 0.6249318181818183,
+    "kernel_lo": 0.6163636363636364,
+    "kernel_hi": 0.6336363636363636,
+    "lo": 0.6098484848484848,
+    "hi": 0.6401515151515151
+   },
+   "split": {
+    "point": 0.99875,
+    "kernel_lo": 0.99,
+    "kernel_hi": 1.0,
+    "lo": 1.0,
+    "hi": 1.0
+   },
+   "amp": {
+    "point": 0.02605,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.060499999999999825,
+    "lo": 0.0,
+    "hi": 0.08541666666666477
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.0,
+    "cohesion": 0.6363636363636365,
+    "split": 1.0,
+    "amp": 0.0
+   },
+   "null_linear": {
+    "consensusA": 0.001,
+    "majA": 0.213,
+    "cohesion": 0.5935,
+    "split": 0.999,
+    "amp": 0.213
+   }
+  },
+  "M4b_sim_nu12": {
+   "model": "claude:sonnet",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.1326,
+    "kernel_lo": 0.04,
+    "kernel_hi": 0.27049999999999985,
+    "lo": 0.0,
+    "hi": 0.2916666666666667
+   },
+   "majA": {
+    "point": 0.22195,
+    "kernel_lo": 0.12,
+    "kernel_hi": 0.34049999999999986,
+    "lo": 0.041666666666666664,
+    "hi": 0.4166666666666667
+   },
+   "cohesion": {
+    "point": 0.7898239130434783,
+    "kernel_lo": 0.7673695652173912,
+    "kernel_hi": 0.8245652173913042,
+    "lo": 0.7480978260869565,
+    "hi": 0.8369565217391305
+   },
+   "split": {
+    "point": 0.4595,
+    "kernel_lo": 0.33,
+    "kernel_hi": 0.5604999999999999,
+    "lo": 0.25,
+    "hi": 0.6666666666666666
+   },
+   "amp": {
+    "point": -0.052,
+    "kernel_lo": -0.14,
+    "kernel_hi": 0.03,
+    "lo": -0.20833333333333334,
+    "hi": 0.08333333333333333
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.242,
+    "cohesion": 0.5912391304347825,
+    "split": 0.9985,
+    "amp": 0.0085
+   },
+   "null_linear": {
+    "consensusA": 0.0,
+    "majA": 0.307,
+    "cohesion": 0.5950434782608695,
+    "split": 0.9995,
+    "amp": 0.0555
+   }
+  },
+  "M4b_sim_nu24": {
+   "model": "claude:sonnet",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.26805,
+    "kernel_lo": 0.13,
+    "kernel_hi": 0.45,
+    "lo": 0.08333333333333333,
+    "hi": 0.5416666666666666
+   },
+   "majA": {
+    "point": 0.33705,
+    "kernel_lo": 0.21,
+    "kernel_hi": 0.48,
+    "lo": 0.125,
+    "hi": 0.5833333333333334
+   },
+   "cohesion": {
+    "point": 0.8629928571428571,
+    "kernel_lo": 0.8248571428571428,
+    "kernel_hi": 0.9174428571428572,
+    "lo": 0.8047619047619047,
+    "hi": 0.9249999999999999
+   },
+   "split": {
+    "point": 0.16275,
+    "kernel_lo": 0.04,
+    "kernel_hi": 0.27049999999999985,
+    "lo": 0.0,
+    "hi": 0.3333333333333333
+   },
+   "amp": {
+    "point": -0.03175,
+    "kernel_lo": -0.1,
+    "kernel_hi": 0.04,
+    "lo": -0.16666666666666666,
+    "hi": 0.08333333333333333
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.3445,
+    "cohesion": 0.5869571428571428,
+    "split": 0.9995,
+    "amp": 0.0075
+   },
+   "null_linear": {
+    "consensusA": 0.001,
+    "majA": 0.3415,
+    "cohesion": 0.5891571428571428,
+    "split": 0.996,
+    "amp": -0.026
+   }
+  },
+  "M4b_obs_nu12": {
+   "model": "claude:sonnet",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.0005,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.0,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "majA": {
+    "point": 0.0063,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.02,
+    "lo": 0.0,
+    "hi": 0.041666666666666664
+   },
+   "cohesion": {
+    "point": 0.8027760869565217,
+    "kernel_lo": 0.7921304347826086,
+    "kernel_hi": 0.8117608695652173,
+    "lo": 0.7826086956521738,
+    "hi": 0.8206521739130435
+   },
+   "split": {
+    "point": 0.35905,
+    "kernel_lo": 0.26,
+    "kernel_hi": 0.45049999999999985,
+    "lo": 0.16666666666666666,
+    "hi": 0.5416666666666666
+   },
+   "amp": {
+    "point": 0.0063,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.02,
+    "lo": 0.0,
+    "hi": 0.041666666666666664
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.249,
+    "cohesion": 0.592391304347826,
+    "split": 0.9995,
+    "amp": 0.249
+   },
+   "null_linear": {
+    "consensusA": 0.0005,
+    "majA": 0.2515,
+    "cohesion": 0.5975434782608695,
+    "split": 0.9965,
+    "amp": 0.2515
+   }
+  },
+  "M4b_obs_nu24": {
+   "model": "claude:sonnet",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.00015,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.0,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "majA": {
+    "point": 0.00075,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.01,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "cohesion": {
+    "point": 0.8807528571428574,
+    "kernel_lo": 0.8748428571428574,
+    "kernel_hi": 0.8871571428571431,
+    "lo": 0.8702380952380951,
+    "hi": 0.8904761904761904
+   },
+   "split": {
+    "point": 0.00925,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.03,
+    "lo": 0.0,
+    "hi": 0.041666666666666664
+   },
+   "amp": {
+    "point": 0.00075,
+    "kernel_lo": 0.0,
+    "kernel_hi": 0.01,
+    "lo": 0.0,
+    "hi": 0.0
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.3585,
+    "cohesion": 0.5856999999999999,
+    "split": 0.9975,
+    "amp": 0.3585
+   },
+   "null_linear": {
+    "consensusA": 0.0005,
+    "majA": 0.2355,
+    "cohesion": 0.5994285714285713,
+    "split": 0.9925,
+    "amp": 0.2355
+   }
+  }
+ },
+ "draws": 200,
+ "per": 100
+}

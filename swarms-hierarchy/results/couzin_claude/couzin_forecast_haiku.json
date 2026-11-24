@@ -1,0 +1,306 @@
+{
+ "time": "2026-11-21 17:37:34",
+ "model": "claude:haiku",
+ "hartnett": {
+  "passed": true,
+  "results": {
+   "0.3": {
+    "p_majority": [
+     0.043333333333333335,
+     0.10666666666666667,
+     0.22833333333333333,
+     0.38166666666666665
+    ],
+    "slope": 0.378888888888889
+   },
+   "10.0": {
+    "p_majority": [
+     0.9233333333333333,
+     0.84,
+     0.7066666666666667,
+     0.59
+    ],
+    "slope": -0.3777777777777776
+   }
+  },
+  "rule": "slope of P(majority) over rho0 > 0 at b=0.3 and < 0 at b=10"
+ },
+ "omegas": [
+  0.5,
+  6.0
+ ],
+ "kernel_counts_sha256": "d855b11ea37cb76f3ff91324056b5c96cd4dc894f6186721e7f7cfc08ca85154",
+ "forecast_slopes": {
+  "sim": -0.007349999999999998,
+  "obs": -0.02190833333333334
+ },
+ "arms": {
+  "M4b_sim_nu0": {
+   "model": "claude:haiku",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.58365,
+    "kernel_lo": 0.4395,
+    "kernel_hi": 0.73,
+    "lo": 0.375,
+    "hi": 0.7916666666666666
+   },
+   "majA": {
+    "point": 0.6804,
+    "kernel_lo": 0.53,
+    "kernel_hi": 0.81,
+    "lo": 0.4583333333333333,
+    "hi": 0.875
+   },
+   "cohesion": {
+    "point": 0.8665590909090908,
+    "kernel_lo": 0.8253636363636363,
+    "kernel_hi": 0.9091818181818181,
+    "lo": 0.7954545454545454,
+    "hi": 0.9280303030303031
+   },
+   "split": {
+    "point": 0.2732,
+    "kernel_lo": 0.1695,
+    "kernel_hi": 0.38049999999999984,
+    "lo": 0.08333333333333333,
+    "hi": 0.4583333333333333
+   },
+   "amp": {
+    "point": 0.6456,
+    "kernel_lo": 0.5,
+    "kernel_hi": 0.77,
+    "lo": 0.4166666666666667,
+    "hi": 0.8333333333333334
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.0325,
+    "cohesion": 0.6141818181818183,
+    "split": 1.0,
+    "amp": 0.0055
+   },
+   "null_linear": {
+    "consensusA": 0.3275,
+    "majA": 0.813,
+    "cohesion": 0.7136363636363635,
+    "split": 0.662,
+    "amp": 0.782
+   }
+  },
+  "M4b_sim_nu12": {
+   "model": "claude:haiku",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.4522,
+    "kernel_lo": 0.36,
+    "kernel_hi": 0.5504999999999999,
+    "lo": 0.25,
+    "hi": 0.6666666666666666
+   },
+   "majA": {
+    "point": 0.51745,
+    "kernel_lo": 0.42,
+    "kernel_hi": 0.61,
+    "lo": 0.3333333333333333,
+    "hi": 0.7083333333333334
+   },
+   "cohesion": {
+    "point": 0.9007956521739132,
+    "kernel_lo": 0.8782608695652173,
+    "kernel_hi": 0.9287826086956522,
+    "lo": 0.8496376811594204,
+    "hi": 0.9438405797101449
+   },
+   "split": {
+    "point": 0.1625,
+    "kernel_lo": 0.08,
+    "kernel_hi": 0.23,
+    "lo": 0.041666666666666664,
+    "hi": 0.3333333333333333
+   },
+   "amp": {
+    "point": 0.2222,
+    "kernel_lo": 0.08,
+    "kernel_hi": 0.34049999999999986,
+    "lo": 0.041666666666666664,
+    "hi": 0.4166666666666667
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.2555,
+    "cohesion": 0.5777608695652172,
+    "split": 1.0,
+    "amp": 0.011
+   },
+   "null_linear": {
+    "consensusA": 0.0845,
+    "majA": 0.709,
+    "cohesion": 0.6468913043478262,
+    "split": 0.9075,
+    "amp": 0.4645
+   }
+  },
+  "M4b_sim_nu24": {
+   "model": "claude:haiku",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.4513,
+    "kernel_lo": 0.36,
+    "kernel_hi": 0.55,
+    "lo": 0.25,
+    "hi": 0.625
+   },
+   "majA": {
+    "point": 0.504,
+    "kernel_lo": 0.4095,
+    "kernel_hi": 0.59,
+    "lo": 0.3333333333333333,
+    "hi": 0.7083333333333334
+   },
+   "cohesion": {
+    "point": 0.9192857142857143,
+    "kernel_lo": 0.8873857142857144,
+    "kernel_hi": 0.9566571428571427,
+    "lo": 0.8642857142857143,
+    "hi": 0.9654761904761905
+   },
+   "split": {
+    "point": 0.1181,
+    "kernel_lo": 0.03,
+    "kernel_hi": 0.2,
+    "lo": 0.0,
+    "hi": 0.25
+   },
+   "amp": {
+    "point": 0.1294,
+    "kernel_lo": 0.01,
+    "kernel_hi": 0.24,
+    "lo": -0.041666666666666664,
+    "hi": 0.3333333333333333
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.317,
+    "cohesion": 0.5626142857142856,
+    "split": 1.0,
+    "amp": 0.0035
+   },
+   "null_linear": {
+    "consensusA": 0.0495,
+    "majA": 0.655,
+    "cohesion": 0.6221714285714286,
+    "split": 0.947,
+    "amp": 0.3235
+   }
+  },
+  "M4b_obs_nu12": {
+   "model": "claude:haiku",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.20325,
+    "kernel_lo": 0.09,
+    "kernel_hi": 0.34049999999999986,
+    "lo": 0.041666666666666664,
+    "hi": 0.37708333333333144
+   },
+   "majA": {
+    "point": 0.26685,
+    "kernel_lo": 0.1495,
+    "kernel_hi": 0.4,
+    "lo": 0.08333333333333333,
+    "hi": 0.4583333333333333
+   },
+   "cohesion": {
+    "point": 0.8761782608695652,
+    "kernel_lo": 0.8473695652173913,
+    "kernel_hi": 0.9006086956521739,
+    "lo": 0.8260869565217391,
+    "hi": 0.9202898550724639
+   },
+   "split": {
+    "point": 0.18845,
+    "kernel_lo": 0.12,
+    "kernel_hi": 0.27,
+    "lo": 0.041666666666666664,
+    "hi": 0.3333333333333333
+   },
+   "amp": {
+    "point": 0.23175,
+    "kernel_lo": 0.13,
+    "kernel_hi": 0.33,
+    "lo": 0.08333333333333333,
+    "hi": 0.4166666666666667
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.251,
+    "cohesion": 0.5779347826086956,
+    "split": 0.9995,
+    "amp": 0.2165
+   },
+   "null_linear": {
+    "consensusA": 0.077,
+    "majA": 0.6855,
+    "cohesion": 0.6423695652173914,
+    "split": 0.9135,
+    "amp": 0.661
+   }
+  },
+  "M4b_obs_nu24": {
+   "model": "claude:haiku",
+   "groups": 24,
+   "consensusA": {
+    "point": 0.11775,
+    "kernel_lo": 0.03,
+    "kernel_hi": 0.23049999999999984,
+    "lo": 0.0,
+    "hi": 0.2916666666666667
+   },
+   "majA": {
+    "point": 0.1546,
+    "kernel_lo": 0.05,
+    "kernel_hi": 0.28,
+    "lo": 0.0,
+    "hi": 0.3333333333333333
+   },
+   "cohesion": {
+    "point": 0.91099,
+    "kernel_lo": 0.8896999999999998,
+    "kernel_hi": 0.9349142857142859,
+    "lo": 0.8666666666666667,
+    "hi": 0.9464285714285713
+   },
+   "split": {
+    "point": 0.1015,
+    "kernel_lo": 0.05,
+    "kernel_hi": 0.16049999999999984,
+    "lo": 0.0,
+    "hi": 0.25
+   },
+   "amp": {
+    "point": 0.1195,
+    "kernel_lo": 0.049500000000000016,
+    "kernel_hi": 0.21049999999999983,
+    "lo": 0.0,
+    "hi": 0.2916666666666667
+   },
+   "null_independent": {
+    "consensusA": 0.0,
+    "majA": 0.314,
+    "cohesion": 0.5639,
+    "split": 1.0,
+    "amp": 0.29
+   },
+   "null_linear": {
+    "consensusA": 0.034,
+    "majA": 0.6195,
+    "cohesion": 0.6155571428571427,
+    "split": 0.961,
+    "amp": 0.589
+   }
+  }
+ },
+ "draws": 200,
+ "per": 100
+}
