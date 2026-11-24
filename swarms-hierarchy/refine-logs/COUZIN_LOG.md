@@ -146,3 +146,15 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
   - *Stamps.* Main study: the old stamp is kept as `results/couzin_prereg_freeze_v2.json`. Follow-up: the old stamp
     is kept as `results/couzin_followup_freeze_v1.json`. Both were then restamped. No data were evaluated as final
     before the fix.
+
+## 2026-11-24 00:39: owner puts the tournament retest second in line
+
+- **New order:** RT-R (running) → tournament T-A1 retest → Couzin queue 2 → Rosen phase 3.
+- **Tournament retest.** Relaunched unchanged and directly as `tour_queue3.sh 150 58327 72577` (pid 83181), no
+  longer inside the waiting wrapper. Couzin's busy check matches it, so Couzin queue 2 (pid 71693, unchanged) starts
+  only after it ends. This was verified live: the check reported "busy".
+- **Rosen phase 3.** The waiter was relaunched as `rosen_p3_wait.sh 200 71693`. Without that, Rosen and Couzin
+  could both have started in the gap after the retest. Couzin's launcher name does not match Rosen's pattern, and
+  their idle checks have the same timing. Waiting on pid 71693 covers the whole of Couzin queue 2, because the
+  launcher execs the queue under the same pid.
+- **Interruptions.** None: every restarted process was only waiting. Notes were left in both studies' logs.
