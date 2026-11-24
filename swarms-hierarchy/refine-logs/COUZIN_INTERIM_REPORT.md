@@ -112,14 +112,14 @@ registered. It was resumed at 00:18 on 24 Nov. It will probably need several usa
 ## 5. What comes next
 
 - **Sonnet:** the remaining four settings, then the final follow-up evaluation (`couzin_followup.py eval`).
-- **Evaluator fix before that evaluation.** The current script computes a test even when a model has data for only
+- **Evaluator fix: done (M-A3, 2026-11-24).** Tests now run only on complete arms, and Holm covers only computed tests.
   one setting, and that meaningless test enters the Holm correction. It needs a small amendment to require all
   three n_u levels. The Haiku numbers above use Holm over Haiku's own tests.
 - **Main study queue 2:**
   - M1 kernels on six models → M2 calibration → frozen forecast → M3 N-scaling, M4 buffer, M4b, M5 convention,
     M6 claims, M7 stubborn agent.
   - Size: about 120k calls, about 40 h, about 12 credits.
-  - It waits behind the response-threshold rest-framing run and Rosen phase 3. The ledger is at about 123 of the
+  - Since 24 Nov it is next in line, behind only the response-threshold rest-framing run (owner reorder). The ledger is at about 123 of the
     200 cap.
 - **Gemma comparison.** Once M4 and M4b run, the Haiku and Sonnet results can be set against Gemma's. The question
   is whether the sign of the uninformed effect tracks the measured nonlinearity across all models.

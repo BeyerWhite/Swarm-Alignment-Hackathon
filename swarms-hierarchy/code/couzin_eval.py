@@ -3,6 +3,8 @@
 The unit is the group. One-sided tests in the registered direction; bootstrap over groups within arms (5,000
 resamples); Holm within families A (Couzin 2005: H1, H3a, H3b, H4a, H4b), B (Couzin 2011: H5sim, H5obs, H6),
 C (tier 2: H9, H10, H11a, H11b). Calibration arms (M2*) are never tested.
+M-A3: a test runs only when every arm it uses has its planned number of groups (from the frozen forecast);
+otherwise it is reported as incomplete and stays out of Holm.
 Usage: couzin_eval.py [--pilot]   -> results/couzin_eval.json
 """
 import argparse, json, math, sys
@@ -82,24 +84,37 @@ def evaluate(pilot=False, seed=5):
         o["groups"] = len(G[aid]); o["invalid_rate"] = sum(g["invalid"] for g in G[aid]) / max(1, sum(g["decisions"] for g in G[aid]))
         res["arms"][aid] = o
     T = res["tests"]
+
+    def short(*aids):          # M-A3: arms below their planned group count (none -> the test may run)
+        return {a: len(G.get(a, [])) for a in aids if len(G.get(a, [])) < A.get(a, {}).get("groups", 1)}
+
+    def skip(name, miss):
+        T[name] = dict(status=f"incomplete: {miss}; no test")
+    m3ids = [f"M3_N{N}_p{p}" for N, p in M3_CELLS]
     # H1
     X, y = [], []
     ps = sorted({p for _, p in M3_CELLS})
     for N, p in M3_CELLS:
         for v in vals(G, f"M3_N{N}_p{p}", "consensusA"):
             X.append([math.log2(N)] + [float(p == q) for q in ps]); y.append(v)
-    if y:
+    if short(*m3ids):
+        skip("H1", short(*m3ids))
+    elif y:
         T["H1"] = dict(**wald_slope(np.array(X), np.array(y)), status=F.get("h1_status"), n=len(y))
     # H2 (secondary)
     X, y = [], []
     for aid, N in (("M3_N5_p0.2", 5), ("M3_N10_p0.1", 10), ("M3_N20_p0.05", 20)):
         for v in vals(G, aid, "consensusA"):
             X.append([math.log2(N), 1.0]); y.append(v)
-    if y:
+    if short("M3_N5_p0.2", "M3_N10_p0.1", "M3_N20_p0.05"):
+        skip("H2", short("M3_N5_p0.2", "M3_N10_p0.1", "M3_N20_p0.05"))
+    elif y:
         T["H2"] = dict(**wald_slope(np.array(X), np.array(y), direction=-1), secondary=True)
     # H3a amplification > 0; H3b consensus above the independent-agent null
     amp = np.concatenate([vals(G, f"M3_N{N}_p{p}", "amp") for N, p in M3_CELLS] or [np.array([])])
-    if len(amp):
+    if short(*m3ids):
+        skip("H3a", short(*m3ids)); skip("H3b", short(*m3ids))
+    elif len(amp):
         bs = np.array([rng.choice(amp, len(amp)).mean() for _ in range(B)])
         T["H3a"] = dict(mean=float(amp.mean()), lo95=float(np.quantile(bs, .05)), p=p_greater(bs))
         diffs = []
@@ -114,12 +129,17 @@ def evaluate(pilot=False, seed=5):
         T["H3b"] = dict(mean_excess=float(np.mean(diffs)), lo95=float(np.quantile(diffs, .05)), p=p_greater(diffs))
     # H4: strong vs weak omega at N20 p.1
     s_, w_ = "M3_N20_p0.1", "M3_N20_p0.1_w"
-    if G.get(s_) and G.get(w_):
+    if short(s_, w_):
+        skip("H4a", short(s_, w_)); skip("H4b", short(s_, w_))
+    elif G.get(s_) and G.get(w_):
         for key, name in (("majA", "H4a"), ("split", "H4b")):
             bs = boot_mean_diff(vals(G, s_, key), vals(G, w_, key), rng)
             T[name] = dict(diff=float(np.nanmean(bs)), lo95=float(np.nanquantile(bs, .05)), p=p_greater(bs))
     # H5: minority wins falls with n_u, per protocol
     for pr in ("sim", "obs"):
+        ids = ["M4_sim_nu0"] + [f"M4_{pr}_nu{n}" for n in (6, 12, 24)]
+        if short(*ids):
+            skip(f"H5{pr}", short(*ids)); continue
         X, y = [], []
         for nu in (0, 6, 12, 24):
             aid = "M4_sim_nu0" if nu == 0 else f"M4_{pr}_nu{nu}"
@@ -129,7 +149,9 @@ def evaluate(pilot=False, seed=5):
             T[f"H5{pr}"] = wald_slope(np.array(X), np.array(y), direction=-1)
     # H6: observe-first, n_u >= 12 pooled, upper 95% < .5
     v = np.concatenate([vals(G, "M4_obs_nu12", "majA"), vals(G, "M4_obs_nu24", "majA")])
-    if len(v):
+    if short("M4_obs_nu12", "M4_obs_nu24"):
+        skip("H6", short("M4_obs_nu12", "M4_obs_nu24"))
+    elif len(v):
         up = wilson_upper(v.sum(), len(v))
         T["H6"] = dict(p_minority=float(v.mean()), upper95=up, supported=bool(up < .5),
                        p=float(norm.cdf((v.mean() - .5) / max(math.sqrt(.25 / len(v)), 1e-9))))
@@ -174,31 +196,40 @@ def evaluate(pilot=False, seed=5):
             for a, nu in zip(arms, nus):
                 for v in vals(G, a, "majA"):
                     X.append([nu, 1.0]); y.append(v)
-            if y and len(fpts) == 3:
+            if short(*arms):
+                h9[pr] = dict(status=f"incomplete: {short(*arms)}; no test")
+            elif y and len(fpts) == 3:
                 obs = wald_slope(np.array(X), np.array(y))
                 fs = float(np.polyfit(nus, fpts, 1)[0])
                 inside = [bool(A[a]["majA"]["lo"] <= vals(G, a, "majA").mean() <= A[a]["majA"]["hi"]) for a in arms if len(vals(G, a, "majA"))]
                 h9[pr] = dict(forecast_slope=fs, observed_slope=obs["slope"], same_sign=bool(np.sign(fs) == np.sign(obs["slope"])),
                               p_sign=float(1 - norm.cdf(np.sign(fs) * obs["z"])), arms_inside=inside)
         T["H9"] = h9
-        if h9:
+        if h9 and all("p_sign" in v for v in h9.values()):
             T["H9"]["p"] = max(v["p_sign"] for v in h9.values())
     # H10: convention critical mass not lower at N 40 (TOST-style upper bound < margin)
     lv = F["m5_levels"]
     a10 = [vals(G, f"M5_N10_p{p}", "consensusA") for p in lv]; a40 = [vals(G, f"M5_N40_p{p}", "consensusA") for p in lv]
-    if all(len(x) for x in a10 + a40):
+    m5ids = [f"M5_N{N}_p{p}" for N in (10, 40) for p in lv]
+    if short(*m5ids):
+        skip("H10", short(*m5ids))
+    elif all(len(x) for x in a10 + a40):
         bs = np.array([np.mean([rng.choice(b, len(b)).mean() - rng.choice(a, len(a)).mean() for a, b in zip(a10, a40)]) for _ in range(B)])
         m = F["h10_margin"]
         T["H10"] = dict(diff=float(bs.mean()), hi95=float(np.quantile(bs, .95)), margin=m, supported=bool(np.quantile(bs, .95) < m),
                         p=float((np.sum(bs >= m) + 1) / (len(bs) + 1)))
     # H11: claims raise target consensus
     for name, c6, c3 in (("H11a", "M6_N10_n1", "M3_N10_p0.1"), ("H11b", "M6_N40_n2", "M3_N40_p0.05")):
-        if G.get(c6) and G.get(c3):
+        if short(c6, c3):
+            skip(name, short(c6, c3))
+        elif G.get(c6) and G.get(c3):
             bs = boot_mean_diff(vals(G, c6, "consensusA"), vals(G, c3, "consensusA"), rng)
             T[name] = dict(diff=float(np.nanmean(bs)), lo95=float(np.nanquantile(bs, .05)), p=p_greater(bs))
     # M7 (secondary): does the group follow the DeepSeek agent's first choice more than a random Gemma agent's?
     for aid in ("M7_N10", "M7_N20"):
-        if G.get(aid):
+        if short(aid):
+            skip(aid, short(aid))
+        elif G.get(aid):
             bs = boot_mean_diff(vals(G, aid, "follow_extra"), vals(G, aid, "follow_base"), rng)
             T[aid] = dict(follow_extra=float(vals(G, aid, "follow_extra").mean()), follow_base=float(vals(G, aid, "follow_base").mean()),
                           lo95=float(np.nanquantile(bs, .05)), p=p_greater(bs), secondary=True)

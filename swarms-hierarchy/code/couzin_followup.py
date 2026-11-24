@@ -15,7 +15,8 @@ Usage (one model per call except gate):
   couzin_followup.py calib    --model m           M2c_obs_nu6 calibration, 8 groups
   couzin_followup.py forecast --model m           Hartnett check + write-once forecast for the model's M4b arms
   couzin_followup.py pop      --model m           the M4b arms, 24 groups each
-  couzin_followup.py eval                         F1-F3 for every model with data -> couzin_followup_eval.json
+  couzin_followup.py eval                         F1-F3 for every model with complete arms -> couzin_followup_eval.json
+                                                  (M-A3: no test from incomplete n_u levels; Holm only over computed F1s)
   couzin_followup.py stamp | check                hash stamp of the amendment files (write-once) / check
 """
 import argparse, hashlib, json, math, os, sys, threading, time
@@ -165,26 +166,40 @@ def evaluate():
                                     inside=bool(fa["lo"] <= v.mean() <= fa["hi"]),
                                     cohesion=float(vals(G, a, "cohesion").mean()),
                                     invalid_rate=sum(g["invalid"] for g in G[a]) / max(1, sum(g["decisions"] for g in G[a])))
-        for pr in ("sim", "obs"):
+        need = math.ceil(GROUPS / _scale())
+        n_of = lambda a: len(vals(G, a, "majA"))
+        for pr in ("sim", "obs"):           # M-A3: tests only when all three n_u levels are complete
+            arms = ["M4b_sim_nu0", f"M4b_{pr}_nu12", f"M4b_{pr}_nu24"]
+            short_arms = {a: n_of(a) for a in arms if n_of(a) < need}
+            if short_arms:
+                for k in ("F1", "F2"):
+                    o["tests"][f"{k}{pr}"] = dict(status=f"incomplete: {short_arms} of {need} groups; no test")
+                continue
             X, y = [], []
-            for a, nu in zip(["M4b_sim_nu0", f"M4b_{pr}_nu12", f"M4b_{pr}_nu24"], (0, 12, 24)):
+            for a, nu in zip(arms, (0, 12, 24)):
                 for v in vals(G, a, "majA"):
                     X.append([nu, 1.0]); y.append(v)
-            if len(set(y)) > 1:
-                w = wald_slope(np.array(X), np.array(y))
-                fs = F["forecast_slopes"][pr]
-                t = dict(forecast_slope=fs, forecast_change_0_24=24 * fs, observed_slope=w["slope"], z=w["z"],
-                         observed_slope_ci90=[w["slope"] - 1.645 * w["se"], w["slope"] + 1.645 * w["se"]])
-                if abs(24 * fs) >= FLAT:      # sign test only when the forecast predicts a change of >= 5 points
-                    t.update(same_sign=bool(np.sign(fs) == np.sign(w["slope"])), p=float(1 - norm.cdf(np.sign(fs) * w["z"])))
-                else:
-                    t.update(status="flat forecast: no sign test; coverage of the arm intervals is the test")
-                o["tests"][f"F1{pr}"] = t
-                o["tests"][f"F2{pr}"] = dict(**wald_slope(np.array(X), np.array(y), direction=-1))
-        v = np.concatenate([vals(G, "M4b_obs_nu12", "majA"), vals(G, "M4b_obs_nu24", "majA")])
-        if len(v):
+            fs = F["forecast_slopes"][pr]
+            if len(set(y)) < 2:
+                msg = f"no variation: every group scored {y[0]}; slope not estimable"
+                o["tests"][f"F1{pr}"] = dict(forecast_slope=fs, forecast_change_0_24=24 * fs, status=msg)
+                o["tests"][f"F2{pr}"] = dict(status=msg + "; not supported")
+                continue
+            w = wald_slope(np.array(X), np.array(y))
+            t = dict(forecast_slope=fs, forecast_change_0_24=24 * fs, observed_slope=w["slope"], z=w["z"],
+                     observed_slope_ci90=[w["slope"] - 1.645 * w["se"], w["slope"] + 1.645 * w["se"]])
+            if abs(24 * fs) >= FLAT:      # sign test only when the forecast predicts a change of >= 5 points
+                t.update(same_sign=bool(np.sign(fs) == np.sign(w["slope"])), p=float(1 - norm.cdf(np.sign(fs) * w["z"])))
+            else:
+                t.update(status="flat forecast: no sign test; coverage of the arm intervals is the test")
+            o["tests"][f"F1{pr}"] = t
+            o["tests"][f"F2{pr}"] = dict(**wald_slope(np.array(X), np.array(y), direction=-1))
+        if n_of("M4b_obs_nu12") >= need and n_of("M4b_obs_nu24") >= need:
+            v = np.concatenate([vals(G, "M4b_obs_nu12", "majA"), vals(G, "M4b_obs_nu24", "majA")])
             up = wilson_upper(v.sum(), len(v))
             o["tests"]["F3"] = dict(p_minority=float(v.mean()), upper95=up, supported=bool(up < .5))
+        else:
+            o["tests"]["F3"] = dict(status="incomplete: observe-first arms not complete; no test")
         o["coverage"] = f"{sum(a['inside'] for a in o['arms'].values())}/{len(o['arms'])}"
         res[m] = o
     ps = {f"{m}|{k}": t["p"] for m, o in res.items() for k, t in o["tests"].items() if k.startswith("F1") and "p" in t}

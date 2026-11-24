@@ -120,3 +120,29 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
 - **Logs.** Earlier runner logs are appended to `scratch/couzin_claude_run_all.log`; the wrapper's own log is
   `scratch/couzin_claude_autoresume.log`.
 - **Progress at hand-over:** Sonnet M4b_sim_nu0 24/24 and M4b_sim_nu12 11/24.
+
+## 2026-11-24 00:32: owner reordered the account; M-A3 evaluator fix
+
+- **Reorder (owner request: Couzin queue 2 next in line).** Both jobs restarted below were only waiting, so nothing
+  in flight was interrupted.
+  - Couzin queue 2 was relaunched as `couzin_launch.sh 2 200 72577` (pid 71693). It waits only for the running RT
+    phase 2 job, then for an idle account.
+  - The tournament T-A1 retest (`tour_queue3.sh`) was relaunched inside a `bash -c` wrapper that waits for pid 71693,
+    then execs the same command. The Couzin busy check ignores `bash -c` wrappers, so the two cannot deadlock. A note
+    is in `tournament/.../scratch/tour_queue3.log`.
+  - Rosen phase 3 (`rosen_p3_wait.sh`, unchanged) waits while any `queue[N].sh` text is visible, so it stays behind
+    both.
+- **M-A3: evaluators run a test only on complete arms.**
+  - *The bug.* `couzin_followup.py eval` computed F1 and F2 from whatever n_u levels had data. A model with only the
+    n_u = 0 arm produced a meaningless slope that entered the Holm correction. `couzin_eval.py` had the same weakness
+    for H1–H6, H9–H11 and M7.
+  - *The fix.* A test now runs only when every arm it uses has its planned number of groups: 24 per arm in the
+    follow-up, and the frozen forecast's `groups` in the main study. Otherwise it is reported as "incomplete" and
+    stays out of Holm. In the follow-up, a complete set of arms with no variation (every group scoring the same) is
+    reported as "slope not estimable", and F2 counts as not supported.
+  - *Checks.* On the real Claude data, Haiku's numbers are unchanged; Holm is now over Haiku's own two F1 tests, so
+    F1obs p_holm = 0.0031, as in the interim report. Sonnet is all "incomplete". On the dry-run data, all tests ran
+    with complete arms; with M4_obs_nu24 removed, only H5obs and H6 were skipped.
+  - *Stamps.* Main study: the old stamp is kept as `results/couzin_prereg_freeze_v2.json`. Follow-up: the old stamp
+    is kept as `results/couzin_followup_freeze_v1.json`. Both were then restamped. No data were evaluated as final
+    before the fix.
