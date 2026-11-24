@@ -157,6 +157,18 @@ Where the models miss, there are slightly fewer decided contests than they imply
 here is persistence in specific pairs: one agent giving way to one partner beyond what the visible record of that
 pair (d, last ten rounds) shows.
 
+## Post hoc predictor screen (24 Nov, after E14; not registered)
+
+Four candidate predictors of which cells respond, scored on the 13 cells with calibration rows and groups, no calls
+(`code/chase_predictors_posthoc.py` → `results/chase_predictors_posthoc.json`; full table in the log, 24 Nov).
+- **Yielding to strong partners** (LEAD at a partner net of −2..2 minus at +3 or better): every responsive cell
+  scores 0.24–0.60, nine of the ten others 0.16 or less. The exception, Gemma-4-26B `comp` (0.29), lost ground (−0.11).
+- **The full simulation forecast** from the same rows sorts 12 of 13 as well, but misses Qwen3.5-397B `comp`, the
+  miss known since E7. It does separate Gemma-4-26B `comp`. On E14's fresh cells it is 5 of 5 (all null).
+- **Room to respond** (how far fitted LEAD probabilities spread) does not predict; the fitted slope on the partner's
+  record misses Qwen, whose response is a threshold.
+- No single score sorts all 13 cells. Yielding looks necessary in these data, and is not sufficient.
+
 ## Limits
 
 - E11–E13 analyse groups already analysed. E11's predictions were formed from the E9 and E10 sequence results.

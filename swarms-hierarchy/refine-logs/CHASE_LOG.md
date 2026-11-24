@@ -900,3 +900,50 @@ upper bound below 0.17, holds. **The rule fails** (3 of 5 cells correct). Noted 
 gained, so a rule that never predicts a gain would have scored 5 of 5; both gain predictions were close calls (P(dq > 0)
 0.53 and 0.71, 90% intervals across zero). Invalid answers: GLM-5.2 LOG 349 (about 4–5% of decisions), Gemma-4-31B
 `norm0` 111 and 86; the others 0–1.
+
+## 2026-11-24
+
+**Post hoc predictor screen (not registered; after E14, at the owner's request).** Four candidate predictors of
+which cells show the bystander effect, scored on the 13 cells that have both calibration rows and OWN/LOG groups of
+four, no calls. `code/chase_predictors_posthoc.py` (sha256 bd091e41…) → `results/chase_predictors_posthoc.json`
+(e8b2311b…), 100 row-bootstrap refits × 80 groups per arm for the forecast interval, 1,000 groups for its point.
+Calibration rows as E14 used them; every cell fitted with the K form, since the E2 and E5 rows lack the extras.
+
+| Cell | Observed LOG − OWN | 1. Yield to strong partner | 1. Fitted −b_p | 2. Forecast LOG − OWN [90%] | 3. SD fitted | 4. Range |
+|---|---|---|---|---|---|---|
+| **Gemma-4-31B `norm100`** | **+0.21** | 0.60 | 1.07 | +0.32 [+0.21, +0.46] | 0.41 | 0.61 |
+| Gemma-4-26B `comp` | −0.11 | 0.29 | 0.12 | −0.08 [−0.25, +0.09] | 0.21 | 0.32 |
+| **Qwen3.5-397B `comp`** | **+0.29** | 0.26 | 0.16 | −0.07 [−0.27, +0.08] | 0.14 | 0.24 |
+| **Gemma-4-31B `comp`** | **+0.20** | 0.24 | 1.11 | +0.22 [+0.01, +0.34] | 0.12 | 0.30 |
+| Gemma-4-31B `norm0` | +0.12 | 0.16 | 0.15 | +0.05 [−0.06, +0.18] | 0.12 | 0.15 |
+| Qwen3.5-397B `norm100` | +0.00 | 0.13 | 0.11 | +0.06 [−0.15, +0.14] | 0.03 | 0.06 |
+| Qwen3.8-27B `comp` | +0.04 | 0.12 | 0.04 | +0.00 [−0.20, +0.10] | 0.15 | 0.13 |
+| Gemma-4-26B `norm0` | +0.02 | 0.10 | 0.03 | +0.10 [−0.00, +0.23] | 0.15 | 0.13 |
+| Qwen3.5-397B `norm0` | −0.01 | 0.08 | 0.11 | +0.03 [−0.11, +0.18] | 0.03 | 0.05 |
+| GLM-5.2 `norm100` | −0.02 | 0.06 | 0.14 | −0.05 [−0.12, +0.15] | 0.02 | 0.03 |
+| Gemma-4-26B `norm100` | −0.11 | 0.05 | 0.20 | −0.08 [−0.18, +0.09] | 0.03 | 0.07 |
+| GLM-5.2 `comp` | +0.00 | 0.01 | −0.01 | −0.03 [−0.18, +0.16] | 0.12 | 0.04 |
+| DeepSeek-V4-Flash `comp` | +0.05 | 0.00 | 0.00 | −0.01 [−0.13, +0.13] | 0.00 | 0.00 |
+
+Bold: the three responsive cells. "Yield to strong partner": LEAD rate in the LOG calibration rows with the partner's
+third-party net at −2..2 minus that at +3 or better. "Range": LEAD at −3 or worse minus LEAD at +3 or better.
+Spearman ρ with the observed difference over the 13 cells: yield +0.46, −b_p +0.27, forecast +0.54 (p 0.056),
+SD fitted +0.32, mean p(1 − p) +0.01, range +0.43.
+
+- **Yielding to a strong partner is in every responsive cell but is not enough.** The three responsive cells score
+  0.24–0.60 and nine of the other ten 0.16 or less; at 0.2 the score sorts 12 of 13. The exception is Gemma-4-26B
+  `comp` (0.29), which went the other way (−0.11). A one-off check holding the shared record's sign fixed leaves it
+  at +0.21 (Qwen3.5-397B `comp` +0.18, Gemma-4-31B `comp` +0.24), so its yielding is not only to its own losses.
+- **The fitted slope misses Qwen.** −b_p puts both Gemma-4-31B cells far ahead (1.07, 1.11; all others 0.20 or less)
+  but Qwen3.5-397B `comp` among the nulls (0.16). Its response is a threshold (LEAD 0.52, 0.53, 0.28 by bin), which
+  a slope on the log scale dilutes; this matches E12.
+- **The full forecast sorts 12 of 13, missing the other way.** Above +0.15 it calls both Gemma-4-31B cells and no
+  null, and it separates Gemma-4-26B `comp` (−0.08). It misses Qwen3.5-397B `comp` (−0.07), the miss known since E7.
+  On E14's five fresh cells it gives −0.08 to +0.05, all null, all right. The one-line E14 rule got 3 of 5 there.
+- **Room to respond does not predict.** Gemma-4-31B `comp` leads 0.92 of the time and responds; GLM-5.2 leads
+  0.89–0.91 and does not. The SD of the fitted probabilities ranks the responsive cells 1, 5 and 8.
+- **The range score carries the same information as yielding** (responsive cells ranked 1, 3 and 4, Gemma-4-26B
+  `comp` 2nd), because the cells barely respond to weak partners.
+- **Reading.** No single score sorts all 13. Yielding to strong partners and the forecast each miss one cell, a
+  different one: Gemma-4-26B `comp` for yielding, Qwen3.5-397B `comp` for the forecast. With three responsive cells
+  any rule found here is a hypothesis to register on fresh cells, not evidence.

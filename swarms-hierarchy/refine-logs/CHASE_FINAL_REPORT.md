@@ -457,7 +457,9 @@ calls; E14 needed calls. All four have run (`CHASE_C10_REPORT.md`):
 Still open: in two cells a model of independent single decisions, fitted on the very decisions groups made, yields
 less hierarchy than the groups showed. A post hoc check rules out complementary answers within a contest;
 persistence in specific pairs beyond the visible record is untested. Which cells show the bystander effect at all
-cannot yet be predicted from single decisions (E14).
+cannot yet be predicted from single decisions (E14). A post hoc screen (24 Nov) found that every responsive cell
+yields clearly to partners with strong third-party records (one null cell, Gemma-4-26B `comp`, does too). The full
+simulation forecast sorts the cells about as well but misses Qwen3.5-397B `comp`. Neither is registered.
 
 ## 9. Files
 
@@ -471,5 +473,5 @@ cannot yet be predicted from single decisions (E14).
 | Evaluations | `results/chase_e3_eval.json`, `chase_e4_eval.json`, `chase_e5_eval.json` |
 | Sequence re-count (post hoc) | `code/chase_seq_posthoc.py` → `results/chase_seq_posthoc.json` |
 | Follow-ups (C8, C9) | reports `CHASE_E7_REPORT.md` … `CHASE_E10_REPORT.md`; forecasts `results/chase_e6_predictions.json` … `chase_e8_predictions.json`; populations `chase_e7_pop.jsonl` … `chase_e10_pop.jsonl` (E10 plan `chase_e10_plan.json`); evaluations `code/chase_e7_eval.py` … `chase_e10_eval.py` → `results/chase_e7_eval.json` … `chase_e10_eval.json`; E6 part A `results/chase_e6a.json` |
-| Follow-ups (C10) | report `CHASE_C10_REPORT.md`; `code/chase_c10.py`, `chase_e11_eval.py`, `chase_e12.py`, `chase_e13.py` → `results/chase_e11_eval.json`, `chase_e12.json`, `chase_e13.json`; E14 `code/chase_e14.py` → `results/chase_e14_statecal.jsonl`, `chase_e14_rule.json`, `chase_e14_pop.jsonl`, `chase_e14_eval.json` |
+| Follow-ups (C10) | report `CHASE_C10_REPORT.md`; `code/chase_c10.py`, `chase_e11_eval.py`, `chase_e12.py`, `chase_e13.py` → `results/chase_e11_eval.json`, `chase_e12.json`, `chase_e13.json`; E14 `code/chase_e14.py` → `results/chase_e14_statecal.jsonl`, `chase_e14_rule.json`, `chase_e14_pop.jsonl`, `chase_e14_eval.json`; post hoc predictor screen `code/chase_predictors_posthoc.py` → `results/chase_predictors_posthoc.json` |
 | Code | `code/chase_*.py`; hashes of every frozen script and forecast are in the log |
