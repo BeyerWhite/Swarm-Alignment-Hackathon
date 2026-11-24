@@ -947,3 +947,126 @@ SD fitted +0.32, mean p(1 − p) +0.01, range +0.43.
 - **Reading.** No single score sorts all 13. Yielding to strong partners and the forecast each miss one cell, a
   different one: Gemma-4-26B `comp` for yielding, Qwen3.5-397B `comp` for the forecast. With three responsive cells
   any rule found here is a hypothesis to register on fresh cells, not evidence.
+
+### Amendment C11 (registered 2026-11-24 16:25, owner's approval "Register and launch"): E15, two rules for which cells show the bystander effect
+
+Written before any E15 calibration row or group exists. The owner chose the pool ("norm50 + Luna + Sonnet", then "Swap in Haiku" for Sonnet). Only the 20-call smoke test per CLI model has been run, with the parse rate looked at and nothing kept.
+
+### Why
+
+E14's one-line rule (round-1 LEAD rates) failed, and its five fresh cells were all null. That made it a weak test.
+A post hoc screen of the 13 known cells (log, 24 Nov) found two candidate rules. Each sorts 12 of the 13 cells, and
+each misses a different one:
+- **Y, yielding to strong partners**: in the LOG calibration rows, LEAD rate when the partner's third-party net is
+  −2..2 minus LEAD rate when it is +3 or better. Predicts a gain iff Y ≥ 0.20. Misses Gemma-4-26B `comp`.
+- **F, the full forecast**: simulate groups of four from K-form fits on the calibration rows, and take LOG − OWN in
+  linear share. Predicts a gain iff F ≥ +0.15. Misses Qwen3.5-397B `comp`.
+Both thresholds were set after seeing the 13 cells: Y between 0.16 and 0.24, F between +0.10 and +0.22. E15 tests
+the rules on cells not run before, chosen so that some are likely to be predicted to gain.
+
+### What was looked at during design
+
+- The 13-cell screen (`results/chase_predictors_posthoc.json`).
+- E1's single decisions for every cell. An E1 version of Y (same bins, E1 LOG rows) agrees with the calibration Y
+  on the 13 known cells (Spearman 0.61, p 0.03). It was used to choose the pool and plays no part in the rules.
+  E1 Y for the pool: GPT-6-Luna `norm100` 0.58, Claude Haiku `norm100` 0.27, Qwen3.8-27B `norm100` 0.01,
+  DeepSeek-V4-Flash `norm100` 0.00. The three `norm50` cells have no E1 rows.
+- No group of any pool cell exists.
+
+### Pool: seven fresh cells, all run whatever the predictions
+
+| Cell | Why |
+|---|---|
+| Gemma-4-31B `norm50` | new middle framing; the model gains under `comp` and `norm100` |
+| Gemma-4-26B `norm50` | new middle framing; the model has never gained |
+| Qwen3.5-397B `norm50` | new middle framing; the model gains only under `comp` |
+| GPT-6-Luna `norm100` | highest E1 Y of any cell never run as groups |
+| Claude Haiku `norm100` | E1 Y 0.27, in place of Claude Sonnet `norm100` (0.43), whose groups would need about 21 Claude plan windows (owner's choice, 24 Nov) |
+| Qwen3.8-27B `norm100` | control; E1 Y 0.01 |
+| DeepSeek-V4-Flash `norm100` | control; E1 Y 0.00 |
+
+**`norm50`.** The existing guidance sentence with "current setting 50" (`chase_prompts.NORM` with w = 50). It is
+added in `chase_e15.py` without editing the frozen `chase_prompts.py`, by extending `FRAMINGS` and `framing_text`
+at import. The prompt text is printed in the registration.
+
+### Stage 1: calibration and frozen predictions
+
+- Round 1 only, groups of four: OWN 300 and LOG 450 rows per cell, records generated as in E7/E14 round 1. These
+  are surrogate kernels fitted on E1 rows for the same model and framing. For `norm50` there are no E1 rows, so one
+  kernel is fitted on the model's E1 `norm100` rows and one on its E1 `norm0` rows, each generating half the records.
+- From these rows alone: Y; F (K form, 1,000 groups per arm at fixed seeds; interval from 100 row-bootstrap refits
+  × 80 groups); the E14 dq for reference. All are written to a write-once rule file with a stamp, logged before the
+  first group call.
+- **Stop rule.** If neither rule predicts a gain in any cell, or both predict a gain everywhere, stage 2 is not run.
+  The result is reported as "untestable on this pool".
+
+### Stage 2: groups
+
+OWN 80 and LOG 80 groups of four per cell, 24 rounds, seeds 64000–64079, `results/chase_e15_pop.jsonl`.
+
+### Tests
+
+Per cell, the outcome is LOG − OWN in linear share. A "gain" is as in E14 (one-sided Fisher p < 0.05).
+- **H-Y and H-F (primary), one per rule.** D = mean outcome over the cells the rule predicts to gain minus the mean
+  over those it predicts null. Group-bootstrap 95% interval; supported if its lower bound is above 0, Holm over the
+  two. A rule that puts every cell on one side is "not tested".
+- **Secondary.** Cells correctly classified per rule and for Y and F together; Spearman of Y and F with the outcome
+  over the 7 fresh cells and over all 20 cells.
+- **Descriptive.** E1 Y against calibration Y in the fresh cells; LEAD rates and decided shares in the groups.
+
+**Power (rough).** With 80 groups per arm the outcome SE per cell is about 0.08. With three cells on each side, a
+true D of 0.20 is found about 90% of the time. With one predicted-gain cell, about 60%.
+
+### Cost and running
+
+| Cells | Calls per cell (stage 1 + 2) | Cost |
+|---|---|---|
+| Gemma-4-31B, Gemma-4-26B `norm50` | ~16,000 | ~0.9 and ~0.5 credits |
+| Qwen3.5-397B `norm50` | ~16,000 | ~4.5 credits |
+| Qwen3.8-27B, DeepSeek `norm100` | ~16,000 | ~0.5 and ~0.2 credits |
+| GPT-6-Luna `norm100` | ~16,000 | ChatGPT plan; E1's 4,224 calls took 88 min at four workers, so about 5–6 h |
+| Claude Haiku `norm100` | ~16,000 | Claude plan; E1's 4,224 Haiku calls ran in 45 min at four workers without a pause, so about 3 h; plan-window use is checked after stage 1 |
+
+Adaption total about 6.6 credits; ledger 124.0 of 200 on 24 Nov. The Adaption cells queue behind the jobs already
+waiting (RT-R, Couzin queue 2, tournament queue 3). The Luna and Haiku cells do not use the Adaption account and
+can run alongside, through `code/chase_cli.py` as in E1, with `GPT_CALL_BUDGET` raised to 17,000 for Luna.
+
+### Checked before registration (24 Nov)
+
+- **Code.** `code/chase_e15.py` (sha256 1572e824a9c52f1c07834c31460d56b46105522d1ca8187017f0c0debd8dd137) and
+  `scratch/chase_e15_queue.sh` (e0d28e7b3082b9c06481ac7b08fa0ba2e7ca45bc942a242bee4b0c4eddbd1246, gitignored like
+  the other queue scripts). They import, unchanged: `chase_prompts.py` 454d24aa…, `chase_cal.py` ca828a3b…,
+  `chase_e14.py` ebab43a9…, `chase_f_run.py` 64490020…, `chase_cli.py` 77554d7b…, `chase_paced.py` e729d7eb….
+- **`norm50` text** (sha256 b4a6667a8f24b2caad28286f86d9821aec5c19c242018dbdce3f81ef0bd2acba): " Organisers'
+  guidance for choosing coordinators, on a 0-100 scale between two goals (0 = give every agent equal turns at
+  coordinating, 100 = let agents with stronger coordination records coordinate): current setting 50." The text for
+  `comp`, `norm100` and `norm0` is unchanged. All 750 calibration jobs of a `norm50` cell carry the new sentence, as
+  do the group prompts (checked on one simulated group).
+- **Rules against the screen.** `chase_e15.py check` recomputes Y, F and F's bootstrap interval on the 13 known
+  cells from their calibration rows. Every value equals the post hoc screen's (largest difference 0).
+- **Tests without calls** (`CHASE_CAL_DIR`, `CHASE_CAL_FAKE=1`, `E15_TEST=1`). The whole queue ran on fake answers
+  in a scratch directory: calibration (5,250 jobs, 750 per cell; a restart skips the finished ones), the
+  write-once rule file (a second write is refused), the log entry, 1,120 groups and the evaluation.
+- **Smoke test, real calls.** 20 of each CLI model's LOG calibration prompts through `chase_cli.py`, one at a time:
+  Claude Haiku 20/20 parsed (1.8 s per call), GPT-6-Luna 20/20 (4.4 s). Only the parse rate was looked at. The
+  group runner itself was tested only with fake answers; it uses the same call path.
+- **Running time.** At four calls in flight: Haiku about 2 h for its groups, Luna about 5 h, calibration 10–20 min
+  each. The Adaption cells take about a day at 48 requests per minute, after the queue ahead of them.
+
+### Launch
+
+```
+nohup caffeinate -i bash scratch/chase_e15_queue.sh 200 <pids of the Adaption jobs it should follow> >> scratch/chase_e15_queue.log 2>&1 & disown
+```
+The CLI calibration starts at once, on the owner's Claude and ChatGPT plans. The Adaption part waits for the listed
+PIDs and then for an idle account. The cap of 200 is the current owner setting, and E15 stops itself at its own
+starting ledger total + 12 credits.
+
+**2026-11-24 16:27 — E15 launched.** The command-line calibration (GPT-6-Luna and Claude Haiku `norm100`, 1,500 jobs,
+four workers, `GPT_CALL_BUDGET=17000`) started at once through `chase_cli.py`, log `scratch/chase_e15_clical.log`.
+The rest waits under `scratch/chase_e15_wait.sh 200 <cal pid> 71693 83183 78575`. That is behind this calibration,
+Couzin queue 2 (71693), the Rosen phase 3 waiter (83183) and the hierarchy q1 waiter (78575), the order on the
+account at launch. Then the waiter starts `scratch/chase_e15_queue.sh 200` (hash as registered). The waiter is named
+without "queue" because the hierarchy waiter treats any running `queue*.sh` as a busy account; under its own name
+E15 and that waiter would wait on each other. `chase_e15_wait.sh` is a launcher only: wait for PIDs, then exec the
+registered queue script.
