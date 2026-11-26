@@ -172,3 +172,20 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
 - **H5 is degenerate.** Gemma's minority won 0.00 in 6 of 7 arms, so the logistic slope is not estimable
   (separation; SE ≈ 40). It is reported as "not supported: nothing to reduce". The M-A3 rule does not cover
   separation; a later analysis would need an exact or Firth test.
+
+## M-A4 (2026-11-26): follow-ups — GPT and Qwen M4b runs, separation-proof trend test
+
+- **Design.** `COUZIN_FOLLOWUP2.md`. New code:
+  - `couzin_cli_run.sh` and `couzin_cli_autoresume.sh` (GPT through `codex`);
+  - `couzin_queue3.sh` (Qwen3.5-397B on Adaption, through `couzin_launch.sh 3`);
+  - `couzin_exact.py` (post-hoc permutation and Firth trend tests).
+- **`couzin_followup.py` changes:** a `seed` stage that reuses the main study's gate and kernel for Qwen; a results
+  folder per model family; and the stop rule extended to empty CLI replies.
+- **New stamp.** The previous follow-up stamp is kept as `couzin_followup_freeze_v2.json`. The main study's stamped
+  files are unchanged.
+- **Checks before the stamp:**
+  - dry runs of both pipelines;
+  - a unit test of the empty-reply stop;
+  - one live GPT decision, a one-word valid reply in 3.9 s.
+- **First run of `couzin_exact.py`.** Gemma's minority wins *rise* with uninformed agents under simultaneous start
+  (p = 0.003; Firth +0.21 [+0.05, +0.37]). The registered H5 could not show this because of separation.

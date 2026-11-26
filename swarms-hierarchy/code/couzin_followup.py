@@ -53,6 +53,10 @@ def _guarded_call(*a, **k):
     out = _orig_call(*a, **k)
     if QUOTA.is_set():
         raise QuotaStop("usage limit reached")
+    model = a[0] if a else k.get("model", "")
+    if not out and str(model).startswith(("claude:", "gpt:")):   # M-A4: a CLI that fails silently (codex writes no
+        QUOTA.set()                                              # output on a usage limit) also stops the run
+        raise QuotaStop(f"empty reply from the {model.split(':')[0]} CLI after retries (possible usage limit)")
     return out
 
 
@@ -70,6 +74,7 @@ def _guarded_fake(*a, **k):        # offline test of the guard: COUZIN_FAKE_QUOT
 
 cz.FAKE_PARAMS.setdefault("haiku", dict(a=2.2, pers=0.7, lab=0.1))     # scripted stand-ins (offline test only)
 cz.FAKE_PARAMS.setdefault("sonnet", dict(a=1.4, pers=1.2, lab=-0.1))
+cz.FAKE_PARAMS.setdefault("gpt-", dict(a=1.8, pers=0.9, lab=0.05))
 llm._is_quota_msg = _is_quota_msg
 llm.call = _guarded_call
 cz.fake_reply = _guarded_fake
@@ -78,7 +83,8 @@ R = cz.R
 ARMS = ["M4b_sim_nu0", "M4b_sim_nu12", "M4b_sim_nu24", "M4b_obs_nu12", "M4b_obs_nu24"]
 GROUPS, CAL_GROUPS, DRAWS = 24, 8, 20
 FLAT = 0.05                       # |forecast change in P(minority wins) from n_u 0 to 24| below this = flat forecast
-FILES = ["refine-logs/COUZIN_CLAUDE_FOLLOWUP.md", "code/couzin_followup.py", "code/couzin_claude_run.sh",
+FILES = ["refine-logs/COUZIN_CLAUDE_FOLLOWUP.md", "refine-logs/COUZIN_FOLLOWUP2.md", "code/couzin_followup.py",
+         "code/couzin_claude_run.sh", "code/couzin_cli_run.sh", "code/couzin_queue3.sh", "code/couzin_exact.py",
          "code/couzin.py", "code/couzin_kernel.py", "code/couzin_forecast.py", "code/couzin_eval.py", "code/llm.py"]
 ROOT = Path(__file__).resolve().parents[1]
 STAMP = ROOT / "results" / "couzin_followup_freeze.json"
@@ -96,6 +102,23 @@ def gate(models):
     cz.run_labels(models, DRAWS, 8, R / "couzin_m0_labels.jsonl")
     if not (R / "couzin_m0_gate.json").exists():
         ck.gate(models)
+
+
+def seed(model):
+    """M-A4 (Qwen): reuse the main study's frozen M0 gate (label pair ORION/LYRA) and its M1 kernel rows for this
+    model (20 draws per cell, same cells and labels) instead of measuring them again. Write-once."""
+    main = ROOT / "results"
+    g = R / "couzin_m0_gate.json"
+    if not g.exists():
+        d = json.loads((main / "couzin_m0_gate.json").read_text())
+        if model not in d["passed"]:
+            sys.exit(f"{model} did not pass the main M0 gate")
+        g.write_text(json.dumps(d, indent=1))
+    k = R / "couzin_m1_kernel.jsonl"
+    if not k.exists():
+        rows = [l for l in open(main / "couzin_m1_kernel.jsonl") if json.loads(l)["model"] == model]
+        k.write_text("".join(rows))
+        print(f"seeded {len(rows)} M1 rows for {model} from the main study")
 
 
 def rules(model):
@@ -224,16 +247,18 @@ def stamp(check):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["gate", "kernel", "rules", "calib", "forecast", "pop", "eval", "stamp", "check"])
+    ap.add_argument("stage", choices=["gate", "seed", "kernel", "rules", "calib", "forecast", "pop", "eval", "stamp", "check"])
     ap.add_argument("--model"); ap.add_argument("--models", nargs="+")
     a = ap.parse_args()
     if a.stage in ("stamp", "check"):
         return stamp(a.stage == "check")
-    if a.stage != "eval" and "couzin_claude" not in str(R) and "couzin_followup" not in str(R):
-        sys.exit("COUZIN_RESULTS must point at results/couzin_claude (or a scratch follow-up dir)")
+    if a.stage != "eval" and R.resolve() == (ROOT / "results").resolve():
+        sys.exit("COUZIN_RESULTS must point at a follow-up folder (results/couzin_<family>), not the main results")
     try:
         if a.stage == "gate":
             gate(a.models)
+        elif a.stage == "seed":
+            seed(a.model)
         elif a.stage == "kernel":
             cz.run_kernel([a.model], DRAWS, 8, R / "couzin_m1_kernel.jsonl")
         elif a.stage == "rules":

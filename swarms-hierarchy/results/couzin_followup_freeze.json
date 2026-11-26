@@ -1,9 +1,13 @@
 {
- "time": "2026-11-24 00:34:06",
+ "time": "2026-11-26 14:18:36",
  "sha256": {
   "refine-logs/COUZIN_CLAUDE_FOLLOWUP.md": "d893b7af766d0b04dd397e53b26dad5bc81e48e964859f5a4f4e476b1af2eb29",
-  "code/couzin_followup.py": "1e312a2fc2791dc6bf5d61cd6d5dc0fc83ea0b0557d7ec2b61c765d942c669f0",
+  "refine-logs/COUZIN_FOLLOWUP2.md": "4ba4839a29a4f0c9951016b74e27047c8ac3129b903d358be21e65debefb5379",
+  "code/couzin_followup.py": "eaf0ed42534700f90018bc3f00c8ff30edc1506cfb7f1f40a6e7949002cae7b8",
   "code/couzin_claude_run.sh": "c38633e82cabdcc4e382693124d0cc2bff34c90338570c424e704162459debdc",
+  "code/couzin_cli_run.sh": "5f70bd5295e3334eeb48b35db034b85f275f883aa10afd7a02e232779c4add89",
+  "code/couzin_queue3.sh": "a34c92d39f6de6bdf52a8791c6c16831d34b552527f0c46f90331ea840163ff0",
+  "code/couzin_exact.py": "459b80ca8dfcd815a797442776ccb873dee987c25483735a9a1363a4ba825edb",
   "code/couzin.py": "d6bdce85fc899de87c54b70a1552171970a71b557e437d81b9abab4db193169a",
   "code/couzin_kernel.py": "49ac3c374b2c02cb0c1aa82a839529abeaa56f91bf307cd38589860f377201f6",
   "code/couzin_forecast.py": "5dd74bf6010f4b7a36c5d77dfbdcef3b393dd0261b51a3b1884717a76dc0faf5",

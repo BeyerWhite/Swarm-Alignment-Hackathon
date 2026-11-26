@@ -1,0 +1,13 @@
+{
+ "time": "2026-11-24 00:34:06",
+ "sha256": {
+  "refine-logs/COUZIN_CLAUDE_FOLLOWUP.md": "d893b7af766d0b04dd397e53b26dad5bc81e48e964859f5a4f4e476b1af2eb29",
+  "code/couzin_followup.py": "1e312a2fc2791dc6bf5d61cd6d5dc0fc83ea0b0557d7ec2b61c765d942c669f0",
+  "code/couzin_claude_run.sh": "c38633e82cabdcc4e382693124d0cc2bff34c90338570c424e704162459debdc",
+  "code/couzin.py": "d6bdce85fc899de87c54b70a1552171970a71b557e437d81b9abab4db193169a",
+  "code/couzin_kernel.py": "49ac3c374b2c02cb0c1aa82a839529abeaa56f91bf307cd38589860f377201f6",
+  "code/couzin_forecast.py": "5dd74bf6010f4b7a36c5d77dfbdcef3b393dd0261b51a3b1884717a76dc0faf5",
+  "code/couzin_eval.py": "1717de167577bfba16a64bce7f54602a2ad4655ee549c2e09c26593573f4859a",
+  "code/llm.py": "cde3a1bbf86729cde27c94149eb15047f38b2c640ddff6389ce563babeb1168b"
+ }
+}
