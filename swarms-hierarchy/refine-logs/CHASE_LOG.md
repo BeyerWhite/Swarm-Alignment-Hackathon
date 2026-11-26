@@ -1070,3 +1070,11 @@ account at launch. Then the waiter starts `scratch/chase_e15_queue.sh 200` (hash
 without "queue" because the hierarchy waiter treats any running `queue*.sh` as a busy account; under its own name
 E15 and that waiter would wait on each other. `chase_e15_wait.sh` is a launcher only: wait for PIDs, then exec the
 registered queue script.
+
+**2026-11-26 — E15 queue position changed (owner's order, carried out by the Couzin session).** The E15 launcher was
+restarted at 14:24 as `scratch/chase_e15_wait.sh 200 83183 19346 29725` (pid 29897). It now runs after Rosen phase 3
+(83183, running) and Couzin queue 3 (19346, Qwen, about 6 h); 29725 has since exited. The hierarchy G1–G4 waiter
+(32644) waits for E15. The registered queue script is unchanged (sha256 e0d28e7b…, checked). The command-line
+calibration finished before the restart: 1,500 of 1,500 rows parsed (Haiku and GPT-6-Luna, OWN 300 and LOG 450
+each). Nothing has been predicted or looked at: the rule file is written only after the Adaption cells are
+calibrated.
