@@ -158,3 +158,17 @@ Pre-registration: `COUZIN_PREREGISTRATION.md` (stamp `results/couzin_prereg_free
   their idle checks have the same timing. Waiting on pid 71693 covers the whole of Couzin queue 2, because the
   launcher execs the queue under the same pid.
 - **Interruptions.** None: every restarted process was only waiting. Notes were left in both studies' logs.
+
+## 2026-11-26: both runs complete; final report
+
+- **Claude follow-up.** Finished 2026-11-24 16:03 after 26 auto-resume attempts. Every arm has 24 groups. Results
+  are in `results/couzin_claude/couzin_followup_eval.json`.
+- **Queue 2.** Ran 2026-11-24 08:51 to 2026-11-26 08:27 with no stage failure. The study's total Adaption spend is
+  1.98 credits. Results are in `results/couzin_eval.json` and `couzin_eval.txt`.
+- **Report.** `COUZIN_FINAL_REPORT.md` replaces the interim report.
+- **Two analyses added after the fact (not registered):**
+  - Consensus against the number of informed agents and group size (§2.1 of the report).
+  - The label tally of M3 consensus outcomes (ORION 230, LYRA 131).
+- **H5 is degenerate.** Gemma's minority won 0.00 in 6 of 7 arms, so the logistic slope is not estimable
+  (separation; SE ≈ 40). It is reported as "not supported: nothing to reduce". The M-A3 rule does not cover
+  separation; a later analysis would need an exact or Firth test.

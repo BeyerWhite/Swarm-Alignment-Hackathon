@@ -1,0 +1,162 @@
+{
+ "nonlinearity": {
+  "adaption:gemma-4-31b-it": {
+   "a": 3.506252136160831,
+   "beta": 0.06235135145263605,
+   "c": -0.18708798693051273,
+   "contrast": 0.09999999999999998,
+   "n": 960
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "a": 4.612835308239983,
+   "beta": 0.6155034306233569,
+   "c": 0.20204875991977922,
+   "contrast": 0.3,
+   "n": 480
+  },
+  "adaption:qwen3.8-27b": {
+   "a": 0.5534324554896743,
+   "beta": -0.4952611925597711,
+   "c": 0.16220745800053682,
+   "contrast": 0.2625,
+   "n": 480
+  },
+  "adaption:qwen3.5-397b": {
+   "a": 0.3989820082754627,
+   "beta": -0.2371952757167866,
+   "c": 0.036750455139324754,
+   "contrast": 0.1375,
+   "n": 480
+  },
+  "adaption:glm-5.2": {
+   "a": 0.8870180881061593,
+   "beta": 0.8068264781142465,
+   "c": -3.630614934317691e-07,
+   "contrast": 0.125,
+   "n": 480
+  },
+  "adaption:deepseek-v4-flash": {
+   "a": 0.34166635679611473,
+   "beta": 0.12474712894984137,
+   "c": 0.07138648888646539,
+   "contrast": 0.0,
+   "n": 480
+  }
+ },
+ "omega": {
+  "adaption:gemma-4-31b-it": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 1.0,
+    "2.0": 1.0,
+    "6.0": 1.0
+   },
+   "follow1": {
+    "0.5": 0.0,
+    "2.0": 0.0,
+    "6.0": 0.0
+   },
+   "flags": [
+    "no omega meets the weak criterion; weak = 0.5",
+    "weak >= strong; weak set to 0.5",
+    "fallback strong 6, weak 0.5"
+   ]
+  },
+  "adaption:gemma-4-26b-a4b-it": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 0.25,
+    "2.0": 0.7,
+    "6.0": 0.6
+   },
+   "follow1": {
+    "0.5": 0.35,
+    "2.0": 0.19999999999999996,
+    "6.0": 0.25
+   },
+   "flags": [
+    "no omega reaches the strong criterion; strong = 6",
+    "no omega meets the weak criterion; weak = 0.5"
+   ]
+  },
+  "adaption:qwen3.8-27b": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 0.41666666666666663,
+    "2.0": 0.3,
+    "6.0": 0.35
+   },
+   "follow1": {
+    "0.5": 0.5833333333333334,
+    "2.0": 0.4,
+    "6.0": 0.25
+   },
+   "flags": [
+    "no omega reaches the strong criterion; strong = 6"
+   ]
+  },
+  "adaption:qwen3.5-397b": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 0.6,
+    "2.0": 0.65,
+    "6.0": 0.8
+   },
+   "follow1": {
+    "0.5": 0.4,
+    "2.0": 0.19999999999999996,
+    "6.0": 0.09999999999999998
+   },
+   "flags": [
+    "no omega reaches the strong criterion; strong = 6",
+    "no omega meets the weak criterion; weak = 0.5"
+   ]
+  },
+  "adaption:glm-5.2": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 0.7000000000000001,
+    "2.0": 0.75,
+    "6.0": 0.75
+   },
+   "follow1": {
+    "0.5": 0.29999999999999993,
+    "2.0": 0.25,
+    "6.0": 0.25
+   },
+   "flags": [
+    "no omega reaches the strong criterion; strong = 6",
+    "no omega meets the weak criterion; weak = 0.5"
+   ]
+  },
+  "adaption:deepseek-v4-flash": {
+   "weak": 0.5,
+   "strong": 6.0,
+   "stay0": {
+    "0.5": 0.75,
+    "2.0": 0.85,
+    "6.0": 0.8833333333333333
+   },
+   "follow1": {
+    "0.5": 0.19999999999999996,
+    "2.0": 0.15000000000000002,
+    "6.0": 0.1166666666666667
+   },
+   "flags": [
+    "no omega reaches the strong criterion; strong = 6",
+    "no omega meets the weak criterion; weak = 0.5"
+   ]
+  }
+ },
+ "m4b_model": "adaption:deepseek-v4-flash",
+ "m4b_candidates": [
+  "adaption:gemma-4-26b-a4b-it",
+  "adaption:qwen3.8-27b",
+  "adaption:deepseek-v4-flash"
+ ]
+}
